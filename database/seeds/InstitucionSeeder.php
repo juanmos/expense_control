@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use App\Models\Institucion;
 class InstitucionSeeder extends Seeder
 {
     /**
@@ -11,7 +11,7 @@ class InstitucionSeeder extends Seeder
      */
     public function run()
     {
-         DB::table('institucions')->insert([
+        $institucion=Institucion::create([
             'id'=>1,
             'nombre'=>'Unidad Educativa Alborada',
             'siglas'=>'uepa',
@@ -24,5 +24,6 @@ class InstitucionSeeder extends Seeder
             'estado_id'=>'3',
             'ciudad_id'=>'3'
         ]);
+        $institucion->configuracion()->create();
     }
 }

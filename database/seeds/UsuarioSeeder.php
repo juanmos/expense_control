@@ -32,6 +32,10 @@ class UsuarioSeeder extends Seeder
             'name'=>'Bar',
             'guard_name'=>'web'
         ]);
+        DB::table('roles')->insert([
+            'name'=>'Profesor',
+            'guard_name'=>'web'
+        ]);
         DB::table('users')->insert([
             'nombre' => 'Juan Sebastian',
             'apellido' => 'Moscoso',

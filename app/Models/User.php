@@ -8,8 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Cliente;
-use App\Models\Empresa;
+use App\Models\Alumno;
+use App\Models\Institucion;
 
 
 class User extends Authenticatable implements JWTSubject
@@ -47,6 +47,10 @@ class User extends Authenticatable implements JWTSubject
     
     public function institucion(){
         return $this->belongsTo(Institucion::class,'institucion_id');
+    }
+
+    public function alumno(){
+        return $this->hasOne(Alumno::class,'usuario_id');
     }
 
     public function getFullNameAttribute()

@@ -79,10 +79,10 @@
                                     <div class="card-block">
                                         <div class="row align-items-center justify-content-center">
                                             <div class="col">
-                                                <h5 class="m-0">{{$empresa->nombre}}</h5>
-                                                <sub class="text-muted f-14">{{$empresa->direccion}}</sub><br>
-                                                <sub class="text-muted f-14">{{$empresa->telefono}}</sub><br>
-                                                <sub class="text-muted f-14">{{$empresa->email}}</sub>
+                                                <h5 class="m-0">{{$institucion->nombre}}</h5>
+                                                <sub class="text-muted f-14">{{$institucion->direccion}}</sub><br>
+                                                <sub class="text-muted f-14">{{$institucion->telefono}}</sub><br>
+                                                <sub class="text-muted f-14">{{$institucion->email}}</sub>
                                             </div>
                                             {{-- <div class="col-auto">
                                                 <label class="label theme-bg2 text-white f-14 f-w-400 float-right">34%</label>
@@ -90,8 +90,8 @@
                                         </div>
                                         <h6 class="text-muted mt-4 mb-0">
                                             @if(Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('SuperAdminsitrador'))
-                                            <a href="{{route('empresa.edit',$empresa->id)}}" class="label theme-bg text-white f-12">Editar</a> 
-                                            <a href="{{route('configuracion.edit',$empresa->id)}}" class="label theme-bg2 text-white f-12">Configuraciones</a>
+                                            <a href="{{route('empresa.edit',$institucion->id)}}" class="label theme-bg text-white f-12">Editar</a> 
+                                            {{-- <a href="{{route('configuracion.edit',$institucion->id)}}" class="label theme-bg2 text-white f-12">Configuraciones</a> --}}
                                             @endif
                                         </h6>
                                         <i class="far fa-building text-c-purple f-50"></i>
@@ -104,8 +104,8 @@
                                                 <i class="feather icon-users f-30 text-c-purple"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300">{{$clientes->count()}}</h3>
-                                                <span class="d-block text-uppercase">TOTAL DE CLIENTES</span>
+                                                <h3 class="f-w-300">{{$alumnos->count()}}</h3>
+                                                <span class="d-block text-uppercase">TOTAL DE ALUMNOS</span>
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +115,7 @@
                                                 <i class="feather icon-zap f-30 text-c-green"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300">{{$visitas}}</h3>
+                                                <h3 class="f-w-300"></h3>
                                                 <span class="d-block text-uppercase">TOTAL DE VISITAS</span>
                                             </div>
                                         </div>
@@ -126,7 +126,7 @@
                                                 <i class="feather icon-map-pin f-30 text-c-blue"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300">{{$visitasTerminadas}}</h3>
+                                                <h3 class="f-w-300"></h3>
                                                 <span class="d-block text-uppercase">TOTAL VISITAS TERMINADAS</span>
                                             </div>
                                         </div>
@@ -138,16 +138,16 @@
                             <div class="col-xl-8 col-md-6">
                                 <div class="card Recent-Users">
                                     <div class="card-header">
-                                        <h5>Usuarios # <b>{{$usuarios->count()}}</b></h5>
-                                        @if(!Auth::user()->hasRole('Vendedor'))
+                                        {{-- <h5>Usuarios # <b>{{$usuarios->count()}}</b></h5> --}}
+                                        {{-- @if(!Auth::user()->hasRole('Vendedor'))
                                         <a href="{{route('empresa.usuario.create',$empresa->id)}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Nuevo usuario</a>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
                                             <table class="table table-hover">
                                                 <tbody>
-                                                    @forelse ($usuarios as $usuario )
+                                                    {{-- @forelse ($usuarios as $usuario )
                                                         
                                                     
                                                     <tr class="unread">
@@ -173,7 +173,7 @@
                                                     @empty
                                                     <p>No hay usuarios</p>
                                                     
-                                                    @endforelse
+                                                    @endforelse --}}
                                                 </tbody>
                                             </table>
                                         </div>

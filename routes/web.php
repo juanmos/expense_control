@@ -22,4 +22,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'admin'], function () {
         Route::resource('institucion','Admin\InstitucionController');
     });
+
+    Route::get('codificar/{id}','Institucion\AlumnoController@codificar');
 });

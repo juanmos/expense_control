@@ -48,7 +48,7 @@
                                             
                                             <div class="form-group col-md-6 ">
                                                 <label for="exampleInputEmail1">Institución*</label>
-                                                <input type="text" value="@if($institucion!=null){{$institucion->nombre}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="institucion">
+                                                <input type="text" value="@if($institucion!=null){{$institucion->nombre}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Institución">
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">SIGLAS</label>
