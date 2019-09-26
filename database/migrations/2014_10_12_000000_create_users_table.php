@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('telefono')->nullable();
             $table->string('celular')->nullable();
             $table->string('cedula')->nullable();
-            $table->string('foto')->default('/images/default_user.png');
+            $table->string('foto')->default('images/default_user.png');
             $table->date('fecha_nacimiento')->nullable();
             $table->string('facebook_id')->nullable();
             $table->string('token_and')->nullable();

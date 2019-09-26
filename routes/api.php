@@ -20,4 +20,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/usuario', 'APIAuthController@me');//Obtener los datos del usuario en sesion
     Route::delete('usuario/{plataforma}', 'APIAuthController@logout');//Cerrar sesion del usuario actual
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
+
+    Route::post('alumno/saldo','PaymentController@saldo');
 });
