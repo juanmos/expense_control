@@ -12,9 +12,8 @@ class PaymentController extends Controller
 {
     public function saldo(Request $request){
         try {
-            $decrypted = Crypt::decrypt($request->get('alumno'));
-            $user = User::find(base64_decode($decrypted));
-            dd($user);
+            $user = User::find(base64_decode($request->get('alumno')));
+            return Crypt::encrypt(json_encode(['saldo'=>$user->saldo]),false);
         } catch (Illuminate\Contracts\Encryption\DecryptException $e) {
             //
         }

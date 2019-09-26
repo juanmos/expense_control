@@ -21,5 +21,5 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::delete('usuario/{plataforma}', 'APIAuthController@logout');//Cerrar sesion del usuario actual
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
 
-    Route::post('alumno/saldo','PaymentController@saldo');
+    Route::post('alumno/saldo','Bares\PaymentController@saldo');
 });

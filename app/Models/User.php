@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'nombre','apellido', 'email', 'password','telefono','celular','facebook_id','token_and','token_ios','empresa_id','institucion_id','foto','activo','primer_login','latitud','longitud','cedula','fecha_nacimiento'
+        'nombre','apellido', 'email', 'password','telefono','celular','facebook_id','token_and','token_ios','empresa_id','institucion_id','foto','activo','primer_login','latitud','longitud','cedula','fecha_nacimiento','saldo'
     ];
     
     /**
@@ -32,7 +32,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','codigo','facebook_id','token_and','token_ios'
     ];
 
     /**
