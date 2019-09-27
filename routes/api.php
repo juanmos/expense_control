@@ -22,4 +22,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
 
     Route::post('alumno/saldo','Bares\PaymentController@saldo');
+    Route::post('bares/cobrar','Bares\PaymentController@cobrar');
+    Route::post('bares/recargar','Bares\PaymentController@recargar');
+    Route::get('bares/forma_pago','Bares\PaymentController@forma_pago');
+    Route::get('bares/transacciones','Bares\PaymentController@transacciones');
+    Route::get('bares/transacciones/hoy','Bares\PaymentController@transacciones_hoy');
 });

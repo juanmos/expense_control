@@ -35,5 +35,9 @@ class FormaPagoSeeder extends Seeder
             'forma_pago' => "Debito bancario",
             "habilitado"=>1
         ]);
+        DB::table('forma_pagos')->insert([
+            'forma_pago' => "QR",
+            "habilitado"=>1
+        ]);
     }
 }
