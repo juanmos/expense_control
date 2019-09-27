@@ -22,6 +22,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
 
     Route::post('alumno/saldo','Bares\PaymentController@saldo');
+    Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
+
     Route::post('bares/cobrar','Bares\PaymentController@cobrar');
     Route::post('bares/recargar','Bares\PaymentController@recargar');
     Route::get('bares/forma_pago','Bares\PaymentController@forma_pago');

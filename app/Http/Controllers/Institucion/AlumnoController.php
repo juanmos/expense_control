@@ -89,8 +89,13 @@ class AlumnoController extends Controller
     public function codificar($id){
         $usuario =User::find($id);
         $cryptId=base64_encode($usuario->id);
-        $usuario->codigo=Crypt::encryptString($usuario->cedula.'|'.$usuario->full_name.'|'.$usuario->foto.'|'.$usuario->alumno->ano_lectivo.'|'.$usuario->alumno->curso.'|'. $cryptId);
+        $usuario->codigo=Crypt::encryptString($usuario->cedula.'|'.$usuario->full_name.'|'.$usuario->alumno->ano_lectivo.'|'.$usuario->alumno->curso.'|'. $cryptId);
         $usuario->save();
         return view('alumno.show',compact('usuario'));
+    }
+
+    public function imagen($id){
+        $user = User::find(base64_decode($id));
+        return response()->file($user->foto);
     }
 }

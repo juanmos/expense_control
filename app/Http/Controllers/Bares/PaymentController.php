@@ -77,8 +77,20 @@ class PaymentController extends Controller
     }
 
     public function transacciones_hoy(){
-        $transacciones = Transaccion::where('institucion_id',Auth::user()->institucion_id)->whereBetween('fecha_hora',[Carbon::now()->toDateString().' 00:00:00',Carbon::now()->toDateString().' 23:59:59'])->orderBy('fecha_hora','desc')->get();
-        return Crypt::encrypt(json_encode(['saldo'=>$transacciones->sum('valor')]),false);
+        $recargas = Transaccion::where('institucion_id',Auth::user()->institucion_id)
+                ->whereBetween('fecha_hora',[Carbon::now()->toDateString().' 00:00:00',Carbon::now()->toDateString().' 23:59:59'])
+                ->whereHas('tipo_transaccion',function($query){
+                    $query->where('operacion','+');
+                })
+                ->orderBy('fecha_hora','desc')->get();
+        $cobros = Transaccion::where('institucion_id',Auth::user()->institucion_id)
+                ->whereBetween('fecha_hora',[Carbon::now()->toDateString().' 00:00:00',Carbon::now()->toDateString().' 23:59:59'])
+                ->whereHas('tipo_transaccion',function($query){
+                    $query->where('operacion','-');
+                })
+                ->orderBy('fecha_hora','desc')->get();
+        return Crypt::encrypt(json_encode(['recargas'=>$recargas->sum('valor'),'cobros'=>$cobros->sum('valor')]),false);
+        //return response()->json(['recargas'=>$recargas->sum('valor'),'cobros'=>$cobros->sum('valor')]);
     }
 
     public function forma_pago(){
