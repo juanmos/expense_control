@@ -62,7 +62,7 @@ class InstitucionController extends Controller
         $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
             $query->where('name','Alumno');
         })->with('roles')->get();
-        return view('institucion.show',compact('institucion','alumnos'));
+        return view('institucion.show',compact('institucion','alumnos','id'));
     }
 
     /**

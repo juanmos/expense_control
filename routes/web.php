@@ -21,7 +21,19 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['prefix' => 'admin'], function () {
         Route::resource('institucion','Admin\InstitucionController');
+        
     });
 
-    Route::get('codificar/{id}','Institucion\AlumnoController@codificar');
+    
+    Route::group(['prefix' => 'institucion'], function() {
+        Route::get('/{id}/alumnos','Institucion\AlumnoController@index')->name('alumnos.institucion');
+        Route::get('/alumno/crear','Institucion\AlumnoController@create')->name('alumno.create');
+        Route::get('/{id}/alumno/cargar','Institucion\AlumnoController@cargar')->name('alumno.cargar');
+        Route::post('/alumno/import','Institucion\AlumnoController@import')->name('alumno.import');
+        Route::get('/alumno/{id}','Institucion\AlumnoController@show')->name('alumno.show');
+        Route::get('/alumno/codificar/{id}','Institucion\AlumnoController@codificar')->name('alumno.codificar');
+    });
+    
+    
+    
 });

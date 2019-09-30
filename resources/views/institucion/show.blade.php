@@ -105,7 +105,8 @@
                                             </div>
                                             <div class="col">
                                                 <h3 class="f-w-300">{{$alumnos->count()}}</h3>
-                                                <span class="d-block text-uppercase">TOTAL DE ALUMNOS</span>
+                                                <span class="d-inline-block text-uppercase">TOTAL DE ALUMNOS</span>
+                                                <a  class="label theme-bg text-white f-12 float-right" href="{{route('alumnos.institucion',$id)}}">Ver</a>
                                             </div>
                                         </div>
                                     </div>

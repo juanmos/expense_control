@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'nombre','apellido', 'email', 'password','telefono','celular','facebook_id','token_and','token_ios','empresa_id','institucion_id','foto','activo','primer_login','latitud','longitud','cedula','fecha_nacimiento','saldo'
+        'nombre','apellido', 'email', 'password','telefono','celular','facebook_id','token_and','token_ios','institucion_id','foto','activo','primer_login','latitud','longitud','cedula','fecha_nacimiento','saldo'
     ];
     
     /**
@@ -50,7 +50,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function alumno(){
-        return $this->hasOne(Alumno::class,'usuario_id');
+        return $this->hasOne(Alumno::class,'usuario_id','id');
     }
 
     public function getFullNameAttribute()

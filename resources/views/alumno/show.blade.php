@@ -60,7 +60,11 @@
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
+                                            @if($usuario->codigo!=null)
                                             {!!  QrCode::format('svg')->size(300)->generate($usuario->codigo); !!}
+                                            @else
+                                            <a href="{{route('alumno.codificar',$usuario->id)}}" class="btn btn-primary">Codificar</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Institucion;
 
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Imports\AlumnoImport;
+
+use App\Models\Institucion;
 use App\Models\User;
+use Artisan;
 use Auth;
 use Crypt;
 
@@ -15,9 +20,13 @@ class AlumnoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $institucion = Institucion::find($id);
+        $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
+            $query->where('name','Alumno');
+        })->with('alumno')->get();
+        return view('alumno.index',compact('institucion','id','alumnos'));
     }
 
     /**
@@ -49,7 +58,8 @@ class AlumnoController extends Controller
      */
     public function show($id)
     {
-        //
+        $usuario =User::find($id);    
+        return view('alumno.show',compact('usuario'));
     }
 
     /**
@@ -84,6 +94,18 @@ class AlumnoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function cargar($id){
+        return view('alumno.carga',compact('id'));
+    }
+
+    public function import(Request $request) 
+    {
+        
+        Excel::import(new AlumnoImport($request->except(['archivo'])), $request->file('archivo'));
+        Artisan::call('alumno:qr');
+        return redirect('institucion/'.$request->get('id').'/alumnos')->with('mensaje', 'Clientes cargados con exito!');
     }
 
     public function codificar($id){
