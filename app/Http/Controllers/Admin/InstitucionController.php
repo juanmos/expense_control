@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Institucion;
+use App\Models\Transaccion;
 use App\Models\Pais;
 use App\Models\Ciudad;
 use App\Models\EstadoInstitucion;
+use Carbon\Carbon;
 use Hash;
 
 class InstitucionController extends Controller
@@ -62,7 +64,14 @@ class InstitucionController extends Controller
         $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
             $query->where('name','Alumno');
         })->with('roles')->get();
-        return view('institucion.show',compact('institucion','alumnos','id'));
+        $transacciones = Transaccion::where('institucion_id',$id)->orderBy('fecha_hora','desc')->paginate(50);
+        $hoy = Carbon::now()->toDateTimeString();
+        $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
+        $recargas = Transaccion::whereBetween('fecha_hora',[$menos30,$hoy])
+                                ->where('tipo_transaccion_id',2)->get();
+        $compras = Transaccion::whereBetween('fecha_hora',[$menos30,$hoy])
+                                ->where('tipo_transaccion_id',1)->get();
+        return view('institucion.show',compact('institucion','alumnos','id','transacciones','compras','recargas'));
     }
 
     /**

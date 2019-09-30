@@ -113,22 +113,22 @@
                                     <div class="card-block border-bottom">
                                         <div class="row d-flex align-items-center">
                                             <div class="col-auto">
-                                                <i class="feather icon-zap f-30 text-c-green"></i>
+                                                <i class="feather icon-trending-up f-30 text-c-green"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300"></h3>
-                                                <span class="d-block text-uppercase">TOTAL DE VISITAS</span>
+                                                <h3 class="f-w-300 text-c-green" >$ {{$recargas->sum('valor')}}</h3>
+                                                <span class="d-block text-uppercase">#{{$recargas->count()}} RECARGAS DEL ULTIMO MES</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="card-block">
                                         <div class="row d-flex align-items-center">
                                             <div class="col-auto">
-                                                <i class="feather icon-map-pin f-30 text-c-blue"></i>
+                                                <i class="feather icon-trending-down f-30 text-c-red"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300"></h3>
-                                                <span class="d-block text-uppercase">TOTAL VISITAS TERMINADAS</span>
+                                                <h3 class="f-w-300 text-c-red">$ {{$compras->sum('valor')}}</h3>
+                                                <span class="d-block text-uppercase">#{{$compras->count()}} COMPRAS DEL ULTIMO MES</span>
                                             </div>
                                         </div>
                                     </div>
@@ -139,42 +139,33 @@
                             <div class="col-xl-8 col-md-6">
                                 <div class="card Recent-Users">
                                     <div class="card-header">
-                                        {{-- <h5>Usuarios # <b>{{$usuarios->count()}}</b></h5> --}}
-                                        {{-- @if(!Auth::user()->hasRole('Vendedor'))
-                                        <a href="{{route('empresa.usuario.create',$empresa->id)}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Nuevo usuario</a>
-                                        @endif --}}
+                                        <h5>Ultimas transacciones </h5>
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
                                             <table class="table table-hover">
                                                 <tbody>
-                                                    {{-- @forelse ($usuarios as $usuario )
+                                                    @forelse ($transacciones as $transaccion )
                                                         
                                                     
                                                     <tr class="unread">
-                                                        <td><img class="rounded-circle" style="width:40px;" src="{{Storage::url($usuario->foto)}}" alt="activity-user"></td>
+                                                        <td><img class="rounded-circle" style="width:40px;" src="{{Storage::url($transaccion->usuario->foto)}}" alt="activity-user"></td>
                                                         <td>
-                                                            <h6 class="mb-1">{{$usuario->nombre}} {{$usuario->apellido}}</h6>
-                                                            <p class="m-0">{{$usuario->telefono}}</p>
+                                                            <h6 class="mb-1">{{$transaccion->usuario->full_name}} </h6>
+                                                            <p class="m-0">{{$transaccion->usuario->telefono}}</p>
                                                         </td>
                                                         <td>
-                                                            <h6 class="text-muted"><i class="fas fa-circle {{($usuario->activo)?'text-c-green' :'text-c-red' }} f-10 m-r-15"></i>{{$usuario->email}}</h6>
-                                                            <p class="m-0">{{$usuario->getRoleNames()->implode(',')}}</p>
+                                                            <h6 class="text-muted"><i class="fas fa-circle {{($transaccion->tipo_transaccion->operacion=='+')?'text-c-green' :'text-c-red' }} f-10 m-r-15"></i>{{$transaccion->valor}}</h6>
+                                                            <p class="m-0">{{$transaccion->forma_pago->forma_pago}}</p>
                                                         </td>
                                                         <td>
-                                                            <a href="{{route('empresa.usuario.show',[$usuario->id] )}}" class="label theme-bg2 text-white f-12">Ver</a>
-                                                            <a href="{{route('empresa.usuario.edit',[$usuario->id] )}}" class="label theme-bg text-white f-12">Editar</a>
-                                                            @if(!$usuario->hasRole('Vendedor'))
-                                                            <br>
-                                                            <br>
-                                                            <a href="{{route('empresa.usuario.asignar' )}}" class="label theme-bg text-white f-12">Asignar vendedores</a>
-                                                            @endif
+                                                            
                                                         </td>
                                                     </tr>
                                                     @empty
                                                     <p>No hay usuarios</p>
                                                     
-                                                    @endforelse --}}
+                                                    @endforelse
                                                 </tbody>
                                             </table>
                                         </div>
