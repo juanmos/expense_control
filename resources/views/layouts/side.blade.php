@@ -14,11 +14,11 @@
                 {{-- <li class="nav-item pcoded-menu-caption">
                     <label>Navigation</label>
                 </li> --}}
-                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" class="nav-item active">
+                {{-- <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" class="nav-item active">
                     <a href="{{route('home')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Panel de control</span></a>
-                </li>
+                </li> --}}
                 @if(Auth::user()->hasRole('SuperAdministrador'))
-                <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
+                <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item active">
                     <a href="{{route('institucion.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Instituciones</span></a>
                 </li>
                 @endif

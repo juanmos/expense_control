@@ -28,7 +28,8 @@ class HomeController extends Controller
     {
         $user= User::find(Auth::user()->id);
         if($user->hasRole('SuperAdministrador')){
-            return view('admin.panel');
+            return redirect('admin/institucion');
+            //return view('admin.panel');
         }else if($user->hasRole('Administrador') || $user->hasRole('JefeVentas')){
             if($user->primer_login){
                 return redirect('/e/usuario/'.$user->id.'/edit')->with('info','Debes cambiar tu contraseña e ingresar tu foto');
