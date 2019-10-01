@@ -164,6 +164,6 @@ class AlumnoController extends Controller
 
     public function imagen($id){
         $user = User::find(base64_decode($id));
-        return response()->file($user->foto);
+        return Storage::get($user->foto);//response()->file($user->foto);
     }
 }
