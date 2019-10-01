@@ -65,7 +65,7 @@
                                             {{-- {{ $instituciones->links() }} --}}
                                             @else
                                             <h4>No hay alumnos registrados</h4>
-                                            <a class="btn btn-primary" href="{{route('alumno.create')}}"><span class="pcoded-micon"><i class="feather icon-plus-circle"></i></span><span class="pcoded-mtext">Crear alumno</span></a>
+                                            <a class="btn btn-primary" href="{{route('institucion.alumno.create',$id)}}"><span class="pcoded-micon"><i class="feather icon-plus-circle"></i></span><span class="pcoded-mtext">Crear alumno</span></a>
                                             @endif
                                         </div>
                                     </div>
