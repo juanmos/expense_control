@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
             $table->boolean('primer_login')->default(1);
             $table->decimal('latitud',16,10)->default(0);
             $table->decimal('longitud',16,10)->default(0);
-            $table->string('codigo',500)->nullable()->unique();
+            $table->string('codigo',500)->nullable();
             $table->rememberToken();
             $table->timestamps();
              $table->softDeletes();
