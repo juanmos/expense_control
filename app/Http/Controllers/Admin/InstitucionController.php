@@ -68,8 +68,10 @@ class InstitucionController extends Controller
         $hoy = Carbon::now()->toDateTimeString();
         $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
         $recargas = Transaccion::whereBetween('fecha_hora',[$menos30,$hoy])
+                                ->where('institucion_id',$id)
                                 ->where('tipo_transaccion_id',2)->get();
         $compras = Transaccion::whereBetween('fecha_hora',[$menos30,$hoy])
+                                ->where('institucion_id',$id)
                                 ->where('tipo_transaccion_id',1)->get();
         return view('institucion.show',compact('institucion','alumnos','id','transacciones','compras','recargas'));
     }

@@ -26,7 +26,7 @@ class AlumnoImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChu
             'nombre'=>$row['est_nombres'],
             'apellido'=>$row['est_apellidos'],
             'cedula'=>$row['est_identificacion'],
-            'password'=>bcrypt('123456'),
+            'password'=>bcrypt(random_bytes(10)),
             'institucion_id'=>$this->data['institucion_id']
         ]);
         $alumno->alumno()->create([

@@ -12,7 +12,7 @@
                     <div class="page-wrapper">
                         <!-- [ Main Content ] start -->
                         <div class="row">
-                            <!--[ daily sales section ] start-->
+                            {{-- <!--[ daily sales section ] start-->
                             <div class="col-md-6 col-xl-4">
                                 <div class="card daily-sales">
                                     <div class="card-block">
@@ -72,7 +72,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--[ year  sales section ] end-->
+                            <!--[ year  sales section ] end--> --}}
                             <!-- [ statistics year chart ] start -->
                             <div class="col-xl-4 col-md-6">
                                 <div class="card card-event">
@@ -106,7 +106,7 @@
                                             <div class="col">
                                                 <h3 class="f-w-300">{{$alumnos->count()}}</h3>
                                                 <span class="d-inline-block text-uppercase">TOTAL DE ALUMNOS</span>
-                                                <a  class="label theme-bg text-white f-12 float-right" href="{{route('alumnos.institucion',$id)}}">Ver</a>
+                                                <a  class="label theme-bg text-white f-12 float-right" href="{{route('institucion.alumnos',$id)}}">Ver</a>
                                             </div>
                                         </div>
                                     </div>
@@ -155,8 +155,11 @@
                                                             <p class="m-0">{{$transaccion->usuario->telefono}}</p>
                                                         </td>
                                                         <td>
-                                                            <h6 class="text-muted"><i class="fas fa-circle {{($transaccion->tipo_transaccion->operacion=='+')?'text-c-green' :'text-c-red' }} f-10 m-r-15"></i>{{$transaccion->valor}}</h6>
-                                                            <p class="m-0">{{$transaccion->forma_pago->forma_pago}}</p>
+                                                            <h6 class="text-muted">
+                                                                <i class="feather f-24  {{($transaccion->tipo_transaccion->operacion=='+')?'text-c-green icon-trending-up' :'text-c-red icon-trending-down' }} f-10 m-r-15"></i>
+                                                                $ {{number_format($transaccion->valor,2)}}
+                                                            </h6>
+                                                            <p class="m-0">{{$transaccion->tipo_transaccion->tipo}} {{$transaccion->forma_pago->forma_pago}}</p>
                                                         </td>
                                                         <td>
                                                             
@@ -168,6 +171,7 @@
                                                     @endforelse
                                                 </tbody>
                                             </table>
+                                            {{$transacciones->links()}}
                                         </div>
                                     </div>
                                 </div>

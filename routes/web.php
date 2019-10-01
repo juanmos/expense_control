@@ -26,12 +26,16 @@ Route::group(['middleware' => ['auth']], function () {
 
     
     Route::group(['prefix' => 'institucion'], function() {
-        Route::get('/{id}/alumnos','Institucion\AlumnoController@index')->name('alumnos.institucion');
-        Route::get('/alumno/crear','Institucion\AlumnoController@create')->name('alumno.create');
-        Route::get('/{id}/alumno/cargar','Institucion\AlumnoController@cargar')->name('alumno.cargar');
-        Route::post('/alumno/import','Institucion\AlumnoController@import')->name('alumno.import');
-        Route::get('/alumno/{id}','Institucion\AlumnoController@show')->name('alumno.show');
-        Route::get('/alumno/codificar/{id}','Institucion\AlumnoController@codificar')->name('alumno.codificar');
+        Route::get('/{id}/alumnos','Institucion\AlumnoController@index')->name('institucion.alumnos');
+        Route::get('/{id}/alumno/crear','Institucion\AlumnoController@create')->name('institucion.alumno.create');
+        Route::post('/alumno/store','Institucion\AlumnoController@store')->name('institucion.alumno.store');
+        Route::get('/{id}/alumno/cargar','Institucion\AlumnoController@cargar')->name('institucion.alumno.cargar');
+        Route::post('/alumno/import','Institucion\AlumnoController@import')->name('institucion.alumno.import');
+        Route::get('/{id}/alumno/exportar','Institucion\AlumnoController@exportar')->name('institucion.alumno.exportar');
+        Route::get('/{id}/alumno/{alumno_id}','Institucion\AlumnoController@show')->name('institucion.alumno.show');
+        Route::get('/{id}/alumno/codificar/{alumno_id}','Institucion\AlumnoController@codificar')->name('institucion.alumno.codificar');
+        Route::get('/{id}/alumno/edit/{alumno_id}','Institucion\AlumnoController@edit')->name('institucion.alumno.edit');
+        Route::put('/alumno/update/{alumno_id}','Institucion\AlumnoController@update')->name('institucion.alumno.update');
     });
     
     

@@ -18,37 +18,41 @@
                                     <div class="card-block">
                                         <div class="row align-items-center justify-content-center">
                                             <div class="col">
+                                                <img class="rounded-circle float-right" style="width:60px;" src="{{Storage::url($usuario->foto)}}" alt="activity-user">
                                                 <h5 class="m-0">{{$usuario->full_name}}</h5>
                                                 <sub class="text-muted f-14"><small>Email: </small>{{$usuario->email}}</sub><br>
                                                 <sub class="text-muted f-14"><small>Telf: </small>{{$usuario->telefono}}</sub><br>
                                                 <sub class="text-muted f-14"><small>Celular: </small>{{$usuario->celular}}</sub><br>
-                                                <sub class="text-muted f-14"><small>Cedula: </small>{{$usuario->cedula}}</sub>
+                                                <sub class="text-muted f-14"><small>Cedula: </small>{{$usuario->cedula}}</sub><br>
+                                                <sub class="text-muted f-14"><small>Curso: </small>{{$usuario->alumno->curso}}</sub><br>
+                                                <sub class="text-muted f-14"><small>Ano lectivo: </small>{{$usuario->alumno->ano_lectivo}}</sub><br>
                                             </div>
                                         </div>
-                                        {{-- <h6 class="text-muted mt-4 mb-0"><a href="{{route('empresa.usuario.edit',$usuario->id)}}" class="label theme-bg text-white f-12">Editar</a> </h6> --}}
-                                        <i class="far fa-building text-c-purple f-50"></i>
+                                        <h6 class="text-muted mt-4 mb-0"><a href="{{route('institucion.alumno.edit',[$id,$usuario->id])}}" class="label theme-bg text-white f-12">Editar</a> </h6>
+                                        <i class="far fa-user text-c-purple f-50"></i>
+                                        
                                     </div>
                                 </div>
                                 <div class="card">
                                     <div class="card-block border-bottom">
                                         <div class="row d-flex align-items-center">
                                             <div class="col-auto">
-                                                <i class="feather icon-zap f-30 text-c-green"></i>
+                                                <i class="feather icon-trending-up f-30 text-c-green"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300"></h3>
-                                                <span class="d-block text-uppercase">TOTAL DE COMPRAS</span>
+                                                <h3 class="f-w-300 text-c-green" >$ {{$recargas->sum('valor')}}</h3>
+                                                <span class="d-block text-uppercase">#{{$recargas->count()}} RECARGAS DEL ULTIMO MES</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="card-block">
                                         <div class="row d-flex align-items-center">
                                             <div class="col-auto">
-                                                <i class="feather icon-map-pin f-30 text-c-blue"></i>
+                                                <i class="feather icon-trending-down f-30 text-c-red"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300"></h3>
-                                                <span class="d-block text-uppercase">PROMEDIO DE COMPRAS</span>
+                                                <h3 class="f-w-300 text-c-red">$ {{$compras->sum('valor')}}</h3>
+                                                <span class="d-block text-uppercase">#{{$compras->count()}} COMPRAS DEL ULTIMO MES</span>
                                             </div>
                                         </div>
                                     </div>
@@ -63,18 +67,60 @@
                                             @if($usuario->codigo!=null)
                                             {!!  QrCode::format('svg')->size(300)->generate($usuario->codigo); !!}
                                             @else
-                                            <a href="{{route('alumno.codificar',$usuario->id)}}" class="btn btn-primary">Codificar</a>
+                                            <a href="{{route('institucion.alumno.codificar',[$id,$usuario->id])}}" class="btn btn-primary">Codificar</a>
                                             @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            {{-- <?php function seleccionado($val,$pes){
+                            <?php function seleccionado($val,$pes){
                                 if($val==$pes) return 'active show';
                                 else return '';
-                            }?> --}}
-                            <!-- [ statistics year chart ] end -->                                                      
+                            }?>
+                            <!-- [ statistics year chart ] end -->     
+                            <!--[ Recent Users ] start-->
+                            <div class="col-xl-8 col-md-6">
+                                <div class="card Recent-Users">
+                                    <div class="card-header">
+                                        <h5>Ultimas transacciones </h5>
+                                    </div>
+                                    <div class="card-block px-0 py-3">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <tbody>
+                                                    @forelse ($transacciones as $transaccion )
+                                                        
+                                                    
+                                                    <tr class="unread">
+                                                        <td><img class="rounded-circle" style="width:40px;" src="{{Storage::url($transaccion->usuario->foto)}}" alt="activity-user"></td>
+                                                        <td>
+                                                            <h6 class="mb-1">{{$transaccion->usuario->full_name}} </h6>
+                                                            <p class="m-0">{{$transaccion->usuario->telefono}}</p>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="text-muted">
+                                                                <i class="feather f-24  {{($transaccion->tipo_transaccion->operacion=='+')?'text-c-green icon-trending-up' :'text-c-red icon-trending-down' }} f-10 m-r-15"></i>
+                                                                $ {{number_format($transaccion->valor,2)}}
+                                                            </h6>
+                                                            <p class="m-0">{{$transaccion->tipo_transaccion->tipo}} con {{$transaccion->forma_pago->forma_pago}}</p>
+                                                        </td>
+                                                        <td>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                    @empty
+                                                    <p>No hay usuarios</p>
+                                                    
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
+                                            {{$transacciones->links()}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--[ Recent Users ] end-->                                                 
                             <div class="col-xl-8 col-md-8 m-b-30">
                                 {{-- <ul class="nav nav-pills" id="myTab" role="tablist">
                                     <li class="nav-item">

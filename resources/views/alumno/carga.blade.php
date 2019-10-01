@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <!-- [ breadcrumb ] end -->
-                {!! Form::open(['route'=>'alumno.import','method'=>'POST','enctype'=>"multipart/form-data"]) !!}    
+                {!! Form::open(['route'=>'institucion.alumno.import','method'=>'POST','enctype'=>"multipart/form-data"]) !!}    
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <input type="hidden" name="institucion_id" value="{{ $id }}"/>
                     <div class="main-body">
