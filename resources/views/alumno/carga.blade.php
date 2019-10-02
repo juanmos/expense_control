@@ -15,7 +15,7 @@
                                 </div>
                                 <ul class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="feather icon-home"></i></a></li>
-                                    <li class="breadcrumb-item"><a href="{{route('alumnos.institucion',$id)}}">Insitucion</a></li>                                    
+                                    <li class="breadcrumb-item"><a href="{{route('institucion.alumnos',$id)}}">Insitucion</a></li>                                    
                                     <li class="breadcrumb-item"><a href="javascript:">Cargar</a></li>
                                     
                                 </ul>
