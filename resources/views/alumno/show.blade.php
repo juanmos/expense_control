@@ -65,7 +65,8 @@
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
                                             @if($usuario->codigo!=null)
-                                            {!!  QrCode::format('svg')->size(300)->generate($usuario->codigo); !!}
+                                            {{--  {!!  QrCode::format('svg')->size(300)->generate($usuario->codigo); !!}  --}}
+                                            <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($usuario->codigo)) !!} ">
                                             @else
                                             <a href="{{route('institucion.alumno.codificar',[$id,$usuario->id])}}" class="btn btn-primary">Codificar</a>
                                             @endif
