@@ -15,7 +15,7 @@ Route::get('/', 'HomeController@index');
 Auth::routes();
 Route::get('logout','Auth\LoginController@logout')->name('logout');
 
-
+Route::get('carga','Bares\PaymentController@carga');
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\EstadoInstitucion;
+use App\Models\Transaccion;
 use App\Models\Configuracion;
 use App\Models\Ciudad;
 use App\Models\User;
@@ -26,5 +27,10 @@ class Institucion extends Model
 
     public function alumnos(){
         return $this->hasMany(User::class,'institucion_id');
+    }
+
+    public function transacciones()
+    {
+        return $this->morphMany('App\Models\Transaccion', 'transaccionable');
     }
 }

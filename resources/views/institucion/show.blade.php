@@ -151,7 +151,7 @@
                                                     <tr class="unread">
                                                         <td><img class="rounded-circle" style="width:40px;" src="{{Storage::url($transaccion->usuario->foto)}}" alt="activity-user"></td>
                                                         <td>
-                                                            <h6 class="mb-1">{{$transaccion->usuario->full_name}} </h6>
+                                                            <a href="{{route('institucion.alumno.show',[$id,$transaccion->usuario->id])}} " ><h6 class="mb-1">{{$transaccion->usuario->full_name}} </h6></a>
                                                             <p class="m-0">{{$transaccion->usuario->telefono}}</p>
                                                         </td>
                                                         <td>
@@ -162,7 +162,8 @@
                                                             <p class="m-0">{{$transaccion->tipo_transaccion->tipo}} {{$transaccion->forma_pago->forma_pago}}</p>
                                                         </td>
                                                         <td>
-                                                            
+                                                            <p class="m-0">{{date('d-m-Y',strtotime($transaccion->fecha_hora))}}</p>
+                                                            <p class="m-0">{{date('H:i',strtotime($transaccion->fecha_hora))}}</p>
                                                         </td>
                                                     </tr>
                                                     @empty

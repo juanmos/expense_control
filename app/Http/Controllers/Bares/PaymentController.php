@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FormaPago;
 use App\Models\Transaccion;
+use App\Models\Institucion;
 use App\Models\User;
 use Carbon\Carbon;
 use Auth;
@@ -44,6 +45,22 @@ class PaymentController extends Controller
         }else{
             return response()->json(['error'=>'Saldo insuficiente'],404);
         }
+    }
+
+    public function carga(Request $request){
+        
+        $user = Institucion::find(1);
+        $user->transacciones()->create([
+            'tipo_transaccion_id'=>1,
+            'usuario_id'=>3,
+            'usuario_crea_id'=>1,
+            'fecha_hora'=>Carbon::now()->toDateTimeString(),
+            'valor'=>10,
+            'forma_pago_id'=>7,
+            'usuario_crea_ip'=>$request->ip(),
+            //'ubicacion'=>'23.2930320423,-93.230492492'
+            //'telefono_uuid'=>random_bytes(36)
+        ]);
     }
 
     public function recargar(Request $request){

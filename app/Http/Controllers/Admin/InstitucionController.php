@@ -60,18 +60,17 @@ class InstitucionController extends Controller
      */
     public function show($id)
     {
+        
         $institucion = Institucion::find($id);
         $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
             $query->where('name','Alumno');
         })->with('roles')->get();
-        $transacciones = Transaccion::where('institucion_id',$id)->orderBy('fecha_hora','desc')->paginate(50);
+        $transacciones = $institucion->transacciones()->orderBy('fecha_hora','desc')->paginate(50);
         $hoy = Carbon::now()->toDateTimeString();
         $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
-        $recargas = Transaccion::whereBetween('fecha_hora',[$menos30,$hoy])
-                                ->where('institucion_id',$id)
+        $recargas =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('tipo_transaccion_id',2)->get();
-        $compras = Transaccion::whereBetween('fecha_hora',[$menos30,$hoy])
-                                ->where('institucion_id',$id)
+        $compras =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('tipo_transaccion_id',1)->get();
         return view('institucion.show',compact('institucion','alumnos','id','transacciones','compras','recargas'));
     }

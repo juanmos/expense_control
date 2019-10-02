@@ -10,6 +10,8 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Alumno;
 use App\Models\Institucion;
+use App\Models\Tarjeta;
+use App\Models\Transaccion;
 
 
 class User extends Authenticatable implements JWTSubject
@@ -50,7 +52,16 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function alumno(){
-        return $this->hasOne(Alumno::class,'usuario_id','id');
+        return $this->hasOne(Alumno::class,'usuario_id');
+    }
+
+    public function tarjetas(){
+        return $this->hasMany(Tarjeta::class,'usuario_id');
+    }
+
+    public function transacciones()
+    {
+        return $this->morphMany('App\Models\Transaccion', 'transaccionable');
     }
 
     public function getFullNameAttribute()
