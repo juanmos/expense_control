@@ -11,6 +11,7 @@ use App\Models\Institucion;
 use App\Models\Transaccion;
 use App\Models\User;
 use Carbon\Carbon;
+use Storage;
 use Artisan;
 use Auth;
 use Crypt;
@@ -164,6 +165,6 @@ class AlumnoController extends Controller
 
     public function imagen($id){
         $user = User::find(base64_decode($id));
-        return Storage::get($user->foto);//response()->file($user->foto);
+        return Storage::download($user->foto);//response()->file($user->foto);
     }
 }
