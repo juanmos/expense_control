@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\FormaPago;
 use App\Models\Transaccion;
 use App\Models\Institucion;
+use App\Models\Tarjeta;
 use App\Models\User;
 use Carbon\Carbon;
 use Auth;
@@ -29,24 +30,37 @@ class PaymentController extends Controller
         if($tarjeta==null){
             return response()->json(['error'=>'Tarjeta no existe'],404);
         }
-        
+        if ($tarjeta->perdida){
+            return response()->json(['valida'=>false,'mensaje'=>'La tarjeta ha sido reportada como perdida el '.Carbon::parse($tarjeta->fecha_perdida)->format('d-m-Y')]);
+        }
+        if(Carbon::now()->isBefore(Carbon::parse($tarjeta->fecha_vencimiento))){
+            return response()->json(['valida'=>true]);
+        }else{
+            return response()->json(['valida'=>false,'mensaje'=>'La tarjeta ha vencido el '.Carbon::parse($tarjeta->fecha_vencimiento)->format('d-m-Y')]);
+        }
+
     }
 
     public function cobrar(Request $request){
-        $user = User::find(base64_decode($request->get('alumno')));
+        
         $valor = base64_decode($request->get('valor'));
         if(!is_numeric($valor )){
             return response()->json(['error'=>'Ingrese un valor decimal'],404);
         }
+        $user = User::find(base64_decode($request->get('alumno')));
+        $institucion = Institucion::find(Auth::user()->institucion_id);
         if($user->saldo>=$valor){
-            $transaccion = Transaccion::create([
+            $transaccion = $institucion->transacciones()->create([
                 'tipo_transaccion_id'=>1,
                 'usuario_id'=>$user->id,
                 'usuario_crea_id'=>Auth::user()->id,
                 'fecha_hora'=>Carbon::now()->toDateTimeString(),
                 'valor'=>$valor,
                 'forma_pago_id'=>7,
-                'institucion_id'=>Auth::user()->institucion_id
+                'tarjeta_id'=>base64_decode($request->get('tarjeta_id')),
+                'usuario_crea_ip'=>$request->ip(),
+                //'dispositivo'->$request->get('mac'),
+                // 'telefono_uuid'->$request->get('uuid')
             ]);
             $user->saldo= $user->saldo - $transaccion->valor;
             $user->save();
@@ -73,20 +87,25 @@ class PaymentController extends Controller
     }
 
     public function recargar(Request $request){
-        $user = User::find(base64_decode($request->get('alumno')));
+        
         $valor = base64_decode($request->get('valor'));
         if(!is_numeric($valor )){
             return response()->json(['error'=>'Ingrese un valor decimal'],404);
         }
+        $user = User::find(base64_decode($request->get('alumno')));
+        $institucion = Institucion::find(Auth::user()->institucion_id);
         if($valor>0){
-            $transaccion = Transaccion::create([
+            $transaccion = $institucion->transacciones()->create([
                 'tipo_transaccion_id'=>2,
                 'usuario_id'=>$user->id,
                 'usuario_crea_id'=>Auth::user()->id,
                 'fecha_hora'=>Carbon::now()->toDateTimeString(),
                 'valor'=>$valor,
                 'forma_pago_id'=>$request->get('forma_pago_id'),
-                'institucion_id'=>Auth::user()->institucion_id
+                'tarjeta_id'=>base64_decode($request->get('tarjeta_id')),
+                'usuario_crea_ip'=>$request->ip(),
+                // 'dispositivo'->$request->get('mac'),
+                // 'telefono_uuid'->$request->get('uuid')
             ]);
 
             $user->saldo= $user->saldo + $transaccion->valor;
