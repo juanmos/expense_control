@@ -23,7 +23,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::post('alumno/saldo','Transacciones\PaymentController@saldo');
     Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
-
+    
+    Route::post('payment/valida/tarjeta','Transacciones\PaymentController@validaTarjeta');
     Route::post('payment/cobrar','Transacciones\PaymentController@cobrar');
     Route::post('payment/recargar','Transacciones\PaymentController@recargar');
     Route::get('payment/forma_pago','Transacciones\PaymentController@forma_pago');

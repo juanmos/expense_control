@@ -23,6 +23,15 @@ class PaymentController extends Controller
         } 
     }
 
+    public function validaTarjeta(Request $request){
+        $tarjeta_id=$request->get('tid');
+        $tarjeta = Tarjeta::find(base64_decode($tarjeta_id));
+        if($tarjeta==null){
+            return response()->json(['error'=>'Tarjeta no existe'],404);
+        }
+        
+    }
+
     public function cobrar(Request $request){
         $user = User::find(base64_decode($request->get('alumno')));
         $valor = base64_decode($request->get('valor'));
@@ -89,18 +98,20 @@ class PaymentController extends Controller
     }
 
     public function transacciones(){
-        $transacciones = Transaccion::where('institucion_id',Auth::user()->institucion_id)->orderBy('fecha_hora','desc')->paginate(50);
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $transacciones = $institucion->transacciones()->orderBy('fecha_hora','desc')->paginate(50);
         return Crypt::encrypt(json_encode(compact('transacciones')),false);//response()->json(compact('transacciones'));
     }
 
     public function transacciones_hoy(){
-        $recargas = Transaccion::where('institucion_id',Auth::user()->institucion_id)
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $recargas = $institucion->transacciones()
                 ->whereBetween('fecha_hora',[Carbon::now()->toDateString().' 00:00:00',Carbon::now()->toDateString().' 23:59:59'])
                 ->whereHas('tipo_transaccion',function($query){
                     $query->where('operacion','+');
                 })
                 ->orderBy('fecha_hora','desc')->get();
-        $cobros = Transaccion::where('institucion_id',Auth::user()->institucion_id)
+        $cobros = $institucion->transacciones()
                 ->whereBetween('fecha_hora',[Carbon::now()->toDateString().' 00:00:00',Carbon::now()->toDateString().' 23:59:59'])
                 ->whereHas('tipo_transaccion',function($query){
                     $query->where('operacion','-');

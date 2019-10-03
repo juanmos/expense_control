@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Institucion;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Http\Helpers;
 use App\Exports\AlumnoExport;
 use App\Imports\AlumnoImport;
 use App\Models\TipoTarjeta;
 use App\Models\Institucion;
 use App\Models\Transaccion;
+use App\Models\Tarjeta;
 use App\Models\User;
 use Carbon\Carbon;
 use Storage;
@@ -151,9 +153,10 @@ class AlumnoController extends Controller
         return Excel::download(new AlumnoExport($id),'Alumnos.xlsx');
     }
 
-    public function codificar($id,$alumno_id){
-        $this->crearQR($id,$alumno_id);
-        return redirect('institucion/'.$id.'/alumno/'.$alumno_id);
+    public function codificar($id,$tid){
+        $tarjeta = Tarjeta::find($tid);
+        $tarjeta->codigo=Helpers::creaQR($id,$tid);
+        $tarjeta->save();
     }
 
     private function crearQR($id,$alumno_id){

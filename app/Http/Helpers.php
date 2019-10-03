@@ -21,8 +21,9 @@ class Helpers{
             'i'=>$cryptId,
             'a'=>$usuario->alumno->ano_lectivo,
             'p'=>$usuario->alumno->curso,
-            'v'=>$tarjeta->fecha_vencimiento
+            'v'=>Carbon::parse($tarjeta->fecha_vencimiento)->toDateString(),
+            'ti'=>$tarjeta_id
         ];
-        return Crypt::encrypt($qr);;
+        return Crypt::encrypt(json_encode(compact('qr')),false);;
     }
 }
