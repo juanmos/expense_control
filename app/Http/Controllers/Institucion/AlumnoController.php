@@ -76,8 +76,8 @@ class AlumnoController extends Controller
      */
     public function show($id,$alumno_id)
     {
-        $usuario =User::find($alumno_id);    dd(Crypt::encrypt($alumno_id));
-        $institucion = Institucion::find($id);dd($institucion->transacciones()->where('usuario_id',Crypt::encrypt($alumno_id))->get());
+        $usuario =User::find($alumno_id);   
+        $institucion = Institucion::find($id);
         $transacciones = $institucion->transacciones()->where('usuario_id',$alumno_id)->orderBy('fecha_hora','desc')->paginate(50);
         $hoy = Carbon::now()->toDateTimeString();
         $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
@@ -87,18 +87,6 @@ class AlumnoController extends Controller
         $compras =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('usuario_id',$alumno_id)
                                 ->where('tipo_transaccion_id',1)->get();
-
-        // $transacciones = Transaccion::where('usuario_id',$alumno_id)->where('institucion_id',$id)->orderBy('fecha_hora','desc')->paginate(50);
-        // $hoy = Carbon::now()->toDateTimeString();
-        // $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
-        // $recargas = Transaccion::whereBetween('fecha_hora',[$menos30,$hoy])
-        //                         ->where('institucion_id',$id)
-        //                         ->where('usuario_id',$alumno_id)
-        //                         ->where('tipo_transaccion_id',2)->get();
-        // $compras = Transaccion::whereBetween('fecha_hora',[$menos30,$hoy])
-        //                         ->where('institucion_id',$id)
-        //                         ->where('usuario_id',$alumno_id)
-        //                         ->where('tipo_transaccion_id',1)->get();
         return view('alumno.show',compact('usuario','transacciones','recargas','compras','id'));
     }
 

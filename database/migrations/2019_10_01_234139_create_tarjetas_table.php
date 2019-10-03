@@ -15,15 +15,15 @@ class CreateTarjetasTable extends Migration
     {
         Schema::create('tarjetas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->text('usuario_id');
-            $table->text('tipo_tarjeta_id');
-            $table->text('cupo_mensual');
-            $table->text('perdida');
-            $table->text('fecha_solicitud');
-            $table->text('fecha_emision')->nullable();
-            $table->text('fecha_entrega')->nullable();
-            $table->text('fecha_vencimiento');
-            $table->text('fecha_perdida')->nullable();
+            $table->integer('usuario_id');
+            $table->integer('tipo_tarjeta_id');
+            $table->decimal('cupo_mensual',10,3)->default(0);
+            $table->boolean('perdida')->default(0);
+            $table->dateTimeTz('fecha_solicitud');
+            $table->dateTimeTz('fecha_emision')->nullable();
+            $table->dateTimeTz('fecha_entrega')->nullable();
+            $table->dateTimeTz('fecha_vencimiento');
+            $table->dateTimeTz('fecha_perdida')->nullable();
             $table->string('codigo',500)->nullable();
             $table->timestamps();
         });
