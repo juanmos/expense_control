@@ -47,6 +47,8 @@
                                                             {{-- <a href="{{ route('afiche.pdf',$afiche->id) }}" class="label theme-bg2 text-white f-12">Descargar</a> --}}
                                                             
                                                             <a href="{{ route('institucion.show',$institucion->id) }}" class="label theme-bg2 text-white f-12">Ver</a>
+                                                            <a href="{{ route('institucion.alumnos',$institucion->id) }}" class="label theme-bg2 text-white f-12">Alumnos</a>
+                                                            <a href="{{ route('institucion.show',$institucion->id) }}" class="label theme-bg2 text-white f-12">Usuarios</a>
                                                             <a href="{{ route('institucion.edit',$institucion->id) }}" class="label theme-bg text-white f-12">Editar</a>
                                                             
                                                             

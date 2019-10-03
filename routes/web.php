@@ -20,12 +20,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
     Route::group(['prefix' => 'admin'], function () {
-        Route::resource('institucion','Admin\InstitucionController');
+        
         
     });
 
     
     Route::group(['prefix' => 'institucion'], function() {
+        Route::resource('institucion','Institucion\InstitucionController');
+        Route::get('/institucion/{id}/{pest?}','Institucion\InstitucionController@show')->name('institucion.show');
         Route::get('/{id}/alumnos','Institucion\AlumnoController@index')->name('institucion.alumnos');
         Route::get('/{id}/alumno/crear','Institucion\AlumnoController@create')->name('institucion.alumno.create');
         Route::post('/alumno/store','Institucion\AlumnoController@store')->name('institucion.alumno.store');
@@ -41,6 +43,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/alumno/{id}/tarjeta/store','Institucion\TarjetaController@store')->name('institucion.alumno.tarjeta.store');
         Route::post('/alumno/{id}/tarjeta/perdida','Institucion\TarjetaController@perdida')->name('institucion.alumno.tarjeta.perdida');
         Route::delete('/alumno/{id}/tarjeta/destroy','Institucion\TarjetaController@destroy')->name('institucion.alumno.tarjeta.eliminar');
+
+        Route::get('{id}/usuario/crear/','Institucion\UsuarioController@create')->name('institucion.usuario.crear');
+        Route::post('/usuario/store/','Institucion\UsuarioController@store')->name('institucion.usuario.store');
+        Route::get('{id}/usuario/editar/{usuario_id}','Institucion\UsuarioController@edit')->name('institucion.usuario.edit');
+        Route::put('/usuario/{id}/update/','Institucion\UsuarioController@update')->name('institucion.usuario.update');
     });
     
     

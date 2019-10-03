@@ -69,6 +69,11 @@ class User extends Authenticatable implements JWTSubject
         return "{$this->nombre} {$this->apellido}";
     }
 
+    public function getTelefonosAttribute()
+    {
+        return "Cel: {$this->celular} Telf: {$this->telefono}";
+    }
+
       /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

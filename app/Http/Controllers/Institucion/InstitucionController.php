@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Institucion;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -58,12 +58,15 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,$pest=null)
     {
-        
+        if($pest==null)$pest='E';
         $institucion = Institucion::find($id);
         $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
             $query->where('name','Alumno');
+        })->with('roles')->get();
+        $usuarios = $institucion->alumnos()->whereHas('roles',function($query){
+            $query->whereIn('name',['Institucion','Institucion-operador']);
         })->with('roles')->get();
         $transacciones = $institucion->transacciones()->orderBy('fecha_hora','desc')->paginate(50);
         $hoy = Carbon::now()->toDateTimeString();
@@ -72,7 +75,7 @@ class InstitucionController extends Controller
                                 ->where('tipo_transaccion_id',2)->get();
         $compras =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('tipo_transaccion_id',1)->get();
-        return view('institucion.show',compact('institucion','alumnos','id','transacciones','compras','recargas'));
+        return view('institucion.show',compact('institucion','alumnos','id','transacciones','compras','recargas','pest','usuarios'));
     }
 
     /**

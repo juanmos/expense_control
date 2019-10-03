@@ -141,47 +141,219 @@
                                 </div>
                             </div>
                             <!-- [ statistics year chart ] end -->
+                            <?php function seleccionado($val,$pes){
+                                if($val==$pes) return 'active show';
+                                else return '';
+                            }?>
                             <!--[ Recent Users ] start-->
+                            
                             <div class="col-xl-8 col-md-6">
-                                <div class="card Recent-Users">
-                                    <div class="card-header">
-                                        <h5>Ultimas transacciones </h5>
+                                <ul class="nav nav-pills" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link {{seleccionado('E',$pest)}}" id="estadisticas-tab" data-toggle="tab" href="#estadisticas" role="tab" aria-controls="estadisticas" aria-selected="false">Estadisticas</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{seleccionado('T',$pest)}}" id="transacciones-tab" data-toggle="tab" href="#transacciones" role="tab" aria-controls="transacciones" aria-selected="true">Transacciones</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{seleccionado('U',$pest)}}" id="usuarios-tab" data-toggle="tab" href="#usuarios" role="tab" aria-controls="usuarios" aria-selected="false">Usuarios</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade {{seleccionado('E',$pest)}}" id="estadisticas" role="tabpanel" aria-labelledby="estadisticas-tab">
+                                        <div class="row">
+                                            <div class="col-xl-6 col-md6">
+                                                <div class="card theme-bg">
+                                                    <div class="card-block">
+                                                        <div class="row align-items-center justify-content-center">
+                                                            <div class="col">
+                                                                <h4 class="text-white">Profit</h4>
+                                                            </div>
+                                                            <div class="col">
+                                                                <h2 class="text-white text-right f-w-300">$3,764</h2>
+                                                            </div>
+                                                        </div>
+                                                        <div class="m-t-50">
+                                                            <h6 class="text-white">Monthly Profit <span class="float-right text-white">$340</span></h6>
+                                                            <h6 class="text-white mt-3">Weekly Profit <span class="float-right text-whitw">$150</span></h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card theme-bg earning-date">
+                                                    <div class="card-header borderless">
+                                                        <h5 class="text-white">Earnings</h5>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="bd-example bd-example-tabs">
+                                                            <div class="tab-content" id="tabContent-pills">
+                                                                <div class="tab-pane fade show active" id="earnings-mon" role="tabpanel" aria-labelledby="pills-earnings-mon">
+                                                                    <h2 class="text-white mb-3 f-w-300">359,234<i class="feather icon-arrow-up"></i></h2>
+                                                                    <span class="text-white mb-4 d-block">TOTAL EARNINGS</span>
+                                                                </div>
+                                                                <div class="tab-pane fade" id="earnings-tue" role="tabpanel" aria-labelledby="pills-earnings-tue">
+                                                                    <h2 class="text-white mb-3 f-w-300">222,586<i class="feather icon-arrow-down"></i></h2>
+                                                                    <span class="text-white mb-4 d-block">TOTAL EARNINGS</span>
+                                                                </div>
+                                                                <div class="tab-pane fade" id="earnings-wed" role="tabpanel" aria-labelledby="pills-earnings-wed">
+                                                                    <h2 class="text-white mb-3 f-w-300">859,745<i class="feather icon-arrow-up"></i></h2>
+                                                                    <span class="text-white mb-4 d-block">TOTAL EARNINGS</span>
+                                                                </div>
+                                                                <div class="tab-pane fade" id="earnings-thu" role="tabpanel" aria-labelledby="pills-earnings-thu">
+                                                                    <h2 class="text-white mb-3 f-w-300">785,684<i class="feather icon-arrow-up"></i></h2>
+                                                                    <span class="text-white mb-4 d-block">TOTAL EARNINGS</span>
+                                                                </div>
+                                                                <div class="tab-pane fade" id="earnings-fri" role="tabpanel" aria-labelledby="pills-earnings-fri">
+                                                                    <h2 class="text-white mb-3 f-w-300">123,486<i class="feather icon-arrow-down"></i></h2>
+                                                                    <span class="text-white mb-4 d-block">TOTAL EARNINGS</span>
+                                                                </div>
+                                                                <div class="tab-pane fade" id="earnings-sat" role="tabpanel" aria-labelledby="pills-earnings-sat">
+                                                                    <h2 class="text-white mb-3 f-w-300">762,963<i class="feather icon-arrow-up"></i></h2>
+                                                                    <span class="text-white mb-4 d-block">TOTAL EARNINGS</span>
+                                                                </div>
+                                                                <div class="tab-pane fade" id="earnings-sun" role="tabpanel" aria-labelledby="pills-earnings-sun">
+                                                                    <h2 class="text-white mb-3 f-w-300">984,632<i class="feather icon-arrow-down"></i></h2>
+                                                                    <span class="text-white mb-4 d-block">TOTAL EARNINGS</span>
+                                                                </div>
+                                                            </div>
+                                                            <ul class="nav nav-pills align-items-center justify-content-center" id="pills-tab" role="tablist">
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link active" id="pills-earnings-mon" data-toggle="pill" href="#earnings-mon" role="tab" aria-controls="earnings-mon" aria-selected="true">Mon</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" id="pills-earnings-tue" data-toggle="pill" href="#earnings-tue" role="tab" aria-controls="earnings-tue" aria-selected="false">Tue</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" id="pills-earnings-wed" data-toggle="pill" href="#earnings-wed" role="tab" aria-controls="earnings-wed" aria-selected="false">Wed</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" id="pills-earnings-thu" data-toggle="pill" href="#earnings-thu" role="tab" aria-controls="earnings-thu" aria-selected="false">Thu</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" id="pills-earnings-fri" data-toggle="pill" href="#earnings-fri" role="tab" aria-controls="earnings-fri" aria-selected="false">Fri</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" id="pills-earnings-sat" data-toggle="pill" href="#earnings-sat" role="tab" aria-controls="earnings-sat" aria-selected="false">Sat</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" id="pills-earnings-sun" data-toggle="pill" href="#earnings-sun" role="tab" aria-controls="earnings-sun" aria-selected="false">Sun</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 col-md-6">
+                                                <div class="card theme-bg gradientcolor">
+                                                    <div class="card-header borderless">
+                                                        <h5 class="text-white">Statistics</h5>
+                                                    </div>
+                                                    <div class="card-block p-0">
+                                                        <div class="p-2 text-center">
+                                                            <a class="text-white text-uppercase f-w-400">Month</a>
+                                                            <a class="btn btn-round bg-white text-uppercase mx-3 px-4 f-w-400">Week</a>
+                                                            <a class="text-white text-uppercase f-w-400">Day</a>
+                                                        </div>
+                                                        <div class="my-3 text-center text-white">
+                                                            <a class=" d-block mb-1">$ 78.89 <span class="feather icon-arrow-up"></span></a>
+                                                            <span>Week2 +15.44</span>
+                                                        </div>
+                                                        <div id="Chartline" class="lineChart ChartShadow" style="height:260px;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="col-xl-6 col-md6">
+                                                
+                                            </div>
+                                        </div>
+                                        
+
                                     </div>
-                                    <div class="card-block px-0 py-3">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover">
-                                                <tbody>
-                                                    @forelse ($transacciones as $transaccion )
-                                                        
-                                                    
-                                                    <tr class="unread">
-                                                        <td><img class="rounded-circle" style="width:40px;" src="{{Storage::url($transaccion->usuario->foto)}}" alt="activity-user"></td>
-                                                        <td>
-                                                            <a href="{{route('institucion.alumno.show',[$id,$transaccion->usuario->id])}} " ><h6 class="mb-1">{{$transaccion->usuario->full_name}} </h6></a>
-                                                            <p class="m-0">{{$transaccion->usuario->telefono}}</p>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-muted">
-                                                                <i class="feather f-24  {{($transaccion->tipo_transaccion->operacion=='+')?'text-c-green icon-trending-up' :'text-c-red icon-trending-down' }} f-10 m-r-15"></i>
-                                                                $ {{number_format($transaccion->valor,2)}}
-                                                            </h6>
-                                                            <p class="m-0">{{$transaccion->tipo_transaccion->tipo}} {{$transaccion->forma_pago->forma_pago}}</p>
-                                                        </td>
-                                                        <td>
-                                                            <p class="m-0">{{date('d-m-Y',strtotime($transaccion->fecha_hora))}}</p>
-                                                            <p class="m-0">{{date('H:i',strtotime($transaccion->fecha_hora))}}</p>
-                                                        </td>
-                                                    </tr>
-                                                    @empty
-                                                    <p>No hay usuarios</p>
-                                                    
-                                                    @endforelse
-                                                </tbody>
-                                            </table>
-                                            {{$transacciones->links()}}
+                                    <div class="tab-pane fade {{seleccionado('T',$pest)}}" id="transacciones" role="tabpanel" aria-labelledby="transacciones-tab">
+                                        <div class="card Recent-Users">
+                                            <div class="card-header">
+                                                <h5>Ultimas transacciones </h5>
+                                            </div>
+                                            <div class="card-block px-0 py-3">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <tbody>
+                                                            @forelse ($transacciones as $transaccion )
+                                                                
+                                                            
+                                                            <tr class="unread">
+                                                                <td><img class="rounded-circle" style="width:40px;" src="{{Storage::url($transaccion->usuario->foto)}}" alt="activity-user"></td>
+                                                                <td>
+                                                                    <a href="{{route('institucion.alumno.show',[$id,$transaccion->usuario->id])}} " ><h6 class="mb-1">{{$transaccion->usuario->full_name}} </h6></a>
+                                                                    <p class="m-0">{{$transaccion->usuario->telefono}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    <h6 class="text-muted">
+                                                                        <i class="feather f-24  {{($transaccion->tipo_transaccion->operacion=='+')?'text-c-green icon-trending-up' :'text-c-red icon-trending-down' }} f-10 m-r-15"></i>
+                                                                        $ {{number_format($transaccion->valor,2)}}
+                                                                    </h6>
+                                                                    <p class="m-0">{{$transaccion->tipo_transaccion->tipo}} {{$transaccion->forma_pago->forma_pago}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    <p class="m-0">{{date('d-m-Y',strtotime($transaccion->fecha_hora))}}</p>
+                                                                    <p class="m-0">{{date('H:i',strtotime($transaccion->fecha_hora))}}</p>
+                                                                </td>
+                                                            </tr>
+                                                            @empty
+                                                            <p>No hay usuarios</p>
+                                                            
+                                                            @endforelse
+                                                        </tbody>
+                                                    </table>
+                                                    {{$transacciones->links()}}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="tab-pane fade {{seleccionado('U',$pest)}}" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
+                                        <a href="{{route('institucion.usuario.crear',[$id])}}" class="btn btn-primary float-right f-12">Crear</a>
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th>Email</th>
+                                                    <th>Cedula</th>
+                                                    <th>Telefonos</th>
+                                                    <th class="text-right">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($usuarios as $user)
+                                                    <tr>
+                                                        <td>
+                                                            <h6 class="m-0">
+                                                                {{$user->full_name}}
+                                                                <i class="fas fa-circle text-c-{{($user->activo)?'green':'red'}} f-10"></i>
+                                                            </h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="m-0">{{$user->email}}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="m-0">{{$user->cedula}}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6 class="m-0">{{$user->telefonos}}</h6>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <a href="{{route('institucion.usuario.edit',[$id,$user->id])}}" class="label theme-bg2 text-white f-12">Editar</a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                                
+                                                
+                                            </tbody>
+                                        </table>
+                                        {{-- {{$visitasTotal->appends(['pest'=>'T'])->links()}} --}}
+                                    </div>
                                 </div>
+                                
                             </div>
                             <!--[ Recent Users ] end-->
 
@@ -591,3 +763,134 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        var chartDatac = [{
+                                                            "Year": "Jan",
+                                                            "value": 50
+                                                        }, {
+                                                            "Year": "Feb",
+                                                            "value": 60
+                                                        }, {
+                                                            "Year": "Mar",
+                                                            "value": 55
+                                                        }, {
+                                                            "Year": "Apr",
+                                                            "value": 62
+                                                        }, {
+                                                            "Year": "May",
+                                                            "value": 55
+                                                        }, {
+                                                            "Year": "Jun",
+                                                            "value": 62
+                                                        }];
+                                                        var chartc = AmCharts.makeChart("Chartline", {
+                                                            "type": "serial",
+                                                            "addClassNames": true,
+                                                            "defs": {
+                                                                "filter": [{
+                                                                        "x": "-50%",
+                                                                        "y": "-50%",
+                                                                        "width": "200%",
+                                                                        "height": "200%",
+                                                                        "id": "blur",
+                                                                        "feGaussianBlur": {
+                                                                            "in": "SourceGraphic",
+                                                                            "stdDeviation": "30"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "id": "shadow",
+                                                                        "x": "-10%",
+                                                                        "y": "-10%",
+                                                                        "width": "120%",
+                                                                        "height": "120%",
+                                                                        "feOffset": {
+                                                                            "result": "offOut",
+                                                                            "in": "SourceAlpha",
+                                                                            "dx": "0",
+                                                                            "dy": "20"
+                                                                        },
+                                                                        "feGaussianBlur": {
+                                                                            "result": "blurOut",
+                                                                            "in": "offOut",
+                                                                            "stdDeviation": "10"
+                                                                        },
+                                                                        "feColorMatrix": {
+                                                                            "result": "blurOut",
+                                                                            "type": "matrix",
+                                                                            "values": "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .2 0"
+                                                                        },
+                                                                        "feBlend": {
+                                                                            "in": "SourceGraphic",
+                                                                            "in2": "blurOut",
+                                                                            "mode": "normal"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "fontSize": 15,
+                                                            "dataProvider": chartDatac,
+                                                            "autoMarginOffset": 0,
+                                                            "marginRight": 0,
+                                                            "categoryField": "Year",
+                                                            "categoryAxis": {
+                                                                "color": '#fff',
+                                                                "gridAlpha": 0,
+                                                                "axisAlpha": 0,
+                                                                "lineAlpha": 0,
+                                                                "offset": -20,
+                                                                "minPeriod": "YYYY",
+                                                                "inside": true,
+                                                            },
+                                                            "valueAxes": [{
+                                                                "fontSize": 0,
+                                                                "inside": true,
+                                                                "gridAlpha": 0,
+                                                                "axisAlpha": 0,
+                                                                "lineAlpha": 0,
+                                                                "minimum": 0,
+                                                                "maximum": 80,
+                                                            }],
+                                                            "chartCursor": {
+                                                                "valueLineEnabled": false,
+                                                                "valueLineBalloonEnabled": false,
+                                                                "cursorAlpha": 0,
+                                                                "zoomable": false,
+                                                                "valueZoomable": false,
+                                                                "cursorColor": "#fff",
+                                                                "categoryBalloonDateFormat": "YYYY",
+                                                                "categoryBalloonColor": "#1dd6d1",
+                                                                "valueLineAlpha": 0
+                                                            },
+                                                            "graphs": [{
+                                                                "id": "g1",
+                                                                "type": "line",
+                                                                "valueField": "value",
+                                                                "bullet": "round",
+                                                                "lineColor": "#ffffff",
+                                                                "lineAlpha": 1,
+                                                                "lineThickness": 3,
+                                                                "fillAlphas": 0,
+                                                                "showBalloon": true,
+                                                                "balloon": {
+                                                                    "drop": true,
+                                                                    "adjustBorderColor": false,
+                                                                    "color": "#000",
+                                                                    "fillAlphas": 0.2,
+                                                                    "bullet": "round",
+                                                                    "bulletBorderAlpha": 1,
+                                                                    "bulletSize": 5,
+                                                                    "hideBulletsCount": 50,
+                                                                    "lineThickness": 2,
+                                                                    "type": "smoothedLine",
+                                                                    "useLineColorForBulletBorder": true,
+                                                                    "valueField": "value",
+                                                                    "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+                                                                },
+                                                            }],
+                                                        });
+                                                    });
+                                                </script>
+@endpush

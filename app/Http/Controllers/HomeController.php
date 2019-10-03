@@ -28,7 +28,7 @@ class HomeController extends Controller
     {
         $user= User::find(Auth::user()->id);
         if($user->hasRole('SuperAdministrador')){
-            return redirect('admin/institucion');
+            return redirect('institucion/institucion');
             //return view('admin.panel');
         }else if($user->hasRole('Administrador') || $user->hasRole('JefeVentas')){
             if($user->primer_login){
