@@ -89,14 +89,25 @@ class TarjetaController extends Controller
         //
     }
 
+    public function perdida(Request $request, $id)
+    {
+        $tarjeta = Tarjeta::find($request->get('tarjeta_id'));
+        $tarjeta->fecha_perdida=Carbon::parse($request->get('fecha_perdida'))->toDateString();
+        $tarjeta->perdida=1;
+        $tarjeta->save();
+        return back();
+    }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        //
+        $tarjeta = Tarjeta::find($request->get('tarjeta_id'));
+        $tarjeta->delete();
+        return back();
     }
 }

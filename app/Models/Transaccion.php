@@ -41,6 +41,10 @@ class Transaccion extends Model
         return $this->morphTo();
     }
 
+    public function tarjeta(){
+        return $this->belongsTo(Transaccion::class,'tarjeta_id');
+    } 
+
     // public function getUsuarioIdAttribute($value) {
     //     return Crypt::decryptString($value);
     // }

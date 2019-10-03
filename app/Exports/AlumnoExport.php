@@ -19,7 +19,7 @@ class AlumnoExport implements FromView
     {
         $usuarios=User::where('institucion_id',$this->id)->whereHas('roles',function($query){
             $query->where('name','Alumno');
-        })->with(['alumno'])->get();
+        })->with(['alumno','tarjetas'])->get();
         return view('alumno.export', compact('usuarios'));
     }
 }

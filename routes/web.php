@@ -39,7 +39,8 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/alumno/{id}/tarjeta/crear','Institucion\TarjetaController@create')->name('institucion.alumno.tarjeta.create');
         Route::post('/alumno/{id}/tarjeta/store','Institucion\TarjetaController@store')->name('institucion.alumno.tarjeta.store');
-        Route::put('/alumno/{id}/tarjeta/update/{tarjeta_id}','Institucion\TarjetaController@update')->name('institucion.alumno.tarjeta.update');
+        Route::post('/alumno/{id}/tarjeta/perdida','Institucion\TarjetaController@perdida')->name('institucion.alumno.tarjeta.perdida');
+        Route::delete('/alumno/{id}/tarjeta/destroy','Institucion\TarjetaController@destroy')->name('institucion.alumno.tarjeta.eliminar');
     });
     
     

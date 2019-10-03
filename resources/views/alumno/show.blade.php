@@ -40,41 +40,34 @@
                                         
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-block border-bottom">
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-auto">
-                                                <i class="feather icon-trending-up f-30 text-c-green"></i>
+                                <div class="card theme-bg">
+                                    <div class="card-block">
+                                        <div class="row align-items-center justify-content-center">
+                                            <div class="col">
+                                                <h4 class="text-white">Saldo</h4>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300 text-c-green" >$ {{$recargas->sum('valor')}}</h3>
-                                                <span class="d-block text-uppercase">#{{$recargas->count()}} RECARGAS DEL ULTIMO MES</span>
+                                                <h2 class="text-white text-right f-w-300">${{number_format($usuario->saldo,2)}}</h2>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="card-block">
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-auto">
-                                                <i class="feather icon-trending-down f-30 text-c-red"></i>
-                                            </div>
-                                            <div class="col">
-                                                <h3 class="f-w-300 text-c-red">$ {{$compras->sum('valor')}}</h3>
-                                                <span class="d-block text-uppercase">#{{$compras->count()}} COMPRAS DEL ULTIMO MES</span>
-                                            </div>
+                                        <div class="m-t-50">
+                                            <h6 class="text-white"><i class="feather icon-trending-up f-16 text-c-green"></i> Recargas del mes ({{$recargas->count()}}) <span class="float-right text-white">${{$recargas->sum('valor')}}</span></h6>
+                                            <h6 class="text-white mt-3"><i class="feather icon-trending-down f-16 text-c-red"></i> Compras del mes ({{$compras->count()}}) <span class="float-right text-whitw">${{$compras->sum('valor')}}</span></h6>
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <div class="card Recent-Users">
                                     <div class="card-header">
                                         <h5>TARJETAS</h5>
                                         <a href="" data-toggle="modal" data-target="#tarjetaModa" class="label theme-bg text-white f-12 float-right">Crear tarjeta</a>
                                     </div>
                                     <div class="card-block px-0 py-3">
-                                        @forelse ($usuario->tarjetas as $tarjeta)
-                                            <div class="card theme-bg bitcoin-wallet">
+                                        @forelse ($usuario->tarjetas as $index => $tarjeta)
+                                            <div class="card theme-bg{{($index%2 ==0)?'2':''}} bitcoin-wallet  mb-0">
                                                 <div class="card-block">
                                                     <h5 class="text-white mb-2">Tarjeta {{$tarjeta->tipo_tarjeta->tipo_tarjeta}}</h5>
-                                                    <h2 class="text-white mb-3 f-w-300">$0</h2>
+                                                    <h2 class="text-white mb-3 f-w-300">$ {{$tarjeta->transacciones()->where('tipo_transaccion_id',2)->get()->sum('valor')}}</h2>
                                                     <span class="text-white d-block">{{($tarjeta->cupo>0)?'Cupo: $'.$tarjeta->cupo:'Sin cupo establecido'}}</span>
                                                     <h6 class="f-w-600 text-white">
                                                         @if($tarjeta->perdida) PERDIDA @else
@@ -86,7 +79,20 @@
                                             </div>
                                             <div class="collapse" id="tarjeta-{{$tarjeta->id}}">
                                                 <div class="card-body">
+                                                    @if(!$tarjeta->perdida)
                                                     <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($tarjeta->codigo)) !!} ">
+                                                    <button type="button" data-toggle="modal" data-target="#tarjetaPerdidaModa" class="btn btn-warning tarjetaPerdidaModaBtn" myid="{{$tarjeta->id}}">Marcar como perdida</button>
+                                                    @else
+                                                    <h5 class="m-0"><small>Tarjeta perdida el </small>{{\Carbon\Carbon::parse($tarjeta->fecha_perdida)->format('d-m-Y')}}</h5>
+                                                    <button type="button" class="btn btn-danger sweet-multiple" myid="{{$tarjeta->id}}">Eliminar</button>
+                                                    
+                                                    {!! Form::open(['route'=>['institucion.alumno.tarjeta.eliminar',$usuario->id],'method'=>'POST','id'=>'elimina_tarjeta_'.$tarjeta->id]) !!}
+                                                        
+                                                        {!! Form::hidden('_method', 'DELETE') !!}
+                                                        {!! Form::hidden('tarjeta_id', $tarjeta->id) !!}
+                                                    {!! Form::close() !!}
+                                                    
+                                                    @endif
                                                 </div>
                                             </div>
                                         @empty
@@ -287,16 +293,91 @@
     </div>
 </div>
 
+<!-- Tarjeta perdida-->
+<div class="modal fade" id="tarjetaPerdidaModa" tabindex="-1" role="dialog" aria-labelledby="tarjetaPerdidaModaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        {!! Form::open(['route'=>['institucion.alumno.tarjeta.perdida',$usuario->id],'method'=>"POST"]) !!}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tarjeta perdida</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Fecha de perdida:</label>
+                        {!! Form::text('fecha_perdida', '', ["class"=>"form-control datepicker"]) !!}
+                    </div>
+                    <input type="hidden" value="" name="tarjeta_id" id="tarjeta_perdida_id"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+        {!! Form::close() !!}
+    </div>
+</div>
+
 @endsection
 @push('scripts')
 <script src='{{asset("assets/plugins/select2/js/select2.full.min.js")}}'></script>
+<script src='{{asset("assets/plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js")}}'></script>
+<script src='{{asset("assets/plugins/sweetalert/js/sweetalert.min.js")}}'></script>
 <script>
     $(document).ready(function(){
         $(".select").select2();
+        $('.datepicker').datepicker({
+            autoclose:true
+        });
+        $('.tarjetaPerdidaModaBtn').on('click', function (e) {
+            $('#tarjeta_perdida_id').val($(this).attr('myid'));
+        });
+        $('.sweet-multiple').on('click', function() {
+            var tid=$(this).attr('myid');
+            swal({
+                    title: "Estas seguro?",
+                    text: "Estas seguro que desear eliminar la tarjeta",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        swal("La tarjeta ha sido elimina con exito!", {
+                            icon: "success",
+                        });
+                        $('#elimina_tarjeta_'+tid).submit();
+                    } else {
+                    }
+                });
+        });
     });
 
 </script>
 @endpush
 @push('styles')
 <link href='{{asset("assets/plugins/select2/css/select2.min.css")}}' rel='stylesheet' />
+{{-- <link href="{{asset('assets/plugins/bootstrap-datetimepicker/css/prettify.css')}}" rel="stylesheet">
+<link href="{{asset('assets/plugins/bootstrap-datetimepicker/css/docs.css')}}" rel="stylesheet"> --}}
+<link href="{{asset('assets/plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css')}}" rel="stylesheet">
+<script>
+        var page = {
+            bootstrap: 3
+        };
+
+        function swap_bs() {
+            page.bootstrap = 3;
+        }
+    </script>
+    <style>
+        .datepicker>.datepicker-days {
+            display: block;
+        }
+
+        ol.linenums {
+            margin: 0 0 0 -8px;
+        }
+    </style>
 @endpush
