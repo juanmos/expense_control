@@ -107,7 +107,8 @@
                                                             <p class="m-0">{{$transaccion->tipo_transaccion->tipo}} con {{$transaccion->forma_pago->forma_pago}}</p>
                                                         </td>
                                                         <td>
-                                                            
+                                                            <p class="m-0">{{date('d-m-Y',strtotime($transaccion->fecha_hora))}}</p>
+                                                            <p class="m-0">{{date('H:i',strtotime($transaccion->fecha_hora))}}</p>
                                                         </td>
                                                     </tr>
                                                     @empty
