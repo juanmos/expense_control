@@ -18,6 +18,7 @@ class CreateTransaccionsTable extends Migration
             $table->integer('tipo_transaccion_id')->default(1);
             $table->morphs('transaccionable');
             $table->integer('usuario_id');
+            $table->integer('tarjeta_id');
             $table->dateTimeTz('fecha_hora')->nullable();
             $table->decimal('valor',12,3)->default(0);
             $table->integer('usuario_crea_id');

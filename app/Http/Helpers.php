@@ -2,6 +2,7 @@
 namespace App\Http;
 
 use Illuminate\Support\Facades\Crypt;
+use App\Models\Tarjeta;
 use App\Models\User;
 use Carbon\Carbon;
 use Storaga;
@@ -10,8 +11,9 @@ use Mail;
 use App;
 
 class Helpers{
-    public static function creaQR(){
-        $usuario =User::find($alumno_id);
+    public static function creaQR($usuario_id,$tarjeta_id){
+        $usuario =User::find($usuario_id);
+        $tarjeta=Tarjeta::find($tarjeta_id);
         $cryptId=base64_encode($usuario->id);
         $qr=[
             'c'=>$usuario->cedula,
@@ -19,10 +21,8 @@ class Helpers{
             'i'=>$cryptId,
             'a'=>$usuario->alumno->ano_lectivo,
             'p'=>$usuario->alumno->curso,
-            'v'=>$usuario->tarjeta
+            'v'=>$tarjeta->fecha_vencimiento
         ];
-        $usuario->codigo=Crypt::encrypt($qr);
-        $usuario->save();
-        return true;
+        return Crypt::encrypt($qr);;
     }
 }

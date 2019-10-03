@@ -36,6 +36,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}/alumno/codificar/{alumno_id}','Institucion\AlumnoController@codificar')->name('institucion.alumno.codificar');
         Route::get('/{id}/alumno/edit/{alumno_id}','Institucion\AlumnoController@edit')->name('institucion.alumno.edit');
         Route::put('/alumno/update/{alumno_id}','Institucion\AlumnoController@update')->name('institucion.alumno.update');
+
+        Route::get('/alumno/{id}/tarjeta/crear','Institucion\TarjetaController@create')->name('institucion.alumno.tarjeta.create');
+        Route::post('/alumno/{id}/tarjeta/store','Institucion\TarjetaController@store')->name('institucion.alumno.tarjeta.store');
+        Route::put('/alumno/{id}/tarjeta/update/{tarjeta_id}','Institucion\TarjetaController@update')->name('institucion.alumno.tarjeta.update');
     });
     
     

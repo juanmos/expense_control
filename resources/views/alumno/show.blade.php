@@ -6,7 +6,14 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
-
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{url('/')}}"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('institucion.show',$id)}}">Institución</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('institucion.alumnos',$id)}}">Alumnos</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{$usuario->full_name}}</li>
+                    </ol>
+                </nav>
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">
@@ -59,18 +66,43 @@
                                 </div>
                                 <div class="card Recent-Users">
                                     <div class="card-header">
-                                        <h5>QR</h5>
-                                        {{-- <a href="{{route('cliente.listado',$usuario->id)}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Asignar cliente</a> --}}
+                                        <h5>TARJETAS</h5>
+                                        <a href="" data-toggle="modal" data-target="#tarjetaModa" class="label theme-bg text-white f-12 float-right">Crear tarjeta</a>
                                     </div>
                                     <div class="card-block px-0 py-3">
-                                        <div class="table-responsive">
-                                            @if($usuario->codigo!=null)
-                                            {{--  {!!  QrCode::format('svg')->size(300)->generate($usuario->codigo); !!}  --}}
-                                            <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($usuario->codigo)) !!} ">
-                                            @else
-                                            <a href="{{route('institucion.alumno.codificar',[$id,$usuario->id])}}" class="btn btn-primary">Codificar</a>
-                                            @endif
-                                        </div>
+                                        @forelse ($usuario->tarjetas as $tarjeta)
+                                            <div class="card theme-bg bitcoin-wallet">
+                                                <div class="card-block">
+                                                    <h5 class="text-white mb-2">Tarjeta {{$tarjeta->tipo_tarjeta->tipo_tarjeta}}</h5>
+                                                    <h2 class="text-white mb-3 f-w-300">$0</h2>
+                                                    <span class="text-white d-block">{{($tarjeta->cupo>0)?'Cupo: $'.$tarjeta->cupo:'Sin cupo establecido'}}</span>
+                                                    <h6 class="f-w-600 text-white">
+                                                        @if($tarjeta->perdida) PERDIDA @else
+                                                        VALIDA HASTA <span class="f-w-300 m-l-10">{{date('m/Y',strtotime($tarjeta->fecha_vencimiento))}}</span>
+                                                        @endif
+                                                    </h6>
+                                                    <a href="" data-toggle="collapse" data-target="#tarjeta-{{$tarjeta->id}}" aria-expanded="false" aria-controls="tarjeta-{{$tarjeta->id}}"><i class="mdi mdi-qrcode-scan f-70 text-white"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="collapse" id="tarjeta-{{$tarjeta->id}}">
+                                                <div class="card-body">
+                                                    <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($tarjeta->codigo)) !!} ">
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="card-block border-bottom">
+                                                <div class="row d-flex align-items-center">
+                                                    <div class="col-auto">
+                                                        <i class="feather icon-credit-card f-30"></i>
+                                                    </div>
+                                                    <div class="col">
+                                                        <h3 class="f-w-300 text-c-red" >No hay tarjetas creadas</h3>
+                                                        <h6 class="text-muted mt-4 mb-0"> </h6>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforelse
                                     </div>
                                 </div>
                             </div>
@@ -225,90 +257,46 @@
         </div>
     </div>
 </div>
-{{-- @include('includes.modalNuevaVisita') --}}
+<!-- Nueva tarjeta-->
+<div class="modal fade" id="tarjetaModa" tabindex="-1" role="dialog" aria-labelledby="tarjetaModaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        {!! Form::open(['route'=>['institucion.alumno.tarjeta.store',$usuario->id],'method'=>"POST"]) !!}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tarjetas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Tipo de tarjeta:</label>
+                        {!! Form::select('tipo_tarjeta_id', $tipo_tarjetas, 0, ["class"=>"form-control"]) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Deseas establecer un cupo mensual de gasto, si no dejalo en 0:</label>
+                        {!! Form::text('cupo_mensual', 0, ["class"=>"form-control"]) !!}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Crear tarjeta</button>
+            </div>
+        </div>
+        {!! Form::close() !!}
+    </div>
+</div>
+
 @endsection
 @push('scripts')
-{{-- <script src='{{asset("assets/plugins/fullcalendar/packages/core/main.js")}}'></script>
-<script src='{{asset("assets/plugins/fullcalendar/packages/interaction/main.js")}}'></script>
-<script src='{{asset("assets/plugins/fullcalendar/packages/daygrid/main.js")}}'></script>
-<script src='{{asset("assets/plugins/fullcalendar/packages/timegrid/main.js")}}'></script>
-<script src='{{asset("assets/plugins/fullcalendar/packages/list/main.js")}}'></script>
-<script src='{{asset("assets/plugins/fullcalendar/packages/core/locales-all.js")}}'></script>
+<script src='{{asset("assets/plugins/select2/js/select2.full.min.js")}}'></script>
 <script>
-    var calendar=null
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-
-    calendar = new FullCalendar.Calendar(calendarEl, {
-        plugins: [ 'dayGrid', 'timeGrid', 'list', 'interaction' ],
-        locale:'es',
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        },
-        navLinks: true, // can click day/week names to navigate views
-        editable: true,
-        eventLimit: true, // allow "more" link when too many events
-        defaultView:'{{Auth::user()->empresa->configuracion->defaultView}}',
-        hiddenDays: [ 0 ],
-        minTime:"{{Auth::user()->empresa->configuracion->min_time}}",
-        maxTime:'{{Auth::user()->empresa->configuracion->max_time}}',
-        scrollTime:'08:00:00',
-        slotDuration:'00:15:00',
-        dateClick: function(info) {
-            var fecha=moment(info.dateStr);
-            $('#modalBuscaCliente').modal('show');
-            $('#mesModal').val(fecha.format('MM'))
-            $('#diaModal').val(fecha.format('DD'));
-            $('#anioModal').val(fecha.format('YYYY'));
-            $('#horaModal').val(fecha.format('HH'));
-            $('#minModal').val(fecha.format('mm'));
-        },
-        eventDrop: function(event) {
-            if (!confirm("La visita a "+event.event.title + " se reagendara para el: " + moment(event.event.start).format('dddd, DD-MM-YYYY HH:mm')+". Es esto correcto?")) {
-                event.revert();
-            }else{
-                $.ajax({
-                    url: '{{url("e/visita")}}/'+event.event.id,
-                    type: 'PUT',
-                    data:{_token:"{{csrf_token()}}",fecha_inicio:moment(event.event.start).format('YYYY-MM-DD HH:mm:ss'),fecha_fin:moment(event.event.end).format('YYYY-MM-DD HH:mm:ss')},
-                    success: function(response) {
-                        calendar.refetchEvents();
-                    }
-                });
-            }
-        },
-        eventResize: function(event) {
-            if (!confirm("La visita a "+event.event.title + " terminara ahora: " + moment(event.event.end).format('dddd, DD-MM-YYYY HH:mm')+". Es esto correcto?")) {
-                event.revert();
-            }else{
-                $.ajax({
-                    url: '{{url("e/visita")}}/'+event.event.id,
-                    type: 'PUT',
-                    data:{_token:"{{csrf_token()}}",fecha_fin:moment(event.event.end).format('YYYY-MM-DD HH:mm:ss')},
-                    success: function(response) {
-                        calendar.refetchEvents();
-                    }
-                });
-            }
-        },
-        eventSources: [
-            {
-            url: "{{route('visita.vendedor',$usuario->id)}}", // use the `url` property
-            }
-        ]
+    $(document).ready(function(){
+        $(".select").select2();
     });
 
-    calendar.render();
-  });
-
-</script> --}}
+</script>
 @endpush
 @push('styles')
-<link href='{{asset("assets/plugins/fullcalendar/packages/core/main.css")}}' rel='stylesheet' />
-<link href='{{asset("assets/plugins/fullcalendar/packages/daygrid/main.css")}}' rel='stylesheet' />
-<link href='{{asset("assets/plugins/fullcalendar/packages/timegrid/main.css")}}' rel='stylesheet' />
-<link href='{{asset("assets/plugins/fullcalendar/packages/list/main.css")}}' rel='stylesheet' />
-<link href='{{asset("assets/plugins/fullcalendar/packages/bootstrap/main.css")}}' rel='stylesheet' />
+<link href='{{asset("assets/plugins/select2/css/select2.min.css")}}' rel='stylesheet' />
 @endpush

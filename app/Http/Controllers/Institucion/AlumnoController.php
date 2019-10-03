@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Exports\AlumnoExport;
 use App\Imports\AlumnoImport;
+use App\Models\TipoTarjeta;
 use App\Models\Institucion;
 use App\Models\Transaccion;
 use App\Models\User;
@@ -87,7 +88,8 @@ class AlumnoController extends Controller
         $compras =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('usuario_id',$alumno_id)
                                 ->where('tipo_transaccion_id',1)->get();
-        return view('alumno.show',compact('usuario','transacciones','recargas','compras','id'));
+        $tipo_tarjetas=TipoTarjeta::get()->pluck('tipo_tarjeta','id');                                
+        return view('alumno.show',compact('usuario','transacciones','recargas','compras','id','tipo_tarjetas'));
     }
 
     /**

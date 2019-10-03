@@ -6,7 +6,13 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
-
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{url('/')}}"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('institucion.index')}}">Instituciones</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{$institucion->nombre}}</li>
+                    </ol>
+                </nav>
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">

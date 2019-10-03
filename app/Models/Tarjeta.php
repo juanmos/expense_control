@@ -10,7 +10,7 @@ class Tarjeta extends Model
 {
     // use Encryptable;
 
-    protected $fillable=['usuario_id','tipo_tarjeta_id','cupo_mensual','perdida','fecha_solicitud','fecha_emision','fecha_entrega','fecha_vencimiento','fecha_perdida','codigo'];
+    protected $fillable=['usuario_id','tipo_tarjeta_id','cupo_mensual','perdida','fecha_solicitud','fecha_emision','fecha_entrega','fecha_vencimiento','fecha_perdida','codigo','usuario_crea_id'];
     // protected $encryptable = [
     //     'usuario_id','tipo_tarjeta_id','cupo_mensual','perdida','fecha_solicitud','fecha_emision','fecha_entrega','fecha_vencimiento','fecha_perdida'
     // ];

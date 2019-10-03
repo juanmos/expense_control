@@ -21,12 +21,12 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::delete('usuario/{plataforma}', 'APIAuthController@logout');//Cerrar sesion del usuario actual
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
 
-    Route::post('alumno/saldo','Bares\PaymentController@saldo');
+    Route::post('alumno/saldo','Transacciones\PaymentController@saldo');
     Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
 
-    Route::post('bares/cobrar','Bares\PaymentController@cobrar');
-    Route::post('bares/recargar','Bares\PaymentController@recargar');
-    Route::get('bares/forma_pago','Bares\PaymentController@forma_pago');
-    Route::get('bares/transacciones','Bares\PaymentController@transacciones');
-    Route::get('bares/transacciones/hoy','Bares\PaymentController@transacciones_hoy');
+    Route::post('payment/cobrar','Transacciones\PaymentController@cobrar');
+    Route::post('payment/recargar','Transacciones\PaymentController@recargar');
+    Route::get('payment/forma_pago','Transacciones\PaymentController@forma_pago');
+    Route::get('payment/transacciones','Transacciones\PaymentController@transacciones');
+    Route::get('payment/transacciones/hoy','Transacciones\PaymentController@transacciones_hoy');
 });

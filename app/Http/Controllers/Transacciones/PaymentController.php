@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Bares;
+namespace App\Http\Controllers\Transacciones;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

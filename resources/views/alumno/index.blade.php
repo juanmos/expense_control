@@ -6,7 +6,13 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
-
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{url('/')}}"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('institucion.show',$id)}}">Institución</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Alumno</li>
+                    </ol>
+                </nav>
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">
@@ -53,7 +59,7 @@
                                                             {{-- <a href="{{ route('afiche.pdf',$afiche->id) }}" class="label theme-bg2 text-white f-12">Descargar</a> --}}
                                                             
                                                             <a href="{{ route('institucion.alumno.show',[$id,$user->id]) }}" class="label theme-bg2 text-white f-12">Ver</a>
-                                                            {{-- <a href="{{ route('alumno.edit',$alumno->id) }}" class="label theme-bg text-white f-12">Editar</a> --}}
+                                                            <a href="{{ route('institucion.alumno.edit',[$id,$user->id]) }}" class="label theme-bg text-white f-12">Editar</a>
                                                             
                                                             
                                                         </td>

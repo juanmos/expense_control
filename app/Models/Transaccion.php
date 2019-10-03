@@ -14,7 +14,7 @@ class Transaccion extends Model
 {
     //use Encryptable;
 
-    protected $fillable=[ 'tipo_transaccion_id','usuario_id','fecha_hora','valor','usuario_crea_id','forma_pago_id','ubicacion','telefono_uuid','transaccionable_id','transaccionable_type','usuario_crea_ip','dispositivo'];
+    protected $fillable=[ 'tipo_transaccion_id','usuario_id','fecha_hora','valor','usuario_crea_id','forma_pago_id','ubicacion','telefono_uuid','transaccionable_id','transaccionable_type','usuario_crea_ip','dispositivo','tarjeta_id'];
     protected $with =['tipo_transaccion:id,tipo,operacion','forma_pago:id,forma_pago','usuario:id,nombre,apellido,foto,telefono,celular','usuario_crea:id,nombre,apellido,telefono,celular'];
     protected $hidden = [
         'created_at','updated_at'

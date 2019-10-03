@@ -25,6 +25,7 @@ class CreateTarjetasTable extends Migration
             $table->dateTimeTz('fecha_vencimiento');
             $table->dateTimeTz('fecha_perdida')->nullable();
             $table->string('codigo',500)->nullable();
+            $table->integer('usuario_crea_id');
             $table->timestamps();
         });
     }
