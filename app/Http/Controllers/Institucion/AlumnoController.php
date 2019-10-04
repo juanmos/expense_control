@@ -14,6 +14,7 @@ use App\Models\Transaccion;
 use App\Models\Tarjeta;
 use App\Models\User;
 use Carbon\Carbon;
+use Yajra\Datatables\Datatables;
 use Storage;
 use Artisan;
 use Auth;
@@ -29,10 +30,17 @@ class AlumnoController extends Controller
     public function index($id)
     {
         $institucion = Institucion::find($id);
+        
+        return view('alumno.index',compact('institucion','id'));
+    }
+
+    public function alumnosData($id)
+    {
+        $institucion = Institucion::find($id);
         $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
             $query->where('name','Alumno');
         })->with('alumno')->get();
-        return view('alumno.index',compact('institucion','id','alumnos'));
+        return Datatables::of($alumnos)->make(true);
     }
 
     /**

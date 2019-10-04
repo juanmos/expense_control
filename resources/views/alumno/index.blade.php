@@ -32,12 +32,12 @@
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
-                                            @if($alumnos->count()>0)
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th>Codigo</th>
                                                         <th>Nombre</th>
+                                                        <th>Apellido</th>
                                                         <th>Telefono</th>
                                                         <th>Cedula</th>
                                                         <th>Curso</th>
@@ -45,34 +45,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($alumnos as $user)
-                                                    <tr class="unread"></tr>
-                                                        <td>{{$user->id}}</td>
-                                                        <td>
-                                                            <img class="rounded-circle" style="width:40px;" src="{{Storage::url($user->foto)}}" alt="activity-user">
-                                                            {{$user->full_name}}
-                                                        </td>
-                                                        <td>{{$user->telefono}}</td>
-                                                        <td>{{$user->cedula}}</td>
-                                                        <td>{{$user->alumno['curso']}}</td>
-                                                        <td>
-                                                            {{-- <a href="{{ route('afiche.pdf',$afiche->id) }}" class="label theme-bg2 text-white f-12">Descargar</a> --}}
-                                                            
-                                                            <a href="{{ route('institucion.alumno.show',[$id,$user->id]) }}" class="label theme-bg2 text-white f-12">Ver</a>
-                                                            <a href="{{ route('institucion.alumno.edit',[$id,$user->id]) }}" class="label theme-bg text-white f-12">Editar</a>
-                                                            
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                    
-                                                    @endforeach
                                                 </tbody>
                                             </table>
-                                            {{-- {{ $instituciones->links() }} --}}
-                                            @else
-                                            <h4>No hay alumnos registrados</h4>
-                                            <a class="btn btn-primary" href="{{route('institucion.alumno.create',$id)}}"><span class="pcoded-micon"><i class="feather icon-plus-circle"></i></span><span class="pcoded-mtext">Crear alumno</span></a>
-                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -90,3 +64,31 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
+<script>
+$(function() {
+    $('.table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{!! route('institucion.alumnos.data',$id) !!}",
+        columns: [
+            { data: 'id', name: 'id' },
+            { data: 'nombre', name: 'nombre' },
+            { data: 'apellido', name: 'apellido' },
+            { data: 'telefono', name: 'telefono' },
+            { data: 'cedula', name: 'cedula' },
+            { data: 'alumno.curso', name: 'updated_at' },
+            { "data": "id", render: function (dataField) { 
+                return '<a href="{{ url("institucion/".$id."/alumno/")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a> <a href="{{ url("institucion/".$id."/alumno/edit/")}}/'+dataField+'"" class="label theme-bg text-white f-12">Editar</a>';
+                    
+                } 
+            }
+        ]
+    });
+});
+</script>
+@endpush
+@push('styles')
+<link rel="stylesheet" href='{{asset("assets/plugins/data-tables/css/datatables.min.css")}}'>
+@endpush

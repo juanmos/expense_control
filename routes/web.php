@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('institucion','Institucion\InstitucionController');
         Route::get('/institucion/{id}/{pest?}','Institucion\InstitucionController@show')->name('institucion.show');
         Route::get('/{id}/alumnos','Institucion\AlumnoController@index')->name('institucion.alumnos');
+        Route::get('/{id}/alumnos/data','Institucion\AlumnoController@alumnosData')->name('institucion.alumnos.data');
         Route::get('/{id}/alumno/crear','Institucion\AlumnoController@create')->name('institucion.alumno.create');
         Route::post('/alumno/store','Institucion\AlumnoController@store')->name('institucion.alumno.store');
         Route::get('/{id}/alumno/cargar','Institucion\AlumnoController@cargar')->name('institucion.alumno.cargar');
