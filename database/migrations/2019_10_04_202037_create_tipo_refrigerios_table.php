@@ -19,6 +19,7 @@ class CreateTipoRefrigeriosTable extends Migration
             $table->string('tipo');
             $table->text('descripcion')->nullable();
             $table->decimal('costo',10,2)->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

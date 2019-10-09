@@ -18,10 +18,33 @@
                     <a href="{{route('home')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Panel de control</span></a>
                 </li> --}}
                 @if(Auth::user()->hasRole('SuperAdministrador'))
-                <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item active">
+                <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item {{(Route::currentRouteName()=='institucion.index')?'active':''}}">
                     <a href="{{route('institucion.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Instituciones</span></a>
                 </li>
                 @endif
+                @if(Auth::user()->hasRole('Institucion'))
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.show')?'active':''}}">
+                    <a href="{{route('institucion.show',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Inicio</span></a>
+                </li>
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.alumnos')?'active':''}}">
+                    <a href="{{route('institucion.alumnos',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Alumnos</span></a>
+                </li>
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.refrigerio.index')?'active':''}}">
+                    <a href="{{route('institucion.refrigerio.index')}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Refrigerios</span></a>
+                </li>
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Administración</label>
+                </li>
+                <li data-username="basic components Button Alert Badges breadcrumb Paggination progress Tooltip popovers Carousel Cards Collapse Tabs pills Modal Grid System Typography Extra Shadows Embeds" class="nav-item pcoded-hasmenu {{(Route::currentRouteName()=='institucion.refrigerios.tipos.index' || Route::currentRouteName()=='institucion.usuario.index')?'active pcoded-trigger':''}}">
+                    <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-settings"></i></span><span class="pcoded-mtext">Administración</span></a>
+                    <ul class="pcoded-submenu">                        
+                        <li class="{{(Route::currentRouteName()=='institucion.refrigerios.tipos.index')?'active':''}}"><a href="{{route('institucion.refrigerios.tipos.index')}}" class="">Tipos de refrigerios</a></li>
+                        <li class="{{(Route::currentRouteName()=='institucion.usuario.index')?'active':''}}"><a href="{{route('institucion.usuario.index')}}" class="">Usuarios</a></li>
+                        {{-- <li class=""><a href="{{route('configuracion.edit',Auth::user()->empresa_id)}}" class="">Configuraciones</a></li> --}}
+                    </ul>
+                </li>
+                @endif
+                
                 {{-- @if(!Auth::user()->hasRole('SuperAdministrador'))
                 <li data-username="Table bootstrap datatable footable" class="nav-item">
                     <a href="{{route('cliente.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-server"></i></span><span class="pcoded-mtext">Clientes</span></a>

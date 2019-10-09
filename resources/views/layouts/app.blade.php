@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="{{asset('assets/plugins/animation/css/animate.min.css')}}">
     <!-- vendor css -->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css')}}" />
     @stack('styles')
 </head>
 <body>
@@ -280,16 +280,16 @@
             @yield('content')
         </main> --}}
     </div>
-    <script src="{{asset('assets/js/vendor-all.min.js')}}"></script>
-	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('assets/js/pcoded.min.js')}}"></script>
+    <script src="{{asset('assets/js/vendor-all.js')}}?v2"></script>
+	<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}?v2"></script>
+    <script src="{{asset('assets/js/pcoded.js')}}?v2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/es.js"></script>
-    <script src="{{asset('assets/plugins/notify/bootstrap-notify.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/plugins/notify/bootstrap-notify.min.js')}}"></script> --}}
+    <script type="text/javascript" src="{{asset('assets/plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js')}}"></script>
     <!-- Scripts -->
     {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
-    <script>
+    {{-- <script>
         $(document).ready(function(){
             $('.datetime').datetimepicker({
                 format: 'YYYY/MM/DD HH:mm:ss',
@@ -304,7 +304,7 @@
                 }
             });
         })
-    </script>
+    </script> --}}
     @stack('scripts')
 </body>
 </html>

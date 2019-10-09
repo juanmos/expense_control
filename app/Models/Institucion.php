@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TipoRefrigerio;
 use App\Models\EstadoInstitucion;
 use App\Models\Transaccion;
 use App\Models\Configuracion;
@@ -32,5 +33,10 @@ class Institucion extends Model
     public function transacciones()
     {
         return $this->morphMany('App\Models\Transaccion', 'transaccionable');
+    }
+
+    public function tipo_refrigerio()
+    {
+        return $this->hasMany(TipoRefrigerio::class, 'institucion_id');
     }
 }

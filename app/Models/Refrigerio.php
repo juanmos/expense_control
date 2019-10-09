@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\TipoRefrigerio;
 use App\Models\Institucion;
 
 class Refrigerio extends Model
 {
+    use SoftDeletes;
     protected $fillable=['tipo_refrigerio_id','institucion_id','userable','dias'];
 
     public function institucion()

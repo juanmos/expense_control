@@ -19,6 +19,7 @@ class CreateRefrigeriosTable extends Migration
             $table->integer('institucion_id');
             $table->morphs('userable');
             $table->json('dias');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

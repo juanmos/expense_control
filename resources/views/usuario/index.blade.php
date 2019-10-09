@@ -56,7 +56,7 @@
                                                             <i class="fas fa-circle {{($user->activo)?'text-c-green':'text-c-red'}} f-10 m-r-15"></i>
                                                         </td>
                                                         <td>{{$user->email}}</td>
-                                                        <td>{{$user->telefono}}</td>
+                                                        <td>{{$user->telefonos}}</td>
                                                         <td>{{$user->getRoleNames()->implode(',')}}</td>
                                                         <td>
                                                         @if(Request::is('e/usuario/asignar'))  
@@ -70,12 +70,12 @@
                                                                 @if($user->trashed())
                                                                     <a href="{{ route('empresa.usuario.restaurar',$user->id) }}" class="label theme-bg2 text-white f-12">Restaurar</a>
                                                                 @else
-                                                                    <a href="{{ route('empresa.usuario.show',$user->id) }}" class="label theme-bg2 text-white f-12">Ver</a>
-                                                                    <a href="{{ route('empresa.usuario.edit',$user->id) }}" class="label theme-bg text-white f-12">Editar</a>
-                                                                    {!! Form::open(['route'=>['empresa.usuario.destroy',$user->id],'method'=>'POST','style'=>'display:inline-block']) !!}
+                                                                    <a href="{{ route('institucion.usuario.show',$user->id) }}" class="btn btn-success btn-rounded btn-sm f-12">Ver</a>
+                                                                    <a href="{{ route('institucion.usuario.edit',[Auth::user()->institucion_id,$user->id]) }}" class="btn btn-primary btn-rounded btn-sm f-12">Editar</a>
+                                                                    {!! Form::open(['route'=>['institucion.usuario.destroy',$user->id],'method'=>'POST','style'=>'display:inline-block']) !!}
                                                                     <input type="hidden" value="DELETE" name="_method"/>
                                                                     {!! Form::token() !!}
-                                                                    <button type="submit" class="label theme-danger text-white f-12">Eliminar</button>
+                                                                    <button type="submit" class="btn btn-danger btn-rounded btn-sm f-12">Eliminar</button>
                                                                     {!! Form::close() !!}
                                                                 @endif
                                                             @endif

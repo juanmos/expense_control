@@ -30,7 +30,10 @@ class HomeController extends Controller
         if($user->hasRole('SuperAdministrador')){
             return redirect('institucion/institucion');
             //return view('admin.panel');
-        }else if($user->hasRole('Administrador') || $user->hasRole('JefeVentas')){
+        }else if($user->hasRole('Institucion')){
+            return redirect()->route('institucion.show',$user->institucion_id);
+        }
+        else if($user->hasRole('Administrador') || $user->hasRole('JefeVentas')){
             if($user->primer_login){
                 return redirect('/e/usuario/'.$user->id.'/edit')->with('info','Debes cambiar tu contraseña e ingresar tu foto');
             }

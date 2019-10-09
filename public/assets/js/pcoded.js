@@ -102,40 +102,40 @@ $(document).ready(function() {
     }
     // Friend scroll
     if (vw >= 1024) {
-        var px = new PerfectScrollbar('.main-friend-cont', {
-            wheelSpeed: .5,
-            swipeEasing: 0,
-            suppressScrollX: !0,
-            wheelPropagation: 1,
-            minScrollbarLength: 40,
-        });
-        var px = new PerfectScrollbar('.main-chat-cont', {
-            wheelSpeed: .5,
-            swipeEasing: 0,
-            suppressScrollX: !0,
-            wheelPropagation: 1,
-            minScrollbarLength: 40,
-        });
+        // var px = new PerfectScrollbar('.main-friend-cont', {
+        //     wheelSpeed: .5,
+        //     swipeEasing: 0,
+        //     suppressScrollX: !0,
+        //     wheelPropagation: 1,
+        //     minScrollbarLength: 40,
+        // });
+        // var px = new PerfectScrollbar('.main-chat-cont', {
+        //     wheelSpeed: .5,
+        //     swipeEasing: 0,
+        //     suppressScrollX: !0,
+        //     wheelPropagation: 1,
+        //     minScrollbarLength: 40,
+        // });
     }
     // Menu scroll
     if (!$('.pcoded-navbar').hasClass('theme-horizontal')) {
         var vw = $(window)[0].innerWidth;
         if (vw < 992 || $('.pcoded-navbar').hasClass('menupos-static')) {
-            var px = new PerfectScrollbar('.navbar-content', {
-                wheelSpeed: .5,
-                swipeEasing: 0,
-                suppressScrollX: !0,
-                wheelPropagation: 1,
-                minScrollbarLength: 40,
-            });
-        }else{
-            var px = new PerfectScrollbar('.navbar-content', {
-                wheelSpeed: .5,
-                swipeEasing: 0,
-                suppressScrollX: !0,
-                wheelPropagation: 1,
-                minScrollbarLength: 40,
-            });
+            // var px = new PerfectScrollbar('.navbar-content', {
+            //     wheelSpeed: .5,
+            //     swipeEasing: 0,
+            //     suppressScrollX: !0,
+            //     wheelPropagation: 1,
+            //     minScrollbarLength: 40,
+            // });
+        } else {
+            // var px = new PerfectScrollbar('.navbar-content', {
+            //     wheelSpeed: .5,
+            //     swipeEasing: 0,
+            //     suppressScrollX: !0,
+            //     wheelPropagation: 1,
+            //     minScrollbarLength: 40,
+            // });
         }
     }
 
@@ -148,12 +148,12 @@ $(document).ready(function() {
     function cfc(e) {
         $('.header-chat .main-friend-chat').append('' +
             '<div class="media chat-messages">' +
-                '<div class="media-body chat-menu-reply">' +
-                    '<div class="">' +
-                        '<p class="chat-cont">' + $('.h-send-chat').val() + '</p>' +
-                    '</div>' +
-                    '<p class="chat-time">now</p>' +
-                '</div>' +
+            '<div class="media-body chat-menu-reply">' +
+            '<div class="">' +
+            '<p class="chat-cont">' + $('.h-send-chat').val() + '</p>' +
+            '</div>' +
+            '<p class="chat-time">now</p>' +
+            '</div>' +
             '</div>' +
             '');
         frc($('.h-send-chat').val());
@@ -165,13 +165,13 @@ $(document).ready(function() {
         setTimeout(function() {
             $('.header-chat .main-friend-chat').append('' +
                 '<div class="media chat-messages typing">' +
-                    '<a class="media-left photo-table" href="#!"><img class="media-object img-radius img-radius m-t-5" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image"></a>' +
-                    '<div class="media-body chat-menu-content">' +
-                        '<div class="rem-msg">' +
-                            '<p class="chat-cont">Typing . . .</p>' +
-                        '</div>' +
-                        '<p class="chat-time">now</p>' +
-                    '</div>' +
+                '<a class="media-left photo-table" href="#!"><img class="media-object img-radius img-radius m-t-5" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image"></a>' +
+                '<div class="media-body chat-menu-content">' +
+                '<div class="rem-msg">' +
+                '<p class="chat-cont">Typing . . .</p>' +
+                '</div>' +
+                '<p class="chat-time">now</p>' +
+                '</div>' +
                 '</div>' +
                 '');
             fsc();
@@ -405,7 +405,7 @@ $.fn.pcodedmenu = function(settings) {
                         });
                     $(".pcoded-inner-navbar .pcoded-submenu > li > .pcoded-submenu > li").on('click', function(e) {
                         e.stopPropagation();
-                        alert( "click call" );
+                        alert("click call");
                         var str = $(this).closest('.pcoded-submenu').length;
                         if (str === 0) {
                             if ($(this).hasClass('pcoded-trigger')) {
@@ -507,7 +507,9 @@ $.fn.pcodedmenu = function(settings) {
                                 var isEntirelyVisible = (l + w <= docW);
                                 if (!isEntirelyVisible) {
                                     var temp = $('.sidenav-inner').attr('style');
-                                    $('.sidenav-inner').css({'margin-left': (parseInt(temp.slice(12, temp.length - 3)) - 80)});
+                                    $('.sidenav-inner').css({
+                                        'margin-left': (parseInt(temp.slice(12, temp.length - 3)) - 80)
+                                    });
                                     $('.sidenav-horizontal-prev').removeClass('disabled');
                                 } else {
                                     $(this).removeClass('edge');
@@ -629,14 +631,14 @@ $(window).ready(function() {
     });
 });
 // Layout 1 navbar start
-$('.layout-1 .sidemenu a').on('click',function(){
+$('.layout-1 .sidemenu a').on('click', function() {
     var port = $(this);
     port.parents('li').siblings().removeClass('active');
     port.parents('li').addClass('active');
     $('.side-content .sidelink').slideUp();
-    $('.side-content .sidelink.' + port.attr('data-cont') ).slideDown();
+    $('.side-content .sidelink.' + port.attr('data-cont')).slideDown();
 });
-$('.layout-1 .toggle-sidemenu').on('click',function(){
+$('.layout-1 .toggle-sidemenu').on('click', function() {
     var port = $(this);
     $('.pcoded-navbar').toggleClass('hide-sidemenu');
 });

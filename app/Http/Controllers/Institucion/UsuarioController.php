@@ -15,9 +15,13 @@ class UsuarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id=null)
     {
-        //
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $usuarios = $institucion->alumnos()->whereHas('roles',function($query){
+            $query->whereIn('name',['Institucion','Institucion-operador']);
+        })->with('roles')->paginate(50);
+        return view('usuario.index',compact('usuarios'));
     }
 
     /**

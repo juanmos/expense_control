@@ -45,10 +45,27 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/alumno/{id}/tarjeta/perdida','Institucion\TarjetaController@perdida')->name('institucion.alumno.tarjeta.perdida');
         Route::delete('/alumno/{id}/tarjeta/destroy','Institucion\TarjetaController@destroy')->name('institucion.alumno.tarjeta.eliminar');
 
+        Route::get('usuario/','Institucion\UsuarioController@index')->name('institucion.usuario.index');
+        Route::get('usuario/{id}','Institucion\UsuarioController@show')->name('institucion.usuario.show');
         Route::get('{id}/usuario/crear/','Institucion\UsuarioController@create')->name('institucion.usuario.crear');
         Route::post('/usuario/store/','Institucion\UsuarioController@store')->name('institucion.usuario.store');
         Route::get('{id}/usuario/editar/{usuario_id}','Institucion\UsuarioController@edit')->name('institucion.usuario.edit');
         Route::put('/usuario/{id}/update/','Institucion\UsuarioController@update')->name('institucion.usuario.update');
+        Route::delete('usuario/{id}','Institucion\UsuarioController@destroy')->name('institucion.usuario.destroy');
+
+        Route::get('refrigerio/tipos','Institucion\RefrigerioController@index')->name('institucion.refrigerio.index');
+        Route::get('refrigerio/tipos/crear','Institucion\RefrigerioController@create')->name('institucion.refrigerio.crear');
+        Route::post('refrigerio/tipos/store','Institucion\RefrigerioController@store')->name('institucion.refrigerio.store');
+        Route::get('refrigerio/tipos/editar/{id}','Institucion\RefrigerioController@edit')->name('institucion.refrigerio.editar');
+        Route::put('refrigerio/tipos/update/{id}','Institucion\RefrigerioController@update')->name('institucion.refrigerio.update');
+        Route::delete('refrigerio/tipos/{id}','Institucion\RefrigerioController@destroy')->name('institucion.refrigerio.destroy');
+
+        Route::get('refrigerios/tipos','Institucion\TipoRefrigerioController@index')->name('institucion.refrigerios.tipos.index');
+        Route::get('refrigerios/tipos/crear','Institucion\TipoRefrigerioController@create')->name('institucion.refrigerios.tipos.crear');
+        Route::post('refrigerios/tipos/store','Institucion\TipoRefrigerioController@store')->name('institucion.refrigerios.tipos.store');
+        Route::get('refrigerios/tipos/editar/{id}','Institucion\TipoRefrigerioController@edit')->name('institucion.refrigerios.tipos.editar');
+        Route::put('refrigerios/tipos/update/{id}','Institucion\TipoRefrigerioController@update')->name('institucion.refrigerios.tipos.update');
+        Route::delete('refrigerios/tipos/{id}','Institucion\TipoRefrigerioController@destroy')->name('institucion.refrigerios.tipos.destroy');
     });
     
     
