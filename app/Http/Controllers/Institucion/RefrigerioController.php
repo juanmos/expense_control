@@ -9,6 +9,7 @@ use App\Models\Institucion;
 use App\Models\Refrigerio;
 use App\Models\TipoRefrigerio;
 use App\Models\User;
+use Carbon\Carbon;
 use Auth;
 
 class RefrigerioController extends Controller
@@ -59,18 +60,15 @@ class RefrigerioController extends Controller
     {
         $usuario = User::find($request->get('usuario_id'));
         $tipos=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
-        $dias=[];
+        $dias=array_values($request->get('dias'));
         $costo=$tipos->costo*count($request->get('dias'));
-        foreach($request->get('dias') as $dia){
-            $dias[$dia]=1;
-        }
         
         $usuario->refrigerio()->create([
             'tipo_refrigerio_id'=>$request->get('tipo_refrigerio_id'),
             'dias'=>$dias,
             'institucion_id'=>Auth::user()->institucion_id,
-            'fecha_inicio'=>$request->get('fecha_inicio'),
-            'fecha_fin'=>$request->get('fecha_fin'),
+            'fecha_inicio'=>Carbon::parse($request->get('fecha_inicio'))->toDateString(),
+            'fecha_fin'=>Carbon::parse($request->get('fecha_fin'))->toDateString(),
             'costo'=>$costo
         ]);
         return redirect()->route('institucion.alumno.show',[Auth::user()->institucion_id,$usuario->id]);
@@ -84,7 +82,8 @@ class RefrigerioController extends Controller
      */
     public function show($id)
     {
-        //
+        $refigerio = Refrigerio::find($id);
+        return response()->json($refigerio);
     }
 
     /**
@@ -107,7 +106,20 @@ class RefrigerioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $refrigerio = Refrigerio::find($id);
+        $tipos=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
+        $dias=array_values($request->get('dias'));
+        
+        $costo=$tipos->costo*count($request->get('dias'));
+        $refrigerio->update([
+            'tipo_refrigerio_id'=>$request->get('tipo_refrigerio_id'),
+            'dias'=>$dias,
+            'fecha_inicio'=>Carbon::parse($request->get('fecha_inicio'))->toDateString(),
+            'fecha_fin'=>Carbon::parse($request->get('fecha_fin'))->toDateString(),
+            'costo'=>$costo
+        ]);
+
+        return redirect()->route('institucion.alumno.show',[Auth::user()->institucion_id,$refrigerio->userable_id]);
     }
 
     /**
@@ -118,6 +130,8 @@ class RefrigerioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $refrigerio = Refrigerio::find($id);
+        $refrigerio->delete();
+        return back();
     }
 }

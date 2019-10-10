@@ -110,6 +110,7 @@ $(function() {
         serverSide: true,
         ajax: "{!! (Request::is('institucion/refrigerio'))? route('institucion.refrigerio.data') :route('institucion.alumnos.data',$id) !!}",
         columns: [
+            { data: 'id', name: 'id' },
             { data: 'nombre', name: 'nombre' },
             { data: 'apellido', name: 'apellido' },
             { data: 'telefono', name: 'telefono' },
@@ -129,7 +130,7 @@ $(document).ready(function() {
         serverSide: true,
         ajax: "{!! route('institucion.alumnos.data',Auth::user()->institucion_id) !!}",
         columns: [
-            { data: 'id', name: 'id' },
+            
             { data: 'nombre', name: 'nombre' },
             { data: 'apellido', name: 'apellido' },
             { data: 'cedula', name: 'cedula' },

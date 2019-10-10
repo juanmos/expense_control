@@ -12,7 +12,7 @@
                         <li class="breadcrumb-item"><a href="{{route('institucion.show',$id)}}">Institución</a></li>
                         <li class="breadcrumb-item"><a href="{{route('institucion.alumnos',$id)}}">Alumnos</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{$usuario->full_name}}</li>
-                    </ol>
+                    </ol>                 
                 </nav>
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
@@ -35,7 +35,10 @@
                                                 <sub class="text-muted f-14"><small>Ano lectivo: </small>{{$usuario->alumno->ano_lectivo}}</sub><br>
                                             </div>
                                         </div>
-                                        <h6 class="text-muted mt-4 mb-0"><a href="{{route('institucion.alumno.edit',[$id,$usuario->id])}}" class="label theme-bg text-white f-12">Editar</a> </h6>
+                                        <h6 class="text-muted mt-4 mb-0">
+                                            <a href="{{route('institucion.alumno.edit',[$id,$usuario->id])}}" class="label theme-bg text-white f-12">Editar</a> 
+                                            <a href="{{route('institucion.refrigerio.crear',$usuario->id)}}" class="label theme-bg2 text-white f-12"><i class="feather icon-plus"></i> Refrigerios</a>
+                                        </h6>
                                         <i class="far fa-user text-c-purple f-50"></i>
                                         
                                     </div>
@@ -120,6 +123,56 @@
                             <!-- [ statistics year chart ] end -->     
                             <!--[ Recent Users ] start-->
                             <div class="col-xl-8 col-md-6">
+                                @if($usuario->refrigerio()->count()>0)
+                                <div class="card note-bar">
+                                    <div class="card-header">
+                                        <h5>Refrigerios</h5>
+                                        <div class="card-header-right">
+                                            <div class="btn-group card-option">
+                                                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="feather icon-more-horizontal"></i>
+                                                </button>
+                                                <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right">
+                                                    <li class="dropdown-item"><a href="{{route('institucion.refrigerio.crear',$usuario->id)}}"><i class="feather icon-plus"></i> Nuevo</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-block p-0 row">
+                                        @foreach ($usuario->refrigerio as $refrigerio )
+                                        <div class="col-md-11">
+                                            <a href="#!" class="media friendlist-box">
+                                                <div class="mr-3 photo-table">
+                                                    <i class="mdi mdi-food f-30 text-c-purple"></i>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h6>{{$refrigerio->tipo_refrigerio->tipo}}</h6>
+                                                    <span class="f-12 float-right text-muted">${{$refrigerio->costo}}</span>
+                                                    <p class="text-muted m-0">
+                                                        {{strtoupper(implode(', ',array_values($refrigerio->dias)))}}
+                                                        <span class="f-12 float-right text-muted">{{date('d-m-Y',strtotime($refrigerio->fecha_inicio))}}</span>                                            
+                                                    </p>
+                                                </div>    
+                                            </a>
+                                        </div>
+                                        <div class="col-md-1  media friendlist-box">
+                                            <a class="dropdown-toggle addon-btn" data-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-cog"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(1482px, 99px, 0px);">
+                                                <a class="dropdown-item editarRefrigerioModalBtn" href="" myid="{{$refrigerio->id}}" data-toggle="modal" data-target="#editarRefrigerioModal"><i class="icofont icofont-attachment"></i>Editar</a>
+                                                <div role="separator" class="dropdown-divider"></div>
+                                                <a class="dropdown-item sweet-refrigerio" href="#!" myid="{{$refrigerio->id}}"><i class="icofont icofont-refresh"></i>Eliminar</a>
+                                            </div>
+                                            {!! Form::open(['route'=>['institucion.refrigerio.eliminar',$refrigerio->id],'method'=>'POST','id'=>'elimina_refrigerio_'.$refrigerio->id]) !!}
+                                                {!! Form::hidden('_method', 'DELETE') !!}
+                                                {!! Form::hidden('refrigerio_id', $refrigerio->id) !!}
+                                            {!! Form::close() !!}
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @endif
                                 <div class="card Recent-Users">
                                     <div class="card-header">
                                         <h5>Ultimas transacciones </h5>
@@ -319,7 +372,85 @@
         {!! Form::close() !!}
     </div>
 </div>
-
+<!-- Editar refrigerio-->
+<div class="modal fade bd-example-modal-lg" id="editarRefrigerioModal" tabindex="-1" role="dialog" aria-labelledby="editarRefrigerioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarRefrigerioModalLabel">Editar refrigerio</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <form id="refrigerio_form" method="POST">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="exampleInputPassword1">Tipo de refrigerio</label>
+                        {!! Form::select('tipo_refrigerio_id', $tipos_refrigerio,1, ['class'=>'form-control','id'=>'tipo_refrigerio_id']) !!}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputPassword1">Fecha inicio</label>
+                        {!! Form::text('fecha_inicio', '', ['class'=>'form-control datepicker','placeholder'=>'Fecha inicio refrigerio','id'=>'fecha_inicio']) !!}
+                        
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputPassword1">Fecha fin</label>
+                        {!! Form::text('fecha_fin', '', ['class'=>'form-control datepicker','placeholder'=>'Fecha fin refrigerio','id'=>'fecha_fin']) !!}
+                        
+                    </div>
+                    <div class="form-group col-md-12">
+                        <h5>Días</h5>                                            
+                        <label for="exampleInputPassword1">Lunes</label>
+                        <div class="switch switch-primary d-inline m-r-10">
+                            <input type="checkbox" id="switch-lunes" name="dias[]" value="lunes" >
+                            <label for="switch-lunes" class="cr"></label>
+                        </div>
+                        <label for="exampleInputPassword1">Martes</label>
+                        <div class="switch switch-primary d-inline m-r-10">
+                            <input type="checkbox" id="switch-martes" name="dias[]" value="martes" >
+                            <label for="switch-martes" class="cr"></label>
+                        </div>
+                        <label for="exampleInputPassword1">Miercoles</label>
+                        <div class="switch switch-primary d-inline m-r-10">
+                            <input type="checkbox" id="switch-miercoles" name="dias[]" value="miercoles">
+                            <label for="switch-miercoles" class="cr"></label>
+                        </div>
+                        <label for="exampleInputPassword1">Jueves</label>
+                        <div class="switch switch-primary d-inline m-r-10">
+                            <input type="checkbox" id="switch-jueves" name="dias[]" value="jueves">
+                            <label for="switch-jueves" class="cr"></label>
+                        </div>
+                        <label for="exampleInputPassword1">Viernes</label>
+                        <div class="switch switch-primary d-inline m-r-10">
+                            <input type="checkbox" id="switch-viernes" name="dias[]" value="viernes">
+                            <label for="switch-viernes" class="cr"></label>
+                        </div>
+                        <label for="exampleInputPassword1">Sabado</label>
+                        <div class="switch switch-primary d-inline m-r-10">
+                            <input type="checkbox" id="switch-sabado" name="dias[]" value="sabado" >
+                            <label for="switch-sabado" class="cr"></label>
+                        </div>
+                        <label for="exampleInputPassword1">Domingo</label>
+                        <div class="switch switch-primary d-inline m-r-10">
+                            <input type="checkbox" id="switch-domingo" name="dias[]" value="domingo" >
+                            <label for="switch-domingo" class="cr"></label>
+                        </div>
+                    </div>
+                    
+                    {!! Form::hidden('id', 0, ['id'=>'refrigerio_id']) !!}
+                    
+                    {!! Form::hidden('_method', 'PUT') !!}
+                    @csrf
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="refrigerio_update_btn">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @push('scripts')
 <script src='{{asset("assets/plugins/select2/js/select2.full.min.js")}}'></script>
@@ -329,11 +460,27 @@
     $(document).ready(function(){
         $(".select").select2();
         $('.datepicker').datepicker({
-            autoclose:true
+            autoclose:true,
+            format:'dd-mm-yyyy'
         });
         $('.tarjetaPerdidaModaBtn').on('click', function (e) {
             $('#tarjeta_perdida_id').val($(this).attr('myid'));
         });
+        $('.editarRefrigerioModalBtn').on('click', function (e) {
+            $('#refrigerio_id').val($(this).attr('myid'));
+            $.get("{{url('institucion/refrigerio/')}}/"+$(this).attr('myid'),function(json){
+                $('#fecha_inicio').val(moment(json.fecha_inicio).format('DD-MM-YYYY'));
+                $('#fecha_fin').val(moment(json.fecha_fin).format('DD-MM-YYYY'));
+                $('#tipo_refrigerio_id').val(json.tipo_refrigerio_id);
+                json.dias.forEach(function(key){
+                    $('#switch-'+key).attr('checked','checked');
+                })
+            },'json');
+        });
+        $('#refrigerio_update_btn').on('click',function(){
+            $('#refrigerio_form').attr('action','{{url("institucion/refrigerio/update/")}}/'+$('#refrigerio_id').val());
+            $('#refrigerio_form').submit();
+        })
         $('.sweet-multiple').on('click', function() {
             var tid=$(this).attr('myid');
             swal({
@@ -349,6 +496,25 @@
                             icon: "success",
                         });
                         $('#elimina_tarjeta_'+tid).submit();
+                    } else {
+                    }
+                });
+        });
+        $('.sweet-refrigerio').on('click', function() {
+            var tid=$(this).attr('myid');
+            swal({
+                    title: "Estas seguro?",
+                    text: "Estas seguro que desear eliminar el refrigerio",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        swal("El refrigerio ha sido elimina con exito!", {
+                            icon: "success",
+                        });
+                        $('#elimina_refrigerio_'+tid).submit();
                     } else {
                     }
                 });

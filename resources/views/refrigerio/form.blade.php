@@ -58,7 +58,10 @@
                                                 
                                             </div>
                                         </div>
-                                        <h6 class="text-muted mt-4 mb-0"><a href="{{route('institucion.alumno.edit',[Auth::user()->id,$usuario->id])}}" class="label theme-bg text-white f-12">Editar</a> </h6>
+                                        <h6 class="text-muted mt-4 mb-0">
+                                            <a href="{{route('institucion.alumno.show',[Auth::user()->id,$usuario->id])}}" class="label theme-bg text-white f-12">Ver</a> 
+                                            <a href="{{route('institucion.alumno.edit',[Auth::user()->id,$usuario->id])}}" class="label theme-bg2 text-white f-12">Editar</a> 
+                                        </h6>
                                         <i class="far fa-user text-c-purple f-50"></i>
                                         
                                     </div>
@@ -79,12 +82,12 @@
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Fecha inicio</label>
-                                                {!! Form::text('fecha_inicio', ($refrigerio!=null)?$refrigerio->fecha_inicio:1, ['class'=>'form-control']) !!}
+                                                {!! Form::text('fecha_inicio', ($refrigerio!=null)?$refrigerio->fecha_inicio:'', ['class'=>'form-control datepicker','placeholder'=>'Fecha inicio refrigerio']) !!}
                                                 
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Fecha fin</label>
-                                                {!! Form::text('fecha_fin', ($refrigerio!=null)?$refrigerio->fecha_fin:1, ['class'=>'form-control']) !!}
+                                                {!! Form::text('fecha_fin', ($refrigerio!=null)?$refrigerio->fecha_fin:'', ['class'=>'form-control datepicker','placeholder'=>'Fecha fin refrigerio']) !!}
                                                 
                                             </div>
                                             <div class="form-group col-md-12">
@@ -148,6 +151,7 @@
 </div>
 @endsection
 @push('scripts')
+<script src='{{asset("assets/plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js")}}'></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('input[name=foto]').change(function(e) {
@@ -183,6 +187,31 @@ $(document).ready(function(){
             }         
         }        
     });
+    $('.datepicker').datepicker({
+        autoclose:true,
+        format:'dd-mm-yyyy'
+    });
 })
 </script>
+@endpush
+@push('styles')
+<link href="{{asset('assets/plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css')}}" rel="stylesheet">
+<script>
+    var page = {
+        bootstrap: 3
+    };
+
+    function swap_bs() {
+        page.bootstrap = 3;
+    }
+</script>
+<style>
+    .datepicker>.datepicker-days {
+        display: block;
+    }
+
+    ol.linenums {
+        margin: 0 0 0 -8px;
+    }
+</style>
 @endpush

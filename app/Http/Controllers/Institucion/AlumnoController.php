@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Helpers;
 use App\Exports\AlumnoExport;
 use App\Imports\AlumnoImport;
+use App\Models\TipoRefrigerio;
 use App\Models\TipoTarjeta;
 use App\Models\Institucion;
 use App\Models\Transaccion;
@@ -98,8 +99,9 @@ class AlumnoController extends Controller
         $compras =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('usuario_id',$alumno_id)
                                 ->where('tipo_transaccion_id',1)->get();
-        $tipo_tarjetas=TipoTarjeta::get()->pluck('tipo_tarjeta','id');                                
-        return view('alumno.show',compact('usuario','transacciones','recargas','compras','id','tipo_tarjetas'));
+        $tipo_tarjetas=TipoTarjeta::get()->pluck('tipo_tarjeta','id');    
+        $tipos_refrigerio=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo','id');                            
+        return view('alumno.show',compact('usuario','transacciones','recargas','compras','id','tipo_tarjetas','tipos_refrigerio'));
     }
 
     /**
