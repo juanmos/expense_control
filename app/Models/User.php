@@ -12,7 +12,7 @@ use App\Models\Alumno;
 use App\Models\Institucion;
 use App\Models\Tarjeta;
 use App\Models\Transaccion;
-
+use App\Models\Refrigerio;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -61,7 +61,11 @@ class User extends Authenticatable implements JWTSubject
 
     public function transacciones()
     {
-        return $this->morphMany('App\Models\Transaccion', 'transaccionable');
+        return $this->morphMany(Transaccion::class, 'transaccionable');
+    }
+
+    public function refrigerio(){
+        return $this->morphMany(Refrigerio::class,'userable');
     }
 
     public function getFullNameAttribute()

@@ -10,8 +10,10 @@ use App\Models\Institucion;
 class Refrigerio extends Model
 {
     use SoftDeletes;
-    protected $fillable=['tipo_refrigerio_id','institucion_id','userable','dias'];
-
+    protected $fillable=['tipo_refrigerio_id','institucion_id','userable_id','userable_type','dias','costo','activo','fecha_inicio','fecha_fin'];
+    protected $casts = [
+        'dias' => 'array',
+    ];
     public function institucion()
     {
         return $this->belongsTo(Institucion::class, 'institucion_id');

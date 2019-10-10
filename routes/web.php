@@ -53,12 +53,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/usuario/{id}/update/','Institucion\UsuarioController@update')->name('institucion.usuario.update');
         Route::delete('usuario/{id}','Institucion\UsuarioController@destroy')->name('institucion.usuario.destroy');
 
-        Route::get('refrigerio/tipos','Institucion\RefrigerioController@index')->name('institucion.refrigerio.index');
-        Route::get('refrigerio/tipos/crear','Institucion\RefrigerioController@create')->name('institucion.refrigerio.crear');
-        Route::post('refrigerio/tipos/store','Institucion\RefrigerioController@store')->name('institucion.refrigerio.store');
-        Route::get('refrigerio/tipos/editar/{id}','Institucion\RefrigerioController@edit')->name('institucion.refrigerio.editar');
-        Route::put('refrigerio/tipos/update/{id}','Institucion\RefrigerioController@update')->name('institucion.refrigerio.update');
-        Route::delete('refrigerio/tipos/{id}','Institucion\RefrigerioController@destroy')->name('institucion.refrigerio.destroy');
+        Route::get('refrigerio','Institucion\RefrigerioController@index')->name('institucion.refrigerio.index');
+        Route::get('refrigerio/data','Institucion\RefrigerioController@refrigeriosData')->name('institucion.refrigerio.data');
+        Route::get('refrigerio/crear/{id}','Institucion\RefrigerioController@create')->name('institucion.refrigerio.crear');
+        Route::post('refrigerio/store','Institucion\RefrigerioController@store')->name('institucion.refrigerio.store');
+        Route::get('refrigerio/editar/{id}','Institucion\RefrigerioController@edit')->name('institucion.refrigerio.editar');
+        Route::put('refrigerio/update/{id}','Institucion\RefrigerioController@update')->name('institucion.refrigerio.update');
+        Route::delete('refrigerio/{id}','Institucion\RefrigerioController@destroy')->name('institucion.refrigerio.destroy');
 
         Route::get('refrigerios/tipos','Institucion\TipoRefrigerioController@index')->name('institucion.refrigerios.tipos.index');
         Route::get('refrigerios/tipos/crear','Institucion\TipoRefrigerioController@create')->name('institucion.refrigerios.tipos.crear');

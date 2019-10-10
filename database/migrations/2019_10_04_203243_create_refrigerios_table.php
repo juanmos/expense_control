@@ -18,6 +18,10 @@ class CreateRefrigeriosTable extends Migration
             $table->integer('tipo_refrigerio_id');
             $table->integer('institucion_id');
             $table->morphs('userable');
+            $table->decimal('costo',10,2)->default(0);
+            $table->boolean('activo')->default(1);
+            $table->dateTimeTz('fecha_inicio');
+            $table->dateTimeTz('fecha_fin')->nullable();
             $table->json('dias');
             $table->softDeletes();
             $table->timestamps();

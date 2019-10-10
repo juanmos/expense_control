@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Institucion;
 
+use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Institucion;
 use App\Models\Refrigerio;
+use App\Models\TipoRefrigerio;
+use App\Models\User;
 use Auth;
+
 class RefrigerioController extends Controller
 {
     /**
@@ -22,14 +26,27 @@ class RefrigerioController extends Controller
         return view('alumno.index',compact('institucion','id'));
     }
 
+    public function refrigeriosData()
+    {
+        $id=Auth::user()->institucion_id;
+        $institucion = Institucion::find($id);
+        $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
+            $query->where('name','Alumno');
+        })->has('refrigerio')->with('alumno')->get();
+        return Datatables::of($alumnos)->make(true);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $usuario =User::find($id);
+        $refrigerio=null;
+        $tipos=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo','id');
+        return view('refrigerio.form',compact('usuario','tipos','id','refrigerio'));
     }
 
     /**
@@ -40,7 +57,23 @@ class RefrigerioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $usuario = User::find($request->get('usuario_id'));
+        $tipos=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
+        $dias=[];
+        $costo=$tipos->costo*count($request->get('dias'));
+        foreach($request->get('dias') as $dia){
+            $dias[$dia]=1;
+        }
+        
+        $usuario->refrigerio()->create([
+            'tipo_refrigerio_id'=>$request->get('tipo_refrigerio_id'),
+            'dias'=>$dias,
+            'institucion_id'=>Auth::user()->institucion_id,
+            'fecha_inicio'=>$request->get('fecha_inicio'),
+            'fecha_fin'=>$request->get('fecha_fin'),
+            'costo'=>$costo
+        ]);
+        return redirect()->route('institucion.alumno.show',[Auth::user()->institucion_id,$usuario->id]);
     }
 
     /**
