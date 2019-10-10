@@ -21,13 +21,26 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::delete('usuario/{plataforma}', 'APIAuthController@logout');//Cerrar sesion del usuario actual
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
 
-    Route::post('alumno/saldo','Transacciones\PaymentController@saldo');
-    Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
     
-    Route::post('payment/valida/tarjeta','Transacciones\PaymentController@validaTarjeta');
-    Route::post('payment/cobrar','Transacciones\PaymentController@cobrar');
-    Route::post('payment/recargar','Transacciones\PaymentController@recargar');
-    Route::get('payment/forma_pago','Transacciones\PaymentController@forma_pago');
-    Route::get('payment/transacciones','Transacciones\PaymentController@transacciones');
-    Route::get('payment/transacciones/hoy','Transacciones\PaymentController@transacciones_hoy');
+    Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
+
+    
+    Route::group(['prefix' => 'institucion'], function() {
+        Route::get('alumnos/{id}','Institucion\AlumnoController@index')->name('institucion.alumnos');
+    });
+    
+    
+    
+    
+    Route::group(['prefix' => 'payment'], function() {
+        Route::post('alumno/saldo','Transacciones\PaymentController@saldo');
+        Route::post('valida/tarjeta','Transacciones\PaymentController@validaTarjeta');
+        Route::post('cobrar','Transacciones\PaymentController@cobrar');
+        Route::post('recargar','Transacciones\PaymentController@recargar');
+        Route::get('forma_pago','Transacciones\PaymentController@forma_pago');
+        Route::get('transacciones','Transacciones\PaymentController@transacciones');
+        Route::get('transacciones/hoy','Transacciones\PaymentController@transacciones_hoy');
+    });
+    
+    
 });

@@ -28,10 +28,10 @@ class AlumnoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index(Request $reqeust,$id)
     {
         $institucion = Institucion::find($id);
-        
+        if($request->is('api/*')) response()->json(compact('institucion'));
         return view('alumno.index',compact('institucion','id'));
     }
 
