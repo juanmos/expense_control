@@ -55,7 +55,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('refrigerio','Institucion\RefrigerioController@index')->name('institucion.refrigerio.index');
         Route::get('refrigerio/{id}','Institucion\RefrigerioController@show')->name('institucion.refrigerio.show');
-        Route::get('refrigerio/data','Institucion\RefrigerioController@refrigeriosData')->name('institucion.refrigerio.data');
+        Route::get('refrigerios/data','Institucion\RefrigerioController@refrigeriosData')->name('institucion.refrigerio.data');
         Route::get('refrigerio/crear/{id}','Institucion\RefrigerioController@create')->name('institucion.refrigerio.crear');
         Route::post('refrigerio/store','Institucion\RefrigerioController@store')->name('institucion.refrigerio.store');
         Route::get('refrigerio/editar/{id}','Institucion\RefrigerioController@edit')->name('institucion.refrigerio.editar');

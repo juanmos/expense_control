@@ -42,9 +42,14 @@
                                                         <th>Codigo</th>
                                                         <th>Nombre</th>
                                                         <th>Apellido</th>
+                                                        @if(!Request::is('institucion/refrigerio'))
                                                         <th>Telefono</th>
+                                                        @endif
                                                         <th>Cedula</th>
                                                         <th>Curso</th>
+                                                        @if(Request::is('institucion/refrigerio'))
+                                                        <th>Refrigerio</th>
+                                                        @endif
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
@@ -113,9 +118,20 @@ $(function() {
             { data: 'id', name: 'id' },
             { data: 'nombre', name: 'nombre' },
             { data: 'apellido', name: 'apellido' },
-            { data: 'telefono', name: 'telefono' },
+            @if(!Request::is('institucion/refrigerio')){ data: 'telefono', name: 'telefono' },@endif
             { data: 'cedula', name: 'cedula' },
             { data: 'alumno.curso', name: 'updated_at' },
+            @if(Request::is('institucion/refrigerio'))
+            { "data": "refrigerio", render: function (dataField) { 
+                var texto='';
+                dataField.forEach(function(d,index){
+                    if(index>0) texto+=', ';
+                    texto+=d.tipo_refrigerio.tipo;
+                });
+                    return texto;
+                } 
+            },
+            @endif
             { "data": "id", render: function (dataField) { 
                     return '<a href="{{ url("institucion/".$id."/alumno/")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a> <a href="{{ url("institucion/".$id."/alumno/edit/")}}/'+dataField+'"" class="label theme-bg text-white f-12">Editar</a>';
                 } 

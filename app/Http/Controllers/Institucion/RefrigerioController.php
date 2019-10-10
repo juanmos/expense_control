@@ -24,16 +24,18 @@ class RefrigerioController extends Controller
         $id=Auth::user()->institucion_id;
         $institucion = Institucion::find($id);
         
+       // dd($alumnos);
         return view('alumno.index',compact('institucion','id'));
     }
 
     public function refrigeriosData()
     {
+        
         $id=Auth::user()->institucion_id;
         $institucion = Institucion::find($id);
-        $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
+        $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles',function($query){
             $query->where('name','Alumno');
-        })->has('refrigerio')->with('alumno')->get();
+        })->with('alumno','refrigerio.tipo_refrigerio')->get();
         return Datatables::of($alumnos)->make(true);
     }
 
