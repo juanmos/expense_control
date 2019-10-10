@@ -146,8 +146,8 @@
                                                     <i class="mdi mdi-food f-30 text-c-purple"></i>
                                                 </div>
                                                 <div class="media-body">
-                                                    <h6>{{$refrigerio->tipo_refrigerio->tipo}}</h6>
-                                                    <span class="f-12 float-right text-muted">${{$refrigerio->costo}}</span>
+                                                    <h6 class="f-20">{{$refrigerio->tipo_refrigerio->tipo}}</h6>
+                                                    <span class="f-20 float-right text-muted">${{$refrigerio->costo}}</span>
                                                     <p class="text-muted m-0">
                                                         {{strtoupper(implode(', ',array_values($refrigerio->dias)))}}
                                                         <span class="f-12 float-right text-muted">{{date('d-m-Y',strtotime($refrigerio->fecha_inicio))}}</span>                                            
