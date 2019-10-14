@@ -40,8 +40,9 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Codigo</th>
-                                                        <th>Nombre</th>
+                                                        
                                                         <th>Apellido</th>
+                                                        <th>Nombre</th>
                                                         @if(!Request::is('institucion/refrigerio'))
                                                         <th>Telefono</th>
                                                         @endif
@@ -85,8 +86,8 @@
                     <table id="alumnosData" class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
                                 <th>Apellido</th>
+                                <th>Nombre</th>                                
                                 <th>Cedula</th>
                                 <th>Curso</th>
                                 <th>Acciones</th>
@@ -116,8 +117,9 @@ $(function() {
         ajax: "{!! (Request::is('institucion/refrigerio'))? route('institucion.refrigerio.data') :route('institucion.alumnos.data',$id) !!}",
         columns: [
             { data: 'id', name: 'id' },
-            { data: 'nombre', name: 'nombre' },
+            
             { data: 'apellido', name: 'apellido' },
+            { data: 'nombre', name: 'nombre' },
             @if(!Request::is('institucion/refrigerio')){ data: 'telefono', name: 'telefono' },@endif
             { data: 'cedula', name: 'cedula' },
             { data: 'alumno.curso', name: 'updated_at' },
@@ -146,9 +148,8 @@ $(document).ready(function() {
         serverSide: true,
         ajax: "{!! route('institucion.alumnos.data',Auth::user()->institucion_id) !!}",
         columns: [
-            
-            { data: 'nombre', name: 'nombre' },
             { data: 'apellido', name: 'apellido' },
+            { data: 'nombre', name: 'nombre' },            
             { data: 'cedula', name: 'cedula' },
             { data: 'alumno.curso', name: 'updated_at' },
             { "data": "id", render: function (dataField) { 

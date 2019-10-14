@@ -28,11 +28,17 @@ class RefrigerioController extends Controller
         return view('alumno.index',compact('institucion','id'));
     }
 
-    public function refrigeriosData()
+    public function refrigeriosData(Request $request)
     {
         
         $id=Auth::user()->institucion_id;
         $institucion = Institucion::find($id);
+        if($request->is('api/*')) {
+            $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles',function($query){
+                $query->where('name','Alumno');
+            })->with('alumno','refrigerio.tipo_refrigerio')->orderBy('apellido')->paginate(50);
+            return response()->json(compact('alumnos'));
+        }
         $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles',function($query){
             $query->where('name','Alumno');
         })->with('alumno','refrigerio.tipo_refrigerio')->get();
@@ -135,5 +141,9 @@ class RefrigerioController extends Controller
         $refrigerio = Refrigerio::find($id);
         $refrigerio->delete();
         return back();
+    }
+
+    public function refrigerios($id){
+        
     }
 }

@@ -15,10 +15,22 @@ use Crypt;
 
 class PaymentController extends Controller
 {
-    public function saldo(Request $request){
+    public function saldo(Request $request,$completo=null){
         try {
+
             $user = User::find(base64_decode($request->get('alumno')));
-            return Crypt::encrypt(json_encode(['saldo'=>$user->saldo]),false);
+            if($completo==null) return Crypt::encrypt(json_encode(['saldo'=>$user->saldo]),false);
+            
+            $institucion = Institucion::find(Auth::user()->institucion_id);
+            $hoy = Carbon::now()->toDateTimeString();
+            $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
+            $recargas =$institucion->transacciones()//->whereBetween('fecha_hora',[$menos30,$hoy])
+                                    ->where('usuario_id',$user->id)
+                                    ->where('tipo_transaccion_id',2)->get();
+            $compras =$institucion->transacciones()//->whereBetween('fecha_hora',[$menos30,$hoy])
+                                    ->where('usuario_id',$user->id)
+                                    ->where('tipo_transaccion_id',1)->get();
+            return Crypt::encrypt(json_encode(['saldo'=>$user->saldo,'recargas'=>$recargas->sum('valor'),'compras'=>$compras->sum('valor')]),false);
         } catch (Illuminate\Contracts\Encryption\DecryptException $e) {
             //
         } 

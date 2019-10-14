@@ -28,19 +28,26 @@ class AlumnoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $reqeust,$id)
+    public function index($id)
     {
         $institucion = Institucion::find($id);
-        if($request->is('api/*')) response()->json(compact('institucion'));
+        
         return view('alumno.index',compact('institucion','id'));
     }
 
-    public function alumnosData($id)
+    public function alumnosData(Request $request,$id)
     {
         $institucion = Institucion::find($id);
+        
+        if($request->is('api/*')) {
+            $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
+                $query->where('name','Alumno');
+            })->with('alumno')->orderBy('apellido')->paginate(50);
+            return response()->json(compact('alumnos'));
+        }
         $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
             $query->where('name','Alumno');
-        })->with('alumno')->get();
+        })->with('alumno')->orderBy('apellido')->get();
         return Datatables::of($alumnos)->make(true);
     }
 
@@ -86,7 +93,7 @@ class AlumnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id,$alumno_id)
+    public function show(Request $request,$id,$alumno_id)
     {
         $usuario =User::find($alumno_id);   
         $institucion = Institucion::find($id);
@@ -181,4 +188,17 @@ class AlumnoController extends Controller
         $user = User::find(base64_decode($id));
         return Storage::download($user->foto);//response()->file($user->foto);
     }
+
+    public function transacciones(Request $request,$id){
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $transacciones = $institucion->transacciones()->where('usuario_id',base64_decode($id))->orderBy('fecha_hora','desc')->paginate(50);
+        return Crypt::encrypt(json_encode(compact('transacciones')),false);
+        if($request->is('api/*')) return response()->json(compact('transacciones'));
+    }
+
+    public function tarjetas($id){
+        
+    }
+
+    
 }

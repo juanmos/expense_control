@@ -26,14 +26,21 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     
     Route::group(['prefix' => 'institucion'], function() {
-        Route::get('alumnos/{id}','Institucion\AlumnoController@index')->name('institucion.alumnos');
+        Route::get('alumnos/{id}','Institucion\AlumnoController@alumnosData')->name('institucion.alumnos');
+
+        Route::get('refrigerio','Institucion\RefrigerioController@refrigeriosData')->name('institucion.refrigerio.data');
+
+
+        Route::get('alumno/transacciones/{id}','Institucion\AlumnoController@transacciones');
+        Route::get('alumno/tarjetas/{id}','Institucion\AlumnoController@tarjetas');
+        Route::get('alumno/refrigerios/{id}','Institucion\RefrigerioController@refrigerios');
     });
     
     
     
     
     Route::group(['prefix' => 'payment'], function() {
-        Route::post('alumno/saldo','Transacciones\PaymentController@saldo');
+        Route::post('alumno/saldo/{completo?}','Transacciones\PaymentController@saldo');
         Route::post('valida/tarjeta','Transacciones\PaymentController@validaTarjeta');
         Route::post('cobrar','Transacciones\PaymentController@cobrar');
         Route::post('recargar','Transacciones\PaymentController@recargar');

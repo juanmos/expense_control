@@ -34,7 +34,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','codigo','facebook_id','token_and','token_ios'
+        'password', 'remember_token','codigo','facebook_id','token_and','token_ios','email_verified_at','saldo'
     ];
 
     /**
