@@ -30,6 +30,7 @@
                                                         <th>Tipo</th>
                                                         <th>Descripción</th>
                                                         <th>Costo</th>
+                                                        <th>Tipo de pago</th>
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
@@ -39,6 +40,7 @@
                                                         <td>{{$tipo->tipo}}</td>
                                                         <td>{{$tipo->descripcion}}</td>
                                                         <td><h5>$ {{$tipo->costo}}</h5></td>
+                                                        <td>{{$tipo->forma_pago}}</td>
                                                         <td>
 
                                                             <a href="{{ route('institucion.refrigerios.tipos.editar',$tipo->id) }}" class="btn btn-primary btn-rounded btn-sm f-12">Editar</a>

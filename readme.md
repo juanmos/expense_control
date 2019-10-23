@@ -4,3 +4,6 @@ https://datatables.yajrabox.com/starter
 https://github.com/spatie/laravel-permission
 https://code.google.com/archive/p/crypto-js/
 https://kaleido.io/
+https://github.com/barryvdh/laravel-snappy
+https://github.com/laravel-notification-channels/apn
+https://github.com/laravel-notification-channels/fcm

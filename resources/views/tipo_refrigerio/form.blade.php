@@ -57,7 +57,11 @@
                                             </div>
                                             <div class="form-group col-md-12 ">
                                                 <label for="exampleInputEmail1">Costo $</label>
-                                                {!! Form::number('costo', ($tipo!=null)?$tipo->costo:'', ["class"=>"form-control","placeholder"=>'Costo $']) !!}
+                                                {!! Form::number('costo', ($tipo!=null)?$tipo->costo:'', ["class"=>"form-control","placeholder"=>'Costo $',"step"=>".01"]) !!}
+                                            </div>
+                                            <div class="form-group col-md-12 ">
+                                                <label for="exampleInputEmail1">Forma de pago</label>
+                                                {!! Form::select('forma_pago',['diario'=>'diario','mensual'=>'mensual'] ,($tipo!=null)?$tipo->forma_pago:'diario', ["class"=>"form-control"]) !!}
                                                 
                                             </div>
                                             <button type="submit" class="btn btn-primary"><span class="pcoded-micon"><i class="feather icon-save"></i></span><span class="pcoded-mtext">Guardar</span></button>

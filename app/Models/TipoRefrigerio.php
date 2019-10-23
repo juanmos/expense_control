@@ -8,7 +8,7 @@ use App\Models\Institucion;
 class TipoRefrigerio extends Model
 {
     use SoftDeletes;
-    protected $fillable=['institucion_id','tipo','descripcion','costo'];
+    protected $fillable=['institucion_id','tipo','descripcion','costo','forma_pago'];
 
     public function institucion()
     {

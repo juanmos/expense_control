@@ -67,10 +67,13 @@ class RefrigerioController extends Controller
     public function store(Request $request)
     {
         $usuario = User::find($request->get('usuario_id'));
-        $tipos=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
+        $tipo=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
         $dias=array_values($request->get('dias'));
-        $costo=$tipos->costo*count($request->get('dias'));
-        
+        if($tipo->forma_pago=='diario'){
+            $costo=$tipo->costo*count($request->get('dias'));
+        }else{
+            $costo=$tipo->costo;
+        }
         $usuario->refrigerio()->create([
             'tipo_refrigerio_id'=>$request->get('tipo_refrigerio_id'),
             'dias'=>$dias,

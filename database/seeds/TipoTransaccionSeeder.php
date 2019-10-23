@@ -27,5 +27,9 @@ class TipoTransaccionSeeder extends Seeder
             'tipo' => "Reverso de recarga",
             "operacion"=>"-"
         ]);
+         DB::table('tipo_transaccions')->insert([
+            'tipo' => "Refrigerio",
+            "operacion"=>"-"
+        ]);
     }
 }
