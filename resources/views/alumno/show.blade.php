@@ -31,6 +31,7 @@
                                                 <sub class="text-muted f-14"><small>Telf: </small>{{$usuario->telefono}}</sub><br>
                                                 <sub class="text-muted f-14"><small>Celular: </small>{{$usuario->celular}}</sub><br>
                                                 <sub class="text-muted f-14"><small>Cedula: </small>{{$usuario->cedula}}</sub><br>
+                                                <sub class="text-muted f-14"><small>Profesor: </small>{{$usuario->alumno->profesor}}</sub><br>
                                                 <sub class="text-muted f-14"><small>Curso: </small>{{$usuario->alumno->curso}}</sub><br>
                                                 <sub class="text-muted f-14"><small>Ano lectivo: </small>{{$usuario->alumno->ano_lectivo}}</sub><br>
                                             </div>
@@ -140,8 +141,8 @@
                                     </div>
                                     <div class="card-block p-0 row">
                                         @foreach ($usuario->refrigerio as $refrigerio )
-                                        <div class="col-md-11">
-                                            <a href="#!" class="media friendlist-box">
+                                        <div class="col-md-10">
+                                            <div class="media friendlist-box">
                                                 <div class="mr-3 photo-table">
                                                     <i class="mdi mdi-food f-30 text-c-purple"></i>
                                                 </div>
@@ -150,16 +151,22 @@
                                                     <span class="f-20 float-right text-muted">${{$refrigerio->costo}}</span>
                                                     <p class="text-muted m-0">
                                                         {{strtoupper(implode(', ',array_values($refrigerio->dias)))}}
-                                                        <span class="f-12 float-right text-muted">{{date('d-m-Y',strtotime($refrigerio->fecha_inicio))}}</span>                                            
+                                                        <span class="f-12 float-right text-muted">{{date('d-m-Y',strtotime($refrigerio->fecha_inicio))}}</span>    
+                                                        
                                                     </p>
                                                 </div>    
-                                            </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 media friendlist-box">
+                                            <a class="btn btn-icon btn-rounded btn-primary" title="Cobrar"><i class="feather icon-shopping-cart" style="color:#fff;opacity:1"></i></a>                                      
                                         </div>
                                         <div class="col-md-1  media friendlist-box">
                                             <a class="dropdown-toggle addon-btn" data-toggle="dropdown" aria-expanded="false">
                                                 <i class="fas fa-cog"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(1482px, 99px, 0px);">
+                                                <a class="dropdown-item editarRefrigerioModalBtn" href="" myid="{{$refrigerio->id}}" data-toggle="modal" data-target="#editarRefrigerioModal"><i class="icofont icofont-attachment"></i>Historial de pagos</a>
+                                                <div role="separator" class="dropdown-divider"></div>
                                                 <a class="dropdown-item editarRefrigerioModalBtn" href="" myid="{{$refrigerio->id}}" data-toggle="modal" data-target="#editarRefrigerioModal"><i class="icofont icofont-attachment"></i>Editar</a>
                                                 <div role="separator" class="dropdown-divider"></div>
                                                 <a class="dropdown-item sweet-refrigerio" href="#!" myid="{{$refrigerio->id}}"><i class="icofont icofont-refresh"></i>Eliminar</a>

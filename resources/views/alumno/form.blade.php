@@ -105,7 +105,10 @@
                                                 <label for="exampleInputPassword1">Fecha nacimiento <small>YYYY-MM-DD</small></label>
                                                 <input type="text" value="@if($usuario!=null){{$usuario->fecha_nacimiento}}@else{{old('fecha_nacimiento')}}@endif" name="fecha_nacimiento" class="form-control" id="exampleInputPassword1" placeholder="Fecha nacimiento ">
                                             </div>
-                                            
+                                            <div class="form-group col-md-6">
+                                                <label for="exampleInputPassword1">Profesor</label>
+                                                <input type="text" value="@if($usuario!=null){{$usuario->alumno->profesor}}@else{{old('profesor')}}@endif" name="profesor" class="form-control" id="exampleInputPassword1" placeholder="Profesor">
+                                            </div>
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Año lectivo</label>
                                                 <input type="text" value="@if($usuario!=null){{$usuario->alumno->ano_lectivo}}@else{{old('ano_lectivo')}}@endif" name="ano_lectivo" class="form-control" id="exampleInputPassword1" placeholder="Año lectivo">

@@ -77,7 +77,7 @@ class AlumnoController extends Controller
         $data=$request->except(['ano_lectivo','curso']);
         $data['password']=bcrypt(random_bytes(10));
         $usuario=User::create($data);
-        $usuario->alumno()->create($request->only(['ano_lectivo','curso']));
+        $usuario->alumno()->create($request->only(['ano_lectivo','curso','profesor']));
         $usuario->assignRole('Alumno');
         if($request->has('foto')){
             $usuario->foto=$request->file('foto')->store('public/alumnos');
@@ -135,7 +135,7 @@ class AlumnoController extends Controller
         $usuario =User::find($id);
         $data=$request->except(['ano_lectivo','curso']);
         $usuario->update($data);
-        $usuario->alumno()->update($request->only(['ano_lectivo','curso']));
+        $usuario->alumno()->update($request->only(['ano_lectivo','curso','profesor']));
         if($request->has('foto')){
             $usuario->foto=$request->file('foto')->store('public/alumnos');
             $usuario->save();

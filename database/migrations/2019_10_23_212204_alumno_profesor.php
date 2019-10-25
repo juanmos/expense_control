@@ -14,7 +14,7 @@ class AlumnoProfesor extends Migration
     public function up()
     {
         Schema::table('alumnos', function (Blueprint $table) {
-            //
+            $table->string('profesor')->nullable()->after('usuario_id');
         });
     }
 
@@ -26,7 +26,7 @@ class AlumnoProfesor extends Migration
     public function down()
     {
         Schema::table('alumnos', function (Blueprint $table) {
-            //
+            $table->dropColumn('profesor');
         });
     }
 }
