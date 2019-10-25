@@ -95,9 +95,9 @@
                                             </div> --}}
                                         </div>
                                         <h6 class="text-muted mt-4 mb-0">
-                                            @if(Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('SuperAdminsitrador'))
-                                            <a href="{{route('empresa.edit',$institucion->id)}}" class="label theme-bg text-white f-12">Editar</a> 
-                                            {{-- <a href="{{route('configuracion.edit',$institucion->id)}}" class="label theme-bg2 text-white f-12">Configuraciones</a> --}}
+                                            @if(Auth::user()->hasRole('Institucion'))
+                                            <a href="{{route('institucion.edit',$institucion->id)}}" class="label theme-bg text-white f-12">Editar</a> 
+                                            <a href="{{route('institucion.configuracion.edit')}}" class="label theme-bg2 text-white f-12">Configuraciones</a>
                                             @endif
                                         </h6>
                                         <i class="far fa-building text-c-purple f-50"></i>
