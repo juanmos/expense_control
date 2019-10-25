@@ -107,7 +107,16 @@ class AlumnoController extends Controller
                                 ->where('usuario_id',$alumno_id)
                                 ->where('tipo_transaccion_id',1)->get();
         $tipo_tarjetas=TipoTarjeta::get()->pluck('tipo_tarjeta','id');    
-        $tipos_refrigerio=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo','id');                            
+        $tipos_refrigerio=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo','id');      
+        
+        // foreach ($usuario->tarjetas as $index => $tarjeta){
+        //     var_dump('compress: '.);
+        //     var_dump('normal: '.$tarjeta->codigo);
+        //     dd();
+        // }
+        // $compressed = gzcompress('Compress me', 9);dd($compressed);
+        
+
         return view('alumno.show',compact('usuario','transacciones','recargas','compras','id','tipo_tarjetas','tipos_refrigerio'));
     }
 
