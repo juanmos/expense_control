@@ -84,6 +84,9 @@
                                             <div class="collapse" id="tarjeta-{{$tarjeta->id}}">
                                                 <div class="card-body">
                                                     @if(!$tarjeta->perdida)
+                                                    {{var_dump(gzcompress($tarjeta->codigo, 9))}}
+                                                    {{var_dump($tarjeta->codigo)}}
+                                                    <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate(base64_encode(gzdeflate($tarjeta->codigo, 9)))) !!} ">
                                                     <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($tarjeta->codigo)) !!} ">
                                                     <button type="button" data-toggle="modal" data-target="#tarjetaPerdidaModa" class="btn btn-warning tarjetaPerdidaModaBtn" myid="{{$tarjeta->id}}">Marcar como perdida</button>
                                                     @else

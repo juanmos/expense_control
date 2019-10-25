@@ -24,6 +24,7 @@ class Helpers{
             //'v'=>Carbon::parse($tarjeta->fecha_vencimiento)->toDateString(),
             'ti'=>base64_encode($tarjeta_id)
         ];
+        return json_encode(compact('qr'));
         return Crypt::encrypt(json_encode(compact('qr')),false);;
     }
 
