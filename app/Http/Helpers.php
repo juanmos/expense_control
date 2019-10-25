@@ -25,7 +25,7 @@ class Helpers{
             'ti'=>base64_encode($tarjeta_id)
         ];
         return base64_encode(gzcompress(json_encode(compact('qr')), 9)) ;
-        return Crypt::encrypt(json_encode(compact('qr')),false);;
+        // return Crypt::encrypt(json_encode(compact('qr')),false);;
     }
 
     public static function validaTarjeta(){

@@ -9,6 +9,8 @@ use App\Http\Helpers;
 use App\Exports\AlumnoExport;
 use App\Imports\AlumnoImport;
 use App\Models\TipoRefrigerio;
+use App\Models\FormaPago;
+use App\Models\TipoTransaccion;
 use App\Models\TipoTarjeta;
 use App\Models\Institucion;
 use App\Models\Transaccion;
@@ -108,16 +110,11 @@ class AlumnoController extends Controller
                                 ->where('tipo_transaccion_id',1)->get();
         $tipo_tarjetas=TipoTarjeta::get()->pluck('tipo_tarjeta','id');    
         $tipos_refrigerio=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo','id');      
-        
-        // foreach ($usuario->tarjetas as $index => $tarjeta){
-        //     var_dump('compress: '.);
-        //     var_dump('normal: '.$tarjeta->codigo);
-        //     dd();
-        // }
-        // $compressed = gzcompress('Compress me', 9);dd($compressed);
+        $formas_pago = FormaPago::where('habilitado',1)->orderBy('forma_pago')->get()->pluck('forma_pago','id');   
+        $tipo_pago = TipoTransaccion::whereIn('id',[5])->orderBy('tipo')->get()->pluck('tipo','id');    
         
 
-        return view('alumno.show',compact('usuario','transacciones','recargas','compras','id','tipo_tarjetas','tipos_refrigerio'));
+        return view('alumno.show',compact('usuario','transacciones','recargas','compras','id','tipo_tarjetas','tipos_refrigerio','formas_pago','tipo_pago'));
     }
 
     /**

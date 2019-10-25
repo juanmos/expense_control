@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\TipoRefrigerio;
 use App\Models\Institucion;
+use App\Models\Pago;
 
 class Refrigerio extends Model
 {
@@ -27,5 +28,9 @@ class Refrigerio extends Model
     public function userable()
     {
         return $this->morphTo();
+    }
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class, 'refrigerio_id');
     }
 }

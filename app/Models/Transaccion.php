@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\TipoTransaccion;
 use App\Models\FormaPago;
 use App\Models\Institucion;
+use App\Models\Pago;
 use App\Models\User;
 //use App\Traits\Encryptable;
 
@@ -14,7 +15,7 @@ class Transaccion extends Model
 {
     //use Encryptable;
 
-    protected $fillable=[ 'tipo_transaccion_id','usuario_id','fecha_hora','valor','usuario_crea_id','forma_pago_id','ubicacion','telefono_uuid','transaccionable_id','transaccionable_type','usuario_crea_ip','dispositivo','tarjeta_id'];
+    protected $fillable=[ 'tipo_transaccion_id','usuario_id','fecha_hora','valor','usuario_crea_id','forma_pago_id','ubicacion','telefono_uuid','transaccionable_id','transaccionable_type','usuario_crea_ip','dispositivo','tarjeta_id','transaccion_id'];
     protected $with =['tipo_transaccion:id,tipo,operacion','forma_pago:id,forma_pago','usuario:id,nombre,apellido,foto,telefono,celular','usuario_crea:id,nombre,apellido,telefono,celular'];
     protected $hidden = [
         'created_at','updated_at'
@@ -42,8 +43,16 @@ class Transaccion extends Model
     }
 
     public function tarjeta(){
-        return $this->belongsTo(Transaccion::class,'tarjeta_id');
+        return $this->belongsTo(Tarjeta::class,'tarjeta_id');
     } 
+
+    public function pago(){
+        return $this->hasOne(Pago::class,'transanccion_id');
+    }
+
+    public function transaccion_relacionada(){
+        return $this->belongsTo(Transaccion::class,'transaccion_id');
+    }
 
     // public function getUsuarioIdAttribute($value) {
     //     return Crypt::decryptString($value);

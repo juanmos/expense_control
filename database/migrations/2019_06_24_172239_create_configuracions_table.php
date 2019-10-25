@@ -16,11 +16,7 @@ class CreateConfiguracionsTable extends Migration
         Schema::create('configuracions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('institucion_id');
-            $table->string('establecimiento')->default('001');
-            $table->string('punto')->default('001');
-            $table->integer('secuencial')->default(1);
-            $table->string('firma')->nullable();
-            $table->string('clave')->nullable();
+            $table->json('configuraciones')->nullable();
             $table->timestamps();
         });
     }

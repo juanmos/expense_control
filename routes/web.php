@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('refrigerio/editar/{id}','Institucion\RefrigerioController@edit')->name('institucion.refrigerio.editar');
         Route::put('refrigerio/update/{id}','Institucion\RefrigerioController@update')->name('institucion.refrigerio.update');
         Route::delete('refrigerio/{id}','Institucion\RefrigerioController@destroy')->name('institucion.refrigerio.eliminar');
+        Route::get('refrigerio/historial/pagos/{id}','Institucion\RefrigerioController@historialPagos')->name('institucion.refrigerio.historial');
 
         Route::get('refrigerios/tipos','Institucion\TipoRefrigerioController@index')->name('institucion.refrigerios.tipos.index');
         Route::get('refrigerios/tipos/crear','Institucion\TipoRefrigerioController@create')->name('institucion.refrigerios.tipos.crear');
@@ -68,6 +69,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('refrigerios/tipos/editar/{id}','Institucion\TipoRefrigerioController@edit')->name('institucion.refrigerios.tipos.editar');
         Route::put('refrigerios/tipos/update/{id}','Institucion\TipoRefrigerioController@update')->name('institucion.refrigerios.tipos.update');
         Route::delete('refrigerios/tipos/{id}','Institucion\TipoRefrigerioController@destroy')->name('institucion.refrigerios.tipos.destroy');
+
+        
+
+        Route::post('/pagar/refrigerio','Transacciones\PaymentController@refrigerio')->name('institucion.refrigerio.pagar');
+
+        Route::get('configuracion/editar','Institucion\InstitucionController@configuracion')->name('institucion.configuracion.edit');
+        Route::put('configuracion/update/{id}','Institucion\InstitucionController@configuracionUpdate')->name('institucion.configuracion.update');
     });
     
     

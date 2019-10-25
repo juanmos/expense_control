@@ -35,12 +35,12 @@
                 <li class="nav-item pcoded-menu-caption">
                     <label>Administración</label>
                 </li>
-                <li data-username="basic components Button Alert Badges breadcrumb Paggination progress Tooltip popovers Carousel Cards Collapse Tabs pills Modal Grid System Typography Extra Shadows Embeds" class="nav-item pcoded-hasmenu {{(Route::currentRouteName()=='institucion.refrigerios.tipos.index' || Route::currentRouteName()=='institucion.usuario.index')?'active pcoded-trigger':''}}">
+                <li data-username="" class="nav-item pcoded-hasmenu {{(Route::currentRouteName()=='institucion.refrigerios.tipos.index' || Route::currentRouteName()=='institucion.usuario.index' || Route::currentRouteName()=='institucion.configuracion.edit')?'active pcoded-trigger':''}}">
                     <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-settings"></i></span><span class="pcoded-mtext">Administración</span></a>
                     <ul class="pcoded-submenu">                        
                         <li class="{{(Route::currentRouteName()=='institucion.refrigerios.tipos.index')?'active':''}}"><a href="{{route('institucion.refrigerios.tipos.index')}}" class="">Tipos de refrigerios</a></li>
                         <li class="{{(Route::currentRouteName()=='institucion.usuario.index')?'active':''}}"><a href="{{route('institucion.usuario.index')}}" class="">Usuarios</a></li>
-                        {{-- <li class=""><a href="{{route('configuracion.edit',Auth::user()->empresa_id)}}" class="">Configuraciones</a></li> --}}
+                        <li class="{{(Route::currentRouteName()=='institucion.configuracion.edit')?'active':''}}"><a href="{{route('institucion.configuracion.edit')}}" class="">Configuraciones</a></li>
                     </ul>
                 </li>
                 @endif

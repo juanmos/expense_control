@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Institucion;
 use App\Models\Refrigerio;
 use App\Models\TipoRefrigerio;
+use App\Models\Pago;
 use App\Models\User;
 use Carbon\Carbon;
 use Auth;
@@ -148,5 +149,10 @@ class RefrigerioController extends Controller
 
     public function refrigerios($id){
         
+    }
+
+    public function historialPagos($id){
+        $pagos=Pago::where('refrigerio_id',$id)->with(['transaccion.transaccion_relacionada'])->get();
+        return response()->json(compact('pagos'));
     }
 }

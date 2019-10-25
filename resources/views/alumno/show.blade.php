@@ -157,15 +157,15 @@
                                                 </div>    
                                             </div>
                                         </div>
-                                        <div class="col-md-1 media friendlist-box">
-                                            <a class="btn btn-icon btn-rounded btn-primary" title="Cobrar"><i class="feather icon-shopping-cart" style="color:#fff;opacity:1"></i></a>                                      
+                                        <div class="col-md-1 media p-t-20">
+                                            <a class="btn btn-icon btn-rounded btn-primary pagarRefrigerioBtn" myid="{{$refrigerio->id}}" valor="{{$refrigerio->costo}}" title="Cobrar" data-target="#pagoModal" data-toggle="modal"><i class="feather icon-shopping-cart" style="color:#fff;opacity:1"></i></a>                                      
                                         </div>
-                                        <div class="col-md-1  media friendlist-box">
+                                        <div class="col-md-1  media p-t-20">
                                             <a class="dropdown-toggle addon-btn" data-toggle="dropdown" aria-expanded="false">
                                                 <i class="fas fa-cog"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(1482px, 99px, 0px);">
-                                                <a class="dropdown-item editarRefrigerioModalBtn" href="" myid="{{$refrigerio->id}}" data-toggle="modal" data-target="#editarRefrigerioModal"><i class="icofont icofont-attachment"></i>Historial de pagos</a>
+                                                <a class="dropdown-item getHistorial" href="" myid="{{$refrigerio->id}}" data-toggle="modal" data-target="#historialPagos"><i class="icofont icofont-attachment"></i>Historial de pagos</a>
                                                 <div role="separator" class="dropdown-divider"></div>
                                                 <a class="dropdown-item editarRefrigerioModalBtn" href="" myid="{{$refrigerio->id}}" data-toggle="modal" data-target="#editarRefrigerioModal"><i class="icofont icofont-attachment"></i>Editar</a>
                                                 <div role="separator" class="dropdown-divider"></div>
@@ -323,6 +323,131 @@
         </div>
     </div>
 </div>
+<!-- Historial de refrigerios-->
+<div class="modal fade" id="historialPagos" tabindex="-1" role="dialog" aria-labelledby="historialPagosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Historial de pagos de refrigerios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Mes de pago</th>
+                        <th>Valor</th>
+                        <th>Forma de pago</th>
+                        <th>No Factura</th>
+                    </tr>
+                    <tbody id="historialPagosTable"></tbody>
+                    
+                </table>         
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+<!-- Hacer pago / recarga-->
+<div class="modal fade" id="facturarPagoModal" tabindex="-1" role="dialog" aria-labelledby="facturarPagoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        {!! Form::open(['route'=>['institucion.refrigerio.pagar'],'method'=>"POST"]) !!}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Datos de facturación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Nombre factura:</label>
+                        {!! Form::text('nombre', null, ["class"=>"form-control","placeholder"=>"Nombre en la factura"]) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Cedula/RUC:</label>
+                        {!! Form::text('cedula', null, ["class"=>"form-control","id"=>"forma_pago","placeholder"=>"Cedula o RUC"]) !!}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Email:</label>
+                        {!! Form::text('email', null, ["class"=>"form-control","placeholder"=>"Email para facturar"]) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Teléfono:</label>
+                        {!! Form::text('telefono', null, ["class"=>"form-control datepicker","placeholder"=>"Teléfono"]) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Dirección:</label>
+                        {!! Form::text('direccion', null, ["class"=>"form-control ","placeholder"=>"Dirección"]) !!}
+                    </div>
+                    
+                    {!! Form::hidden('alumno', $usuario->id) !!}
+                    {!! Form::hidden('refrigerio_id',0,['id'=>'refrigerio_id']) !!}
+                    
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Facturar</button>
+            </div>
+        </div>
+        {!! Form::close() !!}
+    </div>
+</div>
+<!-- Hacer pago / recarga-->
+<div class="modal fade" id="pagoModal" tabindex="-1" role="dialog" aria-labelledby="pagoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        {!! Form::open(['route'=>['institucion.refrigerio.pagar'],'method'=>"POST"]) !!}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pagos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Tipo de transacción:</label>
+                        {!! Form::select('tipo_transaccion_id', $tipo_pago, 0, ["class"=>"form-control"]) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Forma de pago:</label>
+                        {!! Form::select('forma_pago_id', $formas_pago, 1, ["class"=>"form-control","id"=>"forma_pago"]) !!}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Monto:</label>
+                        {!! Form::text('valor', null, ["class"=>"form-control","placeholder"=>"Valor a pagar",'id'=>'valor_refrigerio']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Mes de pago:</label>
+                        {!! Form::text('mes_pago', null, ["class"=>"form-control datepicker","placeholder"=>"Mes por el que paga"]) !!}
+                    </div>
+                    <div class="form-group detallePago" style="display:none">
+                        <label for="message-text" class="col-form-label">Concepto/Detalle:</label>
+                        {!! Form::text('detalle', null, ["class"=>"form-control ","placeholder"=>"Detalle del pago, numero del cheque, banco, etc"]) !!}
+                    </div>
+                    <div class="form-group detallePago hide" style="display:none">
+                        <label for="message-text" class="col-form-label">Comprobante:</label>
+                        {!! Form::file('comprobante',  ["class"=>"form-control "]) !!}
+                    </div>
+                    
+                    {!! Form::hidden('alumno', $usuario->id) !!}
+                    {!! Form::hidden('refrigerio_id',0,['id'=>'refrigerio_id']) !!}
+                    
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Pagar</button>
+            </div>
+        </div>
+        {!! Form::close() !!}
+    </div>
+</div>
 <!-- Nueva tarjeta-->
 <div class="modal fade" id="tarjetaModa" tabindex="-1" role="dialog" aria-labelledby="tarjetaModaLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -465,6 +590,9 @@
 <script src='{{asset("assets/plugins/sweetalert/js/sweetalert.min.js")}}'></script>
 <script>
     $(document).ready(function(){
+        @if(session('facturar'))
+            $('#facturarPagoModal').modal('show');
+        @endif
         $(".select").select2();
         $('.datepicker').datepicker({
             autoclose:true,
@@ -472,6 +600,10 @@
         });
         $('.tarjetaPerdidaModaBtn').on('click', function (e) {
             $('#tarjeta_perdida_id').val($(this).attr('myid'));
+        });
+        $('.pagarRefrigerioBtn').on('click', function (e) {
+            $('#refrigerio_id').val($(this).attr('myid'));
+            $('#valor_refrigerio').val($(this).attr('valor'));
         });
         $('.editarRefrigerioModalBtn').on('click', function (e) {
             $('#refrigerio_id').val($(this).attr('myid'));
@@ -525,6 +657,20 @@
                     } else {
                     }
                 });
+        });
+        $('#forma_pago').on('change',function(){
+            if($(this).val()!=1){
+                $('.detallePago').show()
+            }else{
+                $('.detallePago').hide()
+            }
+        })
+        $('.getHistorial').on('click',function(){
+            $.get('{{url("institucion/refrigerio/historial/pagos/")}}/'+$(this).attr('myid'),function(json){
+                json.pagos.forEach(function(item){
+                    $('#historialPagosTable').append('<tr><td>'+moment(item.mes_pago).format('MMMM-YY')+'</td><td>$ '+parseFloat(item.transaccion.valor).toFixed(2)+'</td><td>'+item.transaccion.transaccion_relacionada.forma_pago.forma_pago+'</td><td></td></tr>')
+                })
+            },'json')
         });
     });
 

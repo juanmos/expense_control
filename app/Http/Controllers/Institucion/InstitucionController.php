@@ -9,8 +9,11 @@ use App\Models\Transaccion;
 use App\Models\Pais;
 use App\Models\Ciudad;
 use App\Models\EstadoInstitucion;
+use App\Models\Configuracion;
 use Carbon\Carbon;
+use Crypt;
 use Hash;
+use Auth;
 
 class InstitucionController extends Controller
 {
@@ -117,5 +120,26 @@ class InstitucionController extends Controller
         //
     }
 
-    
+    public function configuracion(){
+        $configuracion = Configuracion::where('institucion_id',Auth::user()->institucion_id)->first();
+        if($configuracion==null){
+            $configuracion = Configuracion::create(['institucion_id'=>Auth::user()->institucion_id]);
+        }
+        
+        return view('institucion.configuracion',compact('configuracion'));
+    }
+
+    public function configuracionUpdate(Request $request,$id){
+        $configuracion=Configuracion::find($id);
+        $data=$request->except(['firma','clave','_method',"_token"]);
+        if($request->has('firma')){
+            $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
+        }
+        if($request->has('clave')){
+            $data['clave']=Crypt::encrypt($request->get('clave'));
+        }
+        $configuracion->configuraciones=$data;
+        $configuracion->save();
+        return back()->with('mensaje','Configuraciones guardadas con exito');
+    }
 }
