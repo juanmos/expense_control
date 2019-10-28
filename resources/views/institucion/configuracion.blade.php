@@ -53,20 +53,50 @@
                                                 <div class="tab-content" id="myTabContent">
                                                     <div class="tab-pane fade active show" id="facturacion" role="tabpanel" aria-labelledby="facturacion-tab">
                                                         <div class="row">
+                                                            <div class="form-group col-md-6">
+                                                                <label for="exampleInputPassword1">Razón social</label>
+                                                                {!! Form::text('razon_social', ($configuracion->configuraciones!=null && array_key_exists('razon_social',$configuracion->configuraciones))?$configuracion->configuraciones['razon_social'] : $institucion->nombre ,["class"=>"form-control"]) !!}
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="exampleInputPassword1">Nombre comercial</label>
+                                                                {!! Form::text('nombre_comercial', ($configuracion->configuraciones!=null && array_key_exists('nombre_comercial',$configuracion->configuraciones))?$configuracion->configuraciones['nombre_comercial'] : $institucion->nombre ,["class"=>"form-control"]) !!}
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="exampleInputPassword1">RUC</label>
+                                                                {!! Form::text('ruc', ($configuracion->configuraciones!=null && array_key_exists('ruc',$configuracion->configuraciones))?$configuracion->configuraciones['ruc'] : $institucion->ruc ,["class"=>"form-control","placeholder"=>'RUC']) !!}
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="exampleInputPassword1">Email facturacion</label>
+                                                                {!! Form::text('email_facturacion', ($configuracion->configuraciones!=null && array_key_exists('email_facturacion',$configuracion->configuraciones))?$configuracion->configuraciones['email_facturacion'] : $institucion->email ,["class"=>"form-control"]) !!}
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="exampleInputPassword1">Lleva contabilidad</label>
+                                                                {!! Form::select('contabilidad',['SI'=>'SI','NO'=>'NO'], ($configuracion->configuraciones!=null && array_key_exists('contabilidad',$configuracion->configuraciones))?$configuracion->configuraciones['contabilidad'] : 'NO' ,["class"=>"form-control"]) !!}
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="exampleInputPassword1">Dirección de facturación</label>
+                                                                {!! Form::text('direccion_facturacion', ($configuracion->configuraciones!=null && array_key_exists('direccion_facturacion',$configuracion->configuraciones))?$configuracion->configuraciones['direccion_facturacion'] : $institucion->direccion ,["class"=>"form-control"]) !!}
+                                                            </div>
+                                                            
+
+
+                                                            <div class="form-group col-md-6">
+                                                                
+                                                            </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="exampleInputPassword1">Establecimiento</label>
-                                                                {!! Form::text('establecimiento', ($configuracion->configuraciones!=null)?$configuracion->configuraciones['establecimiento'] : '001' ,["class"=>"form-control"]) !!}
+                                                                {!! Form::text('establecimiento', ($configuracion->configuraciones!=null && array_key_exists('establecimiento',$configuracion->configuraciones))?$configuracion->configuraciones['establecimiento'] : '001' ,["class"=>"form-control"]) !!}
                                                             </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="exampleInputPassword1">Punto</label>
-                                                                {!! Form::text('punto', ($configuracion->configuraciones!=null)?$configuracion->configuraciones['punto'] : '500' ,["class"=>"form-control"]) !!}
+                                                                {!! Form::text('punto', ($configuracion->configuraciones!=null && array_key_exists('punto',$configuracion->configuraciones))?$configuracion->configuraciones['punto'] : '500' ,["class"=>"form-control"]) !!}
                                                             </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="exampleInputPassword1">Secuencia</label>
-                                                                {!! Form::text('secuencia', ($configuracion->configuraciones!=null)?$configuracion->configuraciones['secuencia'] : '1' ,["class"=>"form-control"]) !!}
+                                                                {!! Form::text('secuencia', ($configuracion->configuraciones!=null && array_key_exists('secuencia',$configuracion->configuraciones))?$configuracion->configuraciones['secuencia'] : '1' ,["class"=>"form-control"]) !!}
                                                             </div>
                                                             <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Firma electrónica: {!!($configuracion->configuraciones!=null)?($configuracion->configuraciones['firma'])?'<span class="label text-c-green">Firma guardada</span>':'' : ''!!}</label>
+                                                                <label for="exampleInputPassword1">Firma electrónica: {!!($configuracion->configuraciones!=null && array_key_exists('firma',$configuracion->configuraciones))?($configuracion->configuraciones['firma'])?'<span class="label text-c-green">Firma guardada</span>':'' : ''!!}</label>
                                                                 {!! Form::file('firma',["class"=>"form-control"]) !!}
                                                             </div>
                                                             <div class="form-group col-md-4">
@@ -76,7 +106,18 @@
                                                             </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="exampleInputPassword1">Fecha expiración</label>
-                                                                {!! Form::text('fecha_expiracion', ($configuracion->configuraciones!=null)?$configuracion->configuraciones['fecha_expiracion'] : '' ,["class"=>"form-control","readonly"=>"readonly","placeholder"=>'Obtendremos la fecha de expiracion de tu firma electronica']) !!}
+                                                                {!! Form::text('fecha_expiracion', ($configuracion->configuraciones!=null && array_key_exists('fecha_expiracion',$configuracion->configuraciones))?$configuracion->configuraciones['fecha_expiracion'] : '' ,["class"=>"form-control","placeholder"=>'Obtendremos la fecha de expiracion de tu firma electronica']) !!}
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="exampleInputPassword1">En modo:</label>
+                                                                <div class="radio d-inline">
+                                                                    <input type="radio" name="ambiente_facturacion" id="radio-produccion" value="2" {{($configuracion->configuraciones!=null && array_key_exists('ambiente_facturacion',$configuracion->configuraciones))?($configuracion->configuraciones['ambiente_facturacion']==2)?'checked':'':''}}>
+                                                                    <label for="radio-produccion" class="cr">Producción</label>
+                                                                </div>
+                                                                <div class="radio d-inline">
+                                                                    <input type="radio" name="ambiente_facturacion" id="radio-pruebas" value="1" {{($configuracion->configuraciones!=null && array_key_exists('ambiente_facturacion',$configuracion->configuraciones))?($configuracion->configuraciones['ambiente_facturacion']==1)?'checked':'':''}}>
+                                                                    <label for="radio-pruebas" class="cr">Pruebas</label>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

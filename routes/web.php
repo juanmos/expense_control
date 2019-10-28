@@ -15,7 +15,7 @@ Route::get('/', 'HomeController@index');
 Auth::routes();
 Route::get('logout','Auth\LoginController@logout')->name('logout');
 
-Route::get('carga','Bares\PaymentController@carga');
+// Route::get('carga','Bares\PaymentController@carga');
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::group(['prefix' => 'institucion'], function() {
         Route::resource('institucion','Institucion\InstitucionController');
+        Route::resource('institucion.facturacion','Institucion\FacturacionController');
         Route::get('/institucion/{id}/{pest?}','Institucion\InstitucionController@show')->name('institucion.show');
         Route::get('/{id}/alumnos','Institucion\AlumnoController@index')->name('institucion.alumnos');
         Route::get('/{id}/alumnos/data','Institucion\AlumnoController@alumnosData')->name('institucion.alumnos.data');

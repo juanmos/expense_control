@@ -121,12 +121,13 @@ class InstitucionController extends Controller
     }
 
     public function configuracion(){
+        $institucion =Institucion::find(Auth::user()->institucion_id);
         $configuracion = Configuracion::where('institucion_id',Auth::user()->institucion_id)->first();
         if($configuracion==null){
             $configuracion = Configuracion::create(['institucion_id'=>Auth::user()->institucion_id]);
         }
         
-        return view('institucion.configuracion',compact('configuracion'));
+        return view('institucion.configuracion',compact('configuracion','institucion'));
     }
 
     public function configuracionUpdate(Request $request,$id){

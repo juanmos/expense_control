@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Transaccion;
 use App\Models\Refrigerio;
+use App\Models\Factura;
 
 class Pago extends Model
 {
@@ -17,5 +18,8 @@ class Pago extends Model
     public function refrigerio()
     {
         return $this->belongsTo(Refrigerio::class, 'refrigerio_id');
+    }
+    public function factura(){
+        return $this->hasOne(Factura::class,'pago_id');
     }
 }

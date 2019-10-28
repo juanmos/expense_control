@@ -152,7 +152,7 @@ class RefrigerioController extends Controller
     }
 
     public function historialPagos($id){
-        $pagos=Pago::where('refrigerio_id',$id)->with(['transaccion.transaccion_relacionada'])->get();
+        $pagos=Pago::where('refrigerio_id',$id)->with(['transaccion.transaccion_relacionada','factura'])->get();
         return response()->json(compact('pagos'));
     }
 }

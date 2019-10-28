@@ -3,6 +3,7 @@
 @section('content')
 <div class="pcoded-main-container">
     <div class="pcoded-wrapper">
+        @include('includes.mensaje')
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
@@ -355,7 +356,7 @@
 <!-- Hacer pago / recarga-->
 <div class="modal fade" id="facturarPagoModal" tabindex="-1" role="dialog" aria-labelledby="facturarPagoModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        {!! Form::open(['route'=>['institucion.refrigerio.pagar'],'method'=>"POST"]) !!}
+        {!! Form::open(['route'=>['institucion.facturacion.store',Auth::user()->institucion_id],'method'=>"POST"]) !!}
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Datos de facturación</h5>
@@ -369,7 +370,7 @@
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Cedula/RUC:</label>
-                        {!! Form::text('cedula', null, ["class"=>"form-control","id"=>"forma_pago","placeholder"=>"Cedula o RUC"]) !!}
+                        {!! Form::text('ruc', null, ["class"=>"form-control","id"=>"forma_pago","placeholder"=>"Cedula o RUC"]) !!}
                     </div>
                     
                     <div class="form-group">
@@ -378,15 +379,15 @@
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="col-form-label">Teléfono:</label>
-                        {!! Form::text('telefono', null, ["class"=>"form-control datepicker","placeholder"=>"Teléfono"]) !!}
+                        {!! Form::text('telefono', null, ["class"=>"form-control","placeholder"=>"Teléfono"]) !!}
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="col-form-label">Dirección:</label>
                         {!! Form::text('direccion', null, ["class"=>"form-control ","placeholder"=>"Dirección"]) !!}
                     </div>
                     
-                    {!! Form::hidden('alumno', $usuario->id) !!}
-                    {!! Form::hidden('refrigerio_id',0,['id'=>'refrigerio_id']) !!}
+                    {!! Form::hidden('usuario_id', $usuario->id) !!}
+                    {!! Form::hidden('pago_id',session('pago_id'),['id'=>'pago_id']) !!}
                     
                 
             </div>
@@ -668,7 +669,9 @@
         $('.getHistorial').on('click',function(){
             $.get('{{url("institucion/refrigerio/historial/pagos/")}}/'+$(this).attr('myid'),function(json){
                 json.pagos.forEach(function(item){
-                    $('#historialPagosTable').append('<tr><td>'+moment(item.mes_pago).format('MMMM-YY')+'</td><td>$ '+parseFloat(item.transaccion.valor).toFixed(2)+'</td><td>'+item.transaccion.transaccion_relacionada.forma_pago.forma_pago+'</td><td></td></tr>')
+                    var _pago = (item.factura!=null)?item.factura.factura_no:'Sin factura';
+                    var link='<a class="btn btn-icon btn-rounded btn-primary float-right" title="Ver" href="#"><i class="feather icon-file" style="color:#fff;opacity:1"></i></a>'
+                    $('#historialPagosTable').append('<tr><td>'+moment(item.mes_pago).format('MMMM-YY')+'</td><td>$ '+parseFloat(item.transaccion.valor).toFixed(2)+'</td><td>'+item.transaccion.transaccion_relacionada.forma_pago.forma_pago+'</td><td>'+_pago+link+'</td></tr>')
                 })
             },'json')
         });

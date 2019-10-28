@@ -153,7 +153,7 @@ class PaymentController extends Controller
     }
 
     public function refrigerio(Request $request){
-        return back()->with(['facturar'=>true,'mensaje'=>'Se ha guardado correctamente']);
+        
         if($request->is('api/*')){
             $valor = base64_decode($request->get('valor'));
             $tarjeta_id=base64_decode($request->get('tarjeta_id'));
@@ -177,8 +177,6 @@ class PaymentController extends Controller
         if($user == null){
             return response()->json(['error'=>'No existe el usuario'],404);
         }
-        
-
         $institucion = Institucion::find(Auth::user()->institucion_id);
         if($valor>0){
             $transaccionRecarga = $institucion->transacciones()->create([
@@ -232,11 +230,11 @@ class PaymentController extends Controller
             if($request->has('mes_pago')){
                 $pago['mes_pago']=Carbon::parse($request->get('mes_pago'))->toDateString();
             }
-            $transaccion->pago()->create($pago);
+            $elpago=$transaccion->pago()->create($pago);
             if($request->is('api/*')){
                 return response()->json(['realizado'=>true]);
             }else{
-                return back()->with(['facturar'=>true]);
+                return back()->with(['facturar'=>true,'mensaje'=>'Se ha guardado correctamente','pago_id'=>$elpago->id]);
             }
         }else{
             return response()->json(['error'=>'Saldo insuficiente'],404);
