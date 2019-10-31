@@ -133,7 +133,7 @@ class InstitucionController extends Controller
     public function configuracionUpdate(Request $request,$id){
         $configuracion=Configuracion::find($id);
         $data=$request->except(['firma','clave','_method',"_token"]);
-        if($request->has('firma') && $request->get('firma')!=null){
+        if($request->has('firma') ){
             $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
         }else{
             $data['firma']=$configuracion->configuraciones['firma'];
