@@ -153,7 +153,7 @@ class PaymentController extends Controller
     }
 
     public function refrigerio(Request $request){
-        
+        // return back()->with(['facturar'=>true,'mensaje'=>'Se ha guardado correctamente','pago_id'=>4]);
         if($request->is('api/*')){
             $valor = base64_decode($request->get('valor'));
             $tarjeta_id=base64_decode($request->get('tarjeta_id'));
@@ -197,7 +197,8 @@ class PaymentController extends Controller
             if($request->has('detalle')){
                 $pago['detalle']=$request->get('detalle');
             }
-            if($request->has('comprobante') && $request->get('comprobante')!=null){
+            
+            if($request->has('comprobante') ){
                 $pago['comprobante']=$request->file('comprobante')->store('public/comprobantes/'.$institucion->id);
             }
             $transaccionRecarga->pago()->create($pago);
@@ -221,7 +222,7 @@ class PaymentController extends Controller
             if($request->has('detalle')){
                 $pago['detalle']=$request->get('detalle');
             }
-            if($request->has('comprobante') && $request->get('comprobante')!=null){
+            if($request->has('comprobante')){
                 $pago['comprobante']=$request->file('comprobante')->store('public/comprobantes/'.$institucion->id);
             }
             if($request->has('refrigerio_id')){

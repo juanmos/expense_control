@@ -11,6 +11,7 @@ use App\Models\Refrigerio;
 use App\Models\Factura;
 use App\Models\Pago;
 use Carbon\Carbon;
+use Storage;
 use Auth;
 
 class FacturacionController extends Controller
@@ -43,8 +44,13 @@ class FacturacionController extends Controller
      */
     public function store(Request $request)
     {
-        $data=$request->except(['_token','pago_id']);
-        $datosFacturacion = DatosFacturacion::create($data);
+        $data=$request->except(['_token','pago_id','datos_factura_id']);
+        if($request->get('datos_factura_id')==0){
+            $datosFacturacion = DatosFacturacion::create($data);
+        }else{
+            $datosFacturacion = DatosFacturacion::find('datos_factura_id');
+        }
+        
         $configuracion = Configuracion::where('institucion_id',Auth::user()->institucion_id)->first();
         $secuencia = $configuracion->configuraciones['establecimiento'].'-'.$configuracion->configuraciones['punto'].'-'.str_pad($configuracion->configuraciones['secuencia'], 9, "0", STR_PAD_LEFT);
         $nuevaSecuencia = intval($configuracion->configuraciones['secuencia'])+1;
@@ -74,7 +80,7 @@ class FacturacionController extends Controller
             'precio_unitario'=>$pago->transaccion->valor,
             'descuento'=>0,
             'iva'=>($pago->transaccion->valor * 0.12),
-            'precio'=>$pago->transaccion->valor * 1.12
+            'precio'=>$pago->transaccion->valor 
         ]);
         return back()->with(['mensaje'=>'Factura creada']);
     }
@@ -87,7 +93,8 @@ class FacturacionController extends Controller
      */
     public function show($id)
     {
-        //
+        $factura = Factura::find($id);
+        return view('facturacion.factura',compact('factura'));
     }
 
     /**
@@ -120,6 +127,28 @@ class FacturacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
+    {
+        //
+    }
+
+    public function pdf($institucion,$id)
+    {
+        $factura = Factura::find($id);
+        return response()->file(storage_path('app/'.$factura->pdf));
+    }
+
+    public function xml($institucion,$id)
+    {
+        $factura = Factura::find($id);
+        return response()->download(storage_path('app/'.$factura->xml));
+    }
+
+    public function email($institucion,$id)
+    {
+        //
+    }
+
+    public function anular($institucion,$id)
     {
         //
     }

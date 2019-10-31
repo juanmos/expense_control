@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}/alumno/codificar/{alumno_id}','Institucion\AlumnoController@codificar')->name('institucion.alumno.codificar');
         Route::get('/{id}/alumno/edit/{alumno_id}','Institucion\AlumnoController@edit')->name('institucion.alumno.edit');
         Route::put('/alumno/update/{alumno_id}','Institucion\AlumnoController@update')->name('institucion.alumno.update');
+        Route::get('/{id}/alumno/datos/factura/{alumno_id}','Institucion\AlumnoController@datos_facturacion')->name('institucion.alumno.datos.facturacion');
 
         Route::get('/alumno/{id}/tarjeta/crear','Institucion\TarjetaController@create')->name('institucion.alumno.tarjeta.create');
         Route::post('/alumno/{id}/tarjeta/store','Institucion\TarjetaController@store')->name('institucion.alumno.tarjeta.store');
@@ -71,7 +72,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('refrigerios/tipos/update/{id}','Institucion\TipoRefrigerioController@update')->name('institucion.refrigerios.tipos.update');
         Route::delete('refrigerios/tipos/{id}','Institucion\TipoRefrigerioController@destroy')->name('institucion.refrigerios.tipos.destroy');
 
-        
+        Route::get('{id}/factura/pdf/{factura_id}','Institucion\FacturacionController@pdf')->name('institucion.facturacion.pdf');
+        Route::get('{id}/factura/xml/{factura_id}','Institucion\FacturacionController@xml')->name('institucion.facturacion.xml');
+        Route::get('{id}/factura/email/{factura_id}','Institucion\FacturacionController@email')->name('institucion.facturacion.email');
+        Route::get('{id}/factura/anular/{factura_id}','Institucion\FacturacionController@anular')->name('institucion.facturacion.anular');
 
         Route::post('/pagar/refrigerio','Transacciones\PaymentController@refrigerio')->name('institucion.refrigerio.pagar');
 

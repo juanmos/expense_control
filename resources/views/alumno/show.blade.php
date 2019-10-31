@@ -189,9 +189,7 @@
                                         <div class="table-responsive">
                                             <table class="table table-hover">
                                                 <tbody>
-                                                    @forelse ($transacciones as $transaccion )
-                                                        
-                                                    
+                                                    @forelse ($transacciones as $transaccion )                                                       
                                                     <tr class="unread">
                                                         <td><img class="rounded-circle" style="width:40px;" src="{{Storage::url($transaccion->usuario->foto)}}" alt="activity-user"></td>
                                                         <td>
@@ -204,6 +202,7 @@
                                                                 $ {{number_format($transaccion->valor,2)}}
                                                             </h6>
                                                             <p class="m-0">{{$transaccion->tipo_transaccion->tipo}} con {{$transaccion->forma_pago->forma_pago}}</p>
+                                                            @if($transaccion->pago!=null)<a href="{{Storage::url($transaccion->pago->comprobante)}}" data-toggle="lightbox">Ver comprobante</a>@endif
                                                         </td>
                                                         <td>
                                                             <p class="m-0">{{date('d-m-Y',strtotime($transaccion->fecha_hora))}}</p>
@@ -363,32 +362,36 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Datos de facturación:</label>
+                    {!! Form::select('datos_facturacion_id', [0=>'Nuevo'] + $usuario->datos_facturacion->pluck('nombre','id')->toArray(), 0, ['class'=>'form-control','id'=>'datos_facturacion']) !!}
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Nombre factura:</label>
+                    {!! Form::text('nombre', null, ["class"=>"form-control","placeholder"=>"Nombre en la factura",'id'=>'nombre_factura']) !!}
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Cedula/RUC:</label>
+                    {!! Form::text('ruc', null, ["class"=>"form-control","id"=>"cedula","placeholder"=>"Cedula o RUC",'id'=>'cedula_factura']) !!}
+                </div>
                 
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Nombre factura:</label>
-                        {!! Form::text('nombre', null, ["class"=>"form-control","placeholder"=>"Nombre en la factura"]) !!}
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Cedula/RUC:</label>
-                        {!! Form::text('ruc', null, ["class"=>"form-control","id"=>"forma_pago","placeholder"=>"Cedula o RUC"]) !!}
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label">Email:</label>
-                        {!! Form::text('email', null, ["class"=>"form-control","placeholder"=>"Email para facturar"]) !!}
-                    </div>
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label">Teléfono:</label>
-                        {!! Form::text('telefono', null, ["class"=>"form-control","placeholder"=>"Teléfono"]) !!}
-                    </div>
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label">Dirección:</label>
-                        {!! Form::text('direccion', null, ["class"=>"form-control ","placeholder"=>"Dirección"]) !!}
-                    </div>
-                    
-                    {!! Form::hidden('usuario_id', $usuario->id) !!}
-                    {!! Form::hidden('pago_id',session('pago_id'),['id'=>'pago_id']) !!}
-                    
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Email:</label>
+                    {!! Form::text('email', null, ["class"=>"form-control","placeholder"=>"Email para facturar",'id'=>'email_factura']) !!}
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Teléfono:</label>
+                    {!! Form::text('telefono', null, ["class"=>"form-control","placeholder"=>"Teléfono",'id'=>'telefono_factura']) !!}
+                </div>
+                <div class="form-group">
+                    <label for="message-text" class="col-form-label">Dirección:</label>
+                    {!! Form::text('direccion', null, ["class"=>"form-control ","placeholder"=>"Dirección",'id'=>'direccion_factura']) !!}
+                </div>
+                
+                {!! Form::hidden('usuario_id', $usuario->id) !!}
+                {!! Form::hidden('pago_id',session('pago_id'),['id'=>'pago_id']) !!}
+                {!! Form::hidden('datos_factura_id', 0,['id'=>'datos_facturacion_id']) !!}
                 
             </div>
             <div class="modal-footer">
@@ -402,7 +405,7 @@
 <!-- Hacer pago / recarga-->
 <div class="modal fade" id="pagoModal" tabindex="-1" role="dialog" aria-labelledby="pagoModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        {!! Form::open(['route'=>['institucion.refrigerio.pagar'],'method'=>"POST"]) !!}
+        {!! Form::open(['route'=>['institucion.refrigerio.pagar'],'method'=>"POST",'enctype'=>'multipart/form-data']) !!}
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Pagos</h5>
@@ -586,6 +589,11 @@
 </div>
 @endsection
 @push('scripts')
+<!-- Lightbox Js -->
+<script src="{{asset('assets/plugins/ekko-lightbox/js/ekko-lightbox.min.js')}}">
+</script>
+<script src="{{asset('assets/plugins/lightbox2-master/js/lightbox.min.js')}}">
+</script>
 <script src='{{asset("assets/plugins/select2/js/select2.full.min.js")}}'></script>
 <script src='{{asset("assets/plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js")}}'></script>
 <script src='{{asset("assets/plugins/sweetalert/js/sweetalert.min.js")}}'></script>
@@ -670,10 +678,33 @@
             $.get('{{url("institucion/refrigerio/historial/pagos/")}}/'+$(this).attr('myid'),function(json){
                 json.pagos.forEach(function(item){
                     var _pago = (item.factura!=null)?item.factura.factura_no:'Sin factura';
-                    var link='<a class="btn btn-icon btn-rounded btn-primary float-right" title="Ver" href="#"><i class="feather icon-file" style="color:#fff;opacity:1"></i></a>'
+                    var link=(item.factura!=null)?'<a target="_blank" class="btn btn-icon btn-rounded btn-primary float-right" title="Ver" href="{{url("institucion/institucion/".Auth::user()->institucion_id."/facturacion/")}}/'+item.factura.id+'"><i class="feather icon-file" style="color:#fff;opacity:1"></i></a>':'';
                     $('#historialPagosTable').append('<tr><td>'+moment(item.mes_pago).format('MMMM-YY')+'</td><td>$ '+parseFloat(item.transaccion.valor).toFixed(2)+'</td><td>'+item.transaccion.transaccion_relacionada.forma_pago.forma_pago+'</td><td>'+_pago+link+'</td></tr>')
                 })
             },'json')
+        });
+        $('#datos_facturacion').on('change',function(){
+            if($(this).val()==0){
+                $('#nombre_factura').val('');
+                $('#email_factura').val('');
+                $('#cedula_factura').val('');
+                $('#telefono_factura').val('');
+                $('#direccion_factura').val('');
+                $('#datos_factura_id').val('0');
+                return false;
+            }
+            $.get("{{url('institucion/'.Auth::user()->institucion_id.'/alumno/datos/factura/')}}/"+$(this).val(),function(json){
+                $('#nombre_factura').val(json.nombre);
+                $('#email_factura').val(json.email);
+                $('#cedula_factura').val(json.ruc);
+                $('#telefono_factura').val(json.telefono);
+                $('#direccion_factura').val(json.direccion);
+                $('#datos_factura_id').val(json.id);
+            },'json');
+        });
+        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
         });
     });
 
@@ -681,8 +712,8 @@
 @endpush
 @push('styles')
 <link href='{{asset("assets/plugins/select2/css/select2.min.css")}}' rel='stylesheet' />
-{{-- <link href="{{asset('assets/plugins/bootstrap-datetimepicker/css/prettify.css')}}" rel="stylesheet">
-<link href="{{asset('assets/plugins/bootstrap-datetimepicker/css/docs.css')}}" rel="stylesheet"> --}}
+<link href="{{asset('assets/plugins/ekko-lightbox/css/ekko-lightbox.min.css')}}" rel="stylesheet">
+<link href="{{asset('assets/plugins/lightbox2-master/css/lightbox.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css')}}" rel="stylesheet">
 <script>
         var page = {

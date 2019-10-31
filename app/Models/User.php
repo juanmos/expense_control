@@ -9,6 +9,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Alumno;
+use App\Models\DatosFacturacion;
 use App\Models\Institucion;
 use App\Models\Tarjeta;
 use App\Models\Transaccion;
@@ -66,6 +67,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function refrigerio(){
         return $this->morphMany(Refrigerio::class,'userable');
+    }
+
+    public function datos_facturacion(){
+        return $this->hasMany(DatosFacturacion::class,'usuario_id');
     }
 
     public function getFullNameAttribute()

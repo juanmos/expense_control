@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Helpers;
 use App\Exports\AlumnoExport;
 use App\Imports\AlumnoImport;
+use App\Models\DatosFacturacion;
 use App\Models\TipoRefrigerio;
 use App\Models\FormaPago;
 use App\Models\TipoTransaccion;
@@ -104,16 +105,14 @@ class AlumnoController extends Controller
         $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
         $recargas =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('usuario_id',$alumno_id)
-                                ->where('tipo_transaccion_id',2)->get();
+                                ->whereIn('tipo_transaccion_id',[2,3])->get();
         $compras =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('usuario_id',$alumno_id)
-                                ->where('tipo_transaccion_id',1)->get();
+                                ->whereIn('tipo_transaccion_id',[1,4,5])->get();
         $tipo_tarjetas=TipoTarjeta::get()->pluck('tipo_tarjeta','id');    
         $tipos_refrigerio=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo','id');      
         $formas_pago = FormaPago::where('habilitado',1)->orderBy('forma_pago')->get()->pluck('forma_pago','id');   
         $tipo_pago = TipoTransaccion::whereIn('id',[5])->orderBy('tipo')->get()->pluck('tipo','id');    
-        
-
         return view('alumno.show',compact('usuario','transacciones','recargas','compras','id','tipo_tarjetas','tipos_refrigerio','formas_pago','tipo_pago'));
     }
 
@@ -206,5 +205,9 @@ class AlumnoController extends Controller
         
     }
 
+    public function datos_facturacion($id){
+        $datos = DatosFacturacion::find($id);
+        return $datos;
+    }
     
 }

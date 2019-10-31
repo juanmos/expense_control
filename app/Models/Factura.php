@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\DatosFacturacion;
 use App\Models\FacturaDetalle;
 use App\Models\Institucion;
-use App\Models\Estado;
+use App\Models\EstadoFactura;
 use App\Models\Pago;
 class Factura extends Model
 {
@@ -22,7 +22,7 @@ class Factura extends Model
     }
     public function estado()
     {
-        return $this->belongsTo(Estado::class, 'estado_id');
+        return $this->belongsTo(EstadoFactura::class, 'estado_id');
     }
     public function institucion()
     {
