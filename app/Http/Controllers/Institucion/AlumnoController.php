@@ -198,7 +198,7 @@ class AlumnoController extends Controller
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $transacciones = $institucion->transacciones()->where('usuario_id',base64_decode($id))->orderBy('fecha_hora','desc')->paginate(50);
         return Crypt::encrypt(json_encode(compact('transacciones')),false);
-        if($request->is('api/*')) return response()->json(compact('transacciones'));
+        // if($request->is('api/*')) return response()->json(compact('transacciones'));
     }
 
     public function tarjetas($id){
