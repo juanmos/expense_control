@@ -77,12 +77,11 @@
                                                                 <label for="exampleInputPassword1">Dirección de facturación</label>
                                                                 {!! Form::text('direccion_facturacion', ($configuracion->configuraciones!=null && array_key_exists('direccion_facturacion',$configuracion->configuraciones))?$configuracion->configuraciones['direccion_facturacion'] : $institucion->direccion ,["class"=>"form-control"]) !!}
                                                             </div>
-                                                            
-
-
-                                                            <div class="form-group col-md-6">
-                                                                
+                                                             <div class="form-group col-md-6">
+                                                                <label for="exampleInputPassword1">Teléfono de facturación</label>
+                                                                {!! Form::text('telefono_facturacion', ($configuracion->configuraciones!=null && array_key_exists('telefono_facturacion',$configuracion->configuraciones))?$configuracion->configuraciones['telefono_facturacion'] : $institucion->telefono ,["class"=>"form-control"]) !!}
                                                             </div>
+                                                            
                                                             <div class="form-group col-md-4">
                                                                 <label for="exampleInputPassword1">Establecimiento</label>
                                                                 {!! Form::text('establecimiento', ($configuracion->configuraciones!=null && array_key_exists('establecimiento',$configuracion->configuraciones))?$configuracion->configuraciones['establecimiento'] : '001' ,["class"=>"form-control"]) !!}
