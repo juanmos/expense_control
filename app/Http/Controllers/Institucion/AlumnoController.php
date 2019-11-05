@@ -202,7 +202,9 @@ class AlumnoController extends Controller
     }
 
     public function tarjetas($id){
-        
+        $tarjetas = Tarjeta::where('usuario_id',base64_decode($id))->with(['tipo_tarjeta'])->paginate(50);
+        // return response()->json(compact('tarjetas'));
+        return Crypt::encrypt(json_encode(compact('tarjetas')),false);
     }
 
     public function datos_facturacion($id){

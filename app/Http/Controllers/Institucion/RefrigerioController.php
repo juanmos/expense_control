@@ -12,7 +12,7 @@ use App\Models\Pago;
 use App\Models\User;
 use Carbon\Carbon;
 use Auth;
-
+use Crypt;
 class RefrigerioController extends Controller
 {
     /**
@@ -148,7 +148,10 @@ class RefrigerioController extends Controller
     }
 
     public function refrigerios($id){
-        
+        $user = User::find(base64_decode($id));
+        $refrigerios = $user->refrigerio()->with(['tipo_refrigerio'])->paginate(50);
+        // return response()->json(compact('refrigerios'));
+        return Crypt::encrypt(json_encode(compact('refrigerios')),false);
     }
 
     public function historialPagos($id){

@@ -22,7 +22,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
 
     
-    Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
+    
 
     
     Route::group(['prefix' => 'institucion'], function() {
@@ -34,6 +34,10 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('alumno/transacciones/{id}','Institucion\AlumnoController@transacciones');
         Route::get('alumno/tarjetas/{id}','Institucion\AlumnoController@tarjetas');
         Route::get('alumno/refrigerios/{id}','Institucion\RefrigerioController@refrigerios');
+        Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
+        Route::get('alumno/tarjeta/{id}','Institucion\TarjetaController@imagen');
+        Route::put('alumno/tarjeta/perdida/{id}','Institucion\TarjetaController@perdida');
+        Route::post('alumno/tarjeta/crear/{id}','Institucion\TarjetaController@store');
     });
     
     
