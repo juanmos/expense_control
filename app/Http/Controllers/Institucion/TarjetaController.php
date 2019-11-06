@@ -10,6 +10,7 @@ use App\Models\Tarjeta;
 use App\Models\User;
 use Carbon\Carbon;
 use QrCode;
+use Crypt;
 use Auth;
 
 class TarjetaController extends Controller
