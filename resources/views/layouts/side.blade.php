@@ -32,6 +32,9 @@
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.refrigerio.index')?'active':''}}">
                     <a href="{{route('institucion.refrigerio.index')}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Refrigerios</span></a>
                 </li>
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.menus.index')?'active':''}}">
+                    <a href="{{route('institucion.menus.index')}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Menus</span></a>
+                </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Administración</label>
                 </li>

@@ -7,6 +7,7 @@ use App\Models\TipoRefrigerio;
 use App\Models\EstadoInstitucion;
 use App\Models\Transaccion;
 use App\Models\Configuracion;
+use App\Models\MenuRefrigerio;
 use App\Models\Ciudad;
 use App\Models\User;
 
@@ -38,5 +39,9 @@ class Institucion extends Model
     public function tipo_refrigerio()
     {
         return $this->hasMany(TipoRefrigerio::class, 'institucion_id');
+    }
+
+    public function menus(){
+        return $this->hasMany(MenuRefrigerio::class,'institucion_id');
     }
 }

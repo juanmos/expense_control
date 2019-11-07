@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'institucion'], function() {
         Route::resource('institucion','Institucion\InstitucionController');
         Route::resource('institucion.facturacion','Institucion\FacturacionController');
+        Route::resource('institucion.menus','Institucion\MenuController');
         Route::get('/institucion/{id}/{pest?}','Institucion\InstitucionController@show')->name('institucion.show');
         Route::get('/{id}/alumnos','Institucion\AlumnoController@index')->name('institucion.alumnos');
         Route::get('/{id}/alumnos/data','Institucion\AlumnoController@alumnosData')->name('institucion.alumnos.data');

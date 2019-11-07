@@ -14,7 +14,7 @@ class EstadoTarjeta extends Migration
     public function up()
     {
         Schema::table('tarjetas', function (Blueprint $table) {
-            $table->enum('estado',['Nueva','Aprobada','Perdida'])->default('Nueva');
+            $table->enum('estado',['Nueva','Aprobada','Perdida','Vencida'])->default('Nueva');
         });
     }
 
