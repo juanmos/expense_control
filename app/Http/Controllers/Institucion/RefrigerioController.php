@@ -69,7 +69,10 @@ class RefrigerioController extends Controller
     {
         $usuario = User::find($request->get('usuario_id'));
         $tipo=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
-        $dias=array_values($request->get('dias'));
+        if($request->is('api/*')){
+            $dias=explode(',',$reqeust->get('dias'));
+        }
+        else $dias=array_values($request->get('dias'));
         if($tipo->forma_pago=='diario'){
             $costo=$tipo->costo*count($request->get('dias'));
         }else{
@@ -83,6 +86,7 @@ class RefrigerioController extends Controller
             'fecha_fin'=>Carbon::parse($request->get('fecha_fin'))->toDateString(),
             'costo'=>$costo
         ]);
+        if($request->is('api/*')) return response()->json(['creado'=>true]);
         return redirect()->route('institucion.alumno.show',[Auth::user()->institucion_id,$usuario->id]);
     }
 
