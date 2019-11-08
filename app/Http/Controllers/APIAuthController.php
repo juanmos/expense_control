@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Tymon\JWTAuthExceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TipoRefrigerio;
 use App\Models\TipoTarjeta;
 use App\Models\User;
 use App\Models\Ciudad;
@@ -81,9 +82,10 @@ class APIAuthController extends Controller
             $roles = $user->getRoleNames();
             $ciudades = Ciudad::orderBy('ciudad')->get();
             $tipo_tarjetas = TipoTarjeta::orderBy('tipo_tarjeta')->get();
+            $tipo_refrigerios = TipoRefrigerio::orderBy('tipo')->get();
             // $vendedores = User::where('empresa_id',auth('api')->user()->empresa_id)->with(['roles'])->get();
-            return Crypt::encrypt(json_encode(compact('user','roles','ciudades','tipo_tarjetas')),false);
-            return response()->json(compact('user','roles','ciudades','tipo_tarjetas'));
+            return Crypt::encrypt(json_encode(compact('user','roles','ciudades','tipo_tarjetas','tipo_refrigerios')),false);
+            return response()->json(compact('user','roles','ciudades','tipo_tarjetas','tipo_refrigerios'));
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
 
             return response()->json(['token_absent'], $e->getStatusCode());
