@@ -70,7 +70,7 @@ class RefrigerioController extends Controller
         $usuario = User::find(($request->is('api/*'))? base64_decode($request->get('usuario_id')) :$request->get('usuario_id'));
         $tipo=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
         if($request->is('api/*')){
-            $dias=explode(',',$reqeust->get('dias'));
+            $dias=explode(',',$request->get('dias'));
         }
         else $dias=array_values($request->get('dias'));
         if($tipo->forma_pago=='diario'){
