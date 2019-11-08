@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Institucion;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Institucion;
+use App\Models\TipoRefrigerio;
+use App\Models\MenuRefrigerio;
+use Carbon\Carbon;
+use Auth;
 
 class MenuController extends Controller
 {
@@ -12,9 +17,23 @@ class MenuController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($institucion_id)
     {
-        //
+        $tipos = TipoRefrigerio::where('institucion_id',$institucion_id)->get();
+        return view('menus.index',compact('tipos','institucion_id'));
+    }
+
+    public function menus(Request $request,$institucion_id,$tipo_refrigerio){
+        $menus = MenuRefrigerio::where('institucion_id',$institucion_id)
+                        ->where('tipo_refrigerio_id',$tipo_refrigerio)
+                        ->whereBetween('fecha',[$request->get('start'),$request->get('end')])
+                        ->get();
+        foreach($menus as $menu){
+            $menu->start=$menu->fecha;
+            $menu->end=$menu->fecha;
+            $menu->title=$menu->titulo;
+        }
+        return $menus;
     }
 
     /**
@@ -22,9 +41,11 @@ class MenuController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($institucion_id)
     {
-        //
+        $tipos = TipoRefrigerio::where('institucion_id',$institucion_id)->get()->pluck('tipo','id');
+        $menu = null;
+        return view('menus.form',compact('tipos','menu','institucion_id'));
     }
 
     /**
@@ -33,9 +54,13 @@ class MenuController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$institucion_id)
     {
-        //
+        $institucion = Institucion::find($institucion_id);
+        $data=$request->except(['foto']);
+        $data['fecha']=Carbon::parse($data['fecha'])->toDateString();
+        $menu= $institucion->menus()->create($data);
+        return redirect()->route('institucion.menus.index',$institucion_id);
     }
 
     /**

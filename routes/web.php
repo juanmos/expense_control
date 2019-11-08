@@ -82,6 +82,8 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('configuracion/editar','Institucion\InstitucionController@configuracion')->name('institucion.configuracion.edit');
         Route::put('configuracion/update/{id}','Institucion\InstitucionController@configuracionUpdate')->name('institucion.configuracion.update');
+
+        Route::get('institucion/{id}/menus/menus/{tipo}','Institucion\MenuController@menus')->name('institucion.menus.menus');
     });
     
     
