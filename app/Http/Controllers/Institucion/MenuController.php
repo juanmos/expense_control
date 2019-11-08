@@ -60,6 +60,10 @@ class MenuController extends Controller
         $data=$request->except(['foto']);
         $data['fecha']=Carbon::parse($data['fecha'])->toDateString();
         $menu= $institucion->menus()->create($data);
+        if($request->has('foto')){
+            $menu->foto=$request->file('foto')->store('public/menus/'.$institucion_id);
+            $menu->save();
+        }
         return redirect()->route('institucion.menus.index',$institucion_id);
     }
 
@@ -80,9 +84,11 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($institucion_id,$id)
     {
-        //
+        $tipos = TipoRefrigerio::where('institucion_id',$institucion_id)->get()->pluck('tipo','id');
+        $menu = MenuRefrigerio::find($id);;
+        return view('menus.form',compact('tipos','menu','institucion_id'));
     }
 
     /**
@@ -92,9 +98,17 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$institucion_id, $id)
     {
-        //
+        $data=$request->except(['foto']);
+        $data['fecha']=Carbon::parse($data['fecha'])->toDateString();
+        $menu= MenuRefrigerio::find($id);
+        $menu->update($data);
+        if($request->has('foto')){
+            $menu->foto=$request->file('foto')->store('public/menus/'.$institucion_id);
+            $menu->save();
+        }
+        return redirect()->route('institucion.menus.index',$institucion_id);
     }
 
     /**
