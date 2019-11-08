@@ -74,7 +74,7 @@ class RefrigerioController extends Controller
         }
         else $dias=array_values($request->get('dias'));
         if($tipo->forma_pago=='diario'){
-            $costo=$tipo->costo*count($request->get('dias'));
+            $costo=$tipo->costo*count($dias);
         }else{
             $costo=$tipo->costo;
         }
