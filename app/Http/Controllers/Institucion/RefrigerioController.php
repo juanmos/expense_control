@@ -67,7 +67,7 @@ class RefrigerioController extends Controller
      */
     public function store(Request $request)
     {
-        $usuario = User::find($request->get('usuario_id'));
+        $usuario = User::find(($request->is('api/*'))? base64_decode($request->get('usuario_id')) :$request->get('usuario_id'));
         $tipo=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
         if($request->is('api/*')){
             $dias=explode(',',$reqeust->get('dias'));
