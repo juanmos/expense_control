@@ -66,10 +66,10 @@
                                                 <label for="exampleInputPassword1">Descripción</label>
                                                 {!! Form::text('descripcion', ($menu!=null)?$menu->descripcion:'', ['class'=>'form-control','placeholder'=>'Descripción del refrigerio']) !!}
                                             </div>
-                                            <div class="form-group col-md-6">
+                                            {{--  <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Tabla nutricional</label>
                                                 {!! Form::text('tabla_nutricional', ($menu!=null)?$menu->tabla_nutricional:'', ['class'=>'form-control','placeholder'=>'Tabla nutricional']) !!}
-                                            </div>
+                                            </div>  --}}
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Foto</label>
                                                 {!! Form::file('foto', ['class'=>'form-control','placeholder'=>'Foto del refrigerio']) !!}
