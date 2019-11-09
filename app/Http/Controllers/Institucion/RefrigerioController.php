@@ -146,8 +146,9 @@ class RefrigerioController extends Controller
      */
     public function destroy($id)
     {
-        $refrigerio = Refrigerio::find($id);
+        $refrigerio = Refrigerio::find(($request->is('api/*'))? base64_decode($id) :$id);
         $refrigerio->delete();
+        if($request->is('api/*')) return response()->json(['eliminado'=>true]);
         return back();
     }
 

@@ -36,6 +36,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('alumno/refrigerios/{id}','Institucion\RefrigerioController@refrigerios');
         Route::post('alumno/refrigerio/store','Institucion\RefrigerioController@store');
         Route::put('alumno/refrigerio/update/{id}','Institucion\RefrigerioController@update');
+        Route::delete('alumno/refrigerio/destroy/{id}','Institucion\RefrigerioController@destroy');
 
         Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
         
