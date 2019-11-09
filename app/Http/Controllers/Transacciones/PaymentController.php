@@ -237,7 +237,7 @@ class PaymentController extends Controller
             }
             $elpago=$transaccion->pago()->create($pago);
             if($request->is('api/*')){
-                return response()->json(['realizado'=>true]);
+                return response()->json(['realizado'=>true,'pago_id'=>$elpago->id]);
             }else{
                 return back()->with(['facturar'=>true,'mensaje'=>'Se ha guardado correctamente','pago_id'=>$elpago->id]);
             }
