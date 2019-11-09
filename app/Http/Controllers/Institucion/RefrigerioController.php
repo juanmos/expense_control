@@ -161,6 +161,7 @@ class RefrigerioController extends Controller
 
     public function historialPagos(Request $request,$id){
         $pagos=Pago::where('refrigerio_id',($request->is('api/*'))?base64_decode($id) :$id)->with(['transaccion.transaccion_relacionada','factura'])->get();
+        if($request->is('api/*')) return Crypt::encrypt(json_encode(compact('pagos')),false);
         return response()->json(compact('pagos'));
     }
 }
