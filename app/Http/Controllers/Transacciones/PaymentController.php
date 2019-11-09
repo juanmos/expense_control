@@ -156,8 +156,12 @@ class PaymentController extends Controller
         // return back()->with(['facturar'=>true,'mensaje'=>'Se ha guardado correctamente','pago_id'=>4]);
         if($request->is('api/*')){
             $valor = base64_decode($request->get('valor'));
-            $tarjeta_id=base64_decode($request->get('tarjeta_id'));
             $user = User::find(base64_decode($request->get('alumno')));
+            if($request->has('tarjeta_id')){
+                $tarjeta_id=base64_decode($request->get('tarjeta_id'));
+            }else{
+                $tarjeta_id=$user->tarjetas[0]->id;
+            }
         }else{
             $request->validate([
                 'valor'=>'required|numeric'
@@ -194,11 +198,11 @@ class PaymentController extends Controller
             $user->saldo= $user->saldo + $transaccionRecarga->valor;
             $user->save();
             $pago=[];
-            if($request->has('detalle')){
+            if($request->has('detalle') && $request->get('detalle') != null){
                 $pago['detalle']=$request->get('detalle');
             }
             
-            if($request->has('comprobante') ){
+            if($request->has('comprobante') && $request->get('comprobante') != null ){
                 $pago['comprobante']=$request->file('comprobante')->store('public/comprobantes/'.$institucion->id);
             }
             $transaccionRecarga->pago()->create($pago);
@@ -219,10 +223,10 @@ class PaymentController extends Controller
             $user->saldo= $user->saldo - $transaccion->valor;
             $user->save();
             $pago=[];
-            if($request->has('detalle')){
+            if($request->has('detalle') && $request->get('detalle') != null){
                 $pago['detalle']=$request->get('detalle');
             }
-            if($request->has('comprobante')){
+            if($request->has('comprobante') && $request->get('comprobante') != null){
                 $pago['comprobante']=$request->file('comprobante')->store('public/comprobantes/'.$institucion->id);
             }
             if($request->has('refrigerio_id')){
