@@ -230,7 +230,7 @@ class PaymentController extends Controller
                 $pago['comprobante']=$request->file('comprobante')->store('public/comprobantes/'.$institucion->id);
             }
             if($request->has('refrigerio_id')){
-                $pago['refrigerio_id']=$request->get('refrigerio_id');
+                $pago['refrigerio_id']=($request->is('api/*'))? base64_decode($request->get('refrigerio_id')) :$request->get('refrigerio_id');
             }
             if($request->has('mes_pago')){
                 $pago['mes_pago']=Carbon::parse($request->get('mes_pago'))->toDateString();
