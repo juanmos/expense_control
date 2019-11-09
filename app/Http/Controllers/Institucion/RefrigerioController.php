@@ -122,11 +122,11 @@ class RefrigerioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $refrigerio = Refrigerio::find($id);
+        $refrigerio = Refrigerio::find(($request->is('api/*'))? base64_decode($id) :$id);
         $tipos=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
-        $dias=array_values($request->get('dias'));
+        $dias=($request->is('api/*'))?explode(',',$request->get('dias')):array_values($request->get('dias'));
         
-        $costo=$tipos->costo*count($request->get('dias'));
+        $costo=$tipos->costo*count($dias);
         $refrigerio->update([
             'tipo_refrigerio_id'=>$request->get('tipo_refrigerio_id'),
             'dias'=>$dias,
@@ -134,7 +134,7 @@ class RefrigerioController extends Controller
             'fecha_fin'=>Carbon::parse($request->get('fecha_fin'))->toDateString(),
             'costo'=>$costo
         ]);
-
+        if($request->is('api/*')) return response()->json(['editado'=>true]);
         return redirect()->route('institucion.alumno.show',[Auth::user()->institucion_id,$refrigerio->userable_id]);
     }
 

@@ -34,14 +34,15 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('alumno/transacciones/{id}','Institucion\AlumnoController@transacciones');
         
         Route::get('alumno/refrigerios/{id}','Institucion\RefrigerioController@refrigerios');
-        Route::post('alumno/refrigerio/create','Institucion\RefrigerioController@store');
+        Route::post('alumno/refrigerio/store','Institucion\RefrigerioController@store');
+        Route::put('alumno/refrigerio/update/{id}','Institucion\RefrigerioController@update');
 
         Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
         
         Route::get('alumno/tarjetas/{id}','Institucion\AlumnoController@tarjetas');
         Route::get('alumno/tarjeta/{id}','Institucion\TarjetaController@imagen');
         Route::put('alumno/tarjeta/perdida/{id}','Institucion\TarjetaController@perdida');
-        Route::post('alumno/tarjeta/create/{id}','Institucion\TarjetaController@store');
+        Route::post('alumno/tarjeta/store/{id}','Institucion\TarjetaController@store');
     });
     
     
