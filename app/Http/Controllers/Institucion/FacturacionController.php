@@ -93,7 +93,7 @@ class FacturacionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($insittucion_id,$id)
     {
         $factura = Factura::find($id);
         return view('facturacion.factura',compact('factura'));
