@@ -49,7 +49,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::put('alumno/tarjeta/perdida/{id}','Institucion\TarjetaController@perdida');
         Route::post('alumno/tarjeta/store/{id}','Institucion\TarjetaController@store');
 
-        Route::get('menu/{institucion_id}/{id}','Institucion\MenuController@menus');
+        Route::post('menu/{institucion_id}/{id}','Institucion\MenuController@menus');
         Route::post('menu/{institucion_id}','Institucion\MenuController@store');
         Route::put('menu/{institucion_id}/{id}','Institucion\MenuController@update');
     });
