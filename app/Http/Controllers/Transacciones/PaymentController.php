@@ -45,6 +45,9 @@ class PaymentController extends Controller
         if ($tarjeta->perdida){
             return response()->json(['valida'=>false,'mensaje'=>'La tarjeta ha sido reportada como perdida el '.Carbon::parse($tarjeta->fecha_perdida)->format('d-m-Y')]);
         }
+        if ($tarjeta->estado!='Aprobada'){
+            return response()->json(['valida'=>false,'mensaje'=>'La tarjeta no ha sido aprobada aún, por favor ir al proceso de aprobación']);
+        }
         if(Carbon::now()->isBefore(Carbon::parse($tarjeta->fecha_vencimiento))){
             return response()->json(['valida'=>true]);
         }else{
