@@ -210,8 +210,8 @@ class AlumnoController extends Controller
     public function datos_facturacion(Request $request,$id){
         if($request->is('api/*')){
             $datos=DatosFacturacion::where('usuario_id',base64_decode($id))->get();
-            // return Crypt::encrypt(json_encode(compact('datos')),false);
-            return response()->json(compact('datos'));
+            return Crypt::encrypt(json_encode(compact('datos')),false);
+            // return response()->json(compact('datos'));
         }
         $datos = DatosFacturacion::find($id);
         return $datos;

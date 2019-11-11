@@ -57,7 +57,7 @@ class FacturacionController extends Controller
         $configuraciones = $configuracion->configuraciones;
         $configuraciones['secuencia']=$nuevaSecuencia;
         $configuracion->configuraciones=$configuraciones;
-        $configuracion->save();
+        
         $pago = Pago::find($request->get('pago_id'));
         $factura = Factura::create([
             'datos_facturacion_id'=>$datosFacturacion->id,
@@ -82,6 +82,7 @@ class FacturacionController extends Controller
             'iva'=>($pago->transaccion->valor * 0.12),
             'precio'=>$pago->transaccion->valor 
         ]);
+        $configuracion->save();
         return back()->with(['mensaje'=>'Factura creada']);
     }
 
