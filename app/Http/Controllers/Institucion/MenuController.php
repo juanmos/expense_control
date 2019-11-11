@@ -60,7 +60,7 @@ class MenuController extends Controller
         $data=$request->except(['foto']);
         $data['fecha']=Carbon::parse($data['fecha'])->toDateString();
         $menu= $institucion->menus()->create($data);
-        if($request->has('foto')){
+        if($request->has('foto') && $request->get('foto') !=null){
             $menu->foto=$request->file('foto')->store('public/menus/'.$institucion_id);
             $menu->save();
         }
@@ -104,7 +104,7 @@ class MenuController extends Controller
         $data['fecha']=Carbon::parse($data['fecha'])->toDateString();
         $menu= MenuRefrigerio::find($id);
         $menu->update($data);
-        if($request->has('foto')){
+        if($request->has('foto') && $request->get('foto') !=null){
             $menu->foto=$request->file('foto')->store('public/menus/'.$institucion_id);
             $menu->save();
         }
