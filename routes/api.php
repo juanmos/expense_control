@@ -40,7 +40,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::delete('alumno/refrigerio/destroy/{id}','Institucion\RefrigerioController@destroy');
         Route::get('alumno/refrigerios/historial/{id}','Institucion\RefrigerioController@historialPagos');
         Route::post('/pagar/refrigerio','Transacciones\PaymentController@refrigerio');
-
+        Route::post('facturar/refrigerio','Institucion\FacturacionController');
 
         Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
         

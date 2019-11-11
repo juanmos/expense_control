@@ -45,10 +45,11 @@ class FacturacionController extends Controller
     public function store(Request $request)
     {
         $data=$request->except(['_token','pago_id','datos_factura_id']);
-        if($request->get('datos_factura_id')==0){
+        $datos_factura_id = ($request->is('api/*'))? base64_decode($request->get('datos_factura_id')):$request->get('datos_factura_id');
+        if($datos_factura_id==0){
             $datosFacturacion = DatosFacturacion::create($data);
         }else{
-            $datosFacturacion = DatosFacturacion::find('datos_factura_id');
+            $datosFacturacion = DatosFacturacion::find($datos_factura_id);
         }
         
         $configuracion = Configuracion::where('institucion_id',Auth::user()->institucion_id)->first();
@@ -58,7 +59,7 @@ class FacturacionController extends Controller
         $configuraciones['secuencia']=$nuevaSecuencia;
         $configuracion->configuraciones=$configuraciones;
         
-        $pago = Pago::find($request->get('pago_id'));
+        $pago = Pago::find(($request->is('api/*'))? base64_decode($request->get('pago_id')):$request->get('pago_id'));
         $factura = Factura::create([
             'datos_facturacion_id'=>$datosFacturacion->id,
             'pago_id'=>$pago->id,
@@ -83,7 +84,7 @@ class FacturacionController extends Controller
             'precio'=>$pago->transaccion->valor 
         ]);
         $configuracion->save();
-        return back()->with(['mensaje'=>'Factura creada']);
+        return ($request->is('api/*'))? response()->json(['creada'=>true]): back()->with(['mensaje'=>'Factura creada']);
     }
 
     /**
