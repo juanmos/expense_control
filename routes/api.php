@@ -27,6 +27,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     
     Route::group(['prefix' => 'institucion'], function() {
         Route::get('alumnos/{id}','Institucion\AlumnoController@alumnosData')->name('institucion.alumnos');
+        Route::get('alumnos/datos_facturacion/{id}','Institucion\AlumnoController@datos_facturacion');
 
         Route::get('refrigerio','Institucion\RefrigerioController@refrigeriosData')->name('institucion.refrigerio.data');
 

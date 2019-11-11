@@ -677,7 +677,7 @@
         $('.getHistorial').on('click',function(){
             $.get('{{url("institucion/refrigerio/historial/pagos/")}}/'+$(this).attr('myid'),function(json){
                 json.pagos.forEach(function(item){
-                    var _pago = (item.factura!=null)?item.factura.factura_no:'Sin factura';
+                    var _pago = (item.factura!=null)?item.factura.factura_no:'Sin factura <br> <a href="#" data-toggle="modal" data-target="#facturarPagoModal">Facturar</a>';
                     var link=(item.factura!=null)?'<a target="_blank" class="btn btn-icon btn-rounded btn-primary float-right" title="Ver" href="{{url("institucion/institucion/".Auth::user()->institucion_id."/facturacion/")}}/'+item.factura.id+'"><i class="feather icon-file" style="color:#fff;opacity:1"></i></a>':'';
                     $('#historialPagosTable').append('<tr><td>'+moment(item.mes_pago).format('MMMM-YY')+'</td><td>$ '+parseFloat(item.transaccion.valor).toFixed(2)+'</td><td>'+item.transaccion.transaccion_relacionada.forma_pago.forma_pago+'</td><td>'+_pago+link+'</td></tr>')
                 })
