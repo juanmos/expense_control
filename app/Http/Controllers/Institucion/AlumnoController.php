@@ -139,16 +139,18 @@ class AlumnoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $usuario =User::find($id);
-        $data=$request->except(['ano_lectivo','curso']);
+        $usuario =User::find(($request->is('api/*'))?base64_decode($id) :$id);
+        if($usuario==null) return ($request->is('api/*'))? reposne()->json(['error'=>'Usuario no encontrado'],404) : back()->withErrors(['error'=>'Usuario no encontrado'])->withInput($request->input());
+        $data=$request->except(['ano_lectivo','curso','profesor']);
         $usuario->update($data);
         $usuario->alumno()->update($request->only(['ano_lectivo','curso','profesor']));
-        if($request->has('foto')){
+        if($request->has('foto') && $request->get('foto') !=null){
             $usuario->foto=$request->file('foto')->store('public/alumnos');
             $usuario->save();
         }
         $this->crearQR($request->get('institucion_id'),$usuario->id);
-        return redirect('institucion/'.$request->get('institucion_id').'/alumno/'.$id);
+        return ($request->is('api/*'))? response()->json(['editado'=>true]): redirect('institucion/'.$request->get('institucion_id').'/alumno/'.$usuario->id);
+        
     }
 
     /**
