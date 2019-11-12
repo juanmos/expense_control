@@ -78,6 +78,8 @@
                                                 <input type="text" value="@if($usuario!=null){{$usuario->nombre}} @else {{old('nombre')}} @endif" name="nombre"  required="required" class="form-control" aria-describedby="emailHelp" placeholder="Nombre">
                                                 <label for="exampleInputPassword1">Apellido *</label>
                                                 <input type="text" value="@if($usuario!=null){{$usuario->apellido}} @else {{old('apellido')}} @endif" name="apellido"  required="required" class="form-control" id="exampleInputPassword1" placeholder="Apellido">
+                                                <label for="exampleInputPassword1">Cedula</label>
+                                                <input type="text" value="@if($usuario!=null){{$usuario->cedula}} @else {{old('cedula')}} @endif" name="cedula"  required="required" class="form-control" id="exampleInputPassword1" placeholder="Cedula">
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Email</label>
