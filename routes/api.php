@@ -28,6 +28,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::group(['prefix' => 'institucion'], function() {
         Route::get('alumnos/{id}','Institucion\AlumnoController@alumnosData')->name('institucion.alumnos');
         Route::get('alumno/datos_facturacion/{id}','Institucion\AlumnoController@datos_facturacion');
+        Route::post('alumno/store','Institucion\AlumnoController@store');
+        Route::put('alumno/update/{id}','Institucion\AlumnoController@update');
 
         Route::get('refrigerio','Institucion\RefrigerioController@refrigeriosData')->name('institucion.refrigerio.data');
 

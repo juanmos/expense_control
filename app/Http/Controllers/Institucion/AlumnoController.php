@@ -73,21 +73,23 @@ class AlumnoController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::where('email',$request->get('email'))->first();
-        if($user!=null){
-            return back()->withErrors(['email'=>'Email ya usado'])->withInput($request->input());
+        if($request->has('email') && $request->get('email')!=null){
+            $user = User::where('email',$request->get('email'))->first();
+            if($user!=null){
+                return ($request->is('api/*'))? reposne()->json(['error'=>'Email ya usado'],404) : back()->withErrors(['email'=>'Email ya usado'])->withInput($request->input());
+            }
         }
-        $data=$request->except(['ano_lectivo','curso']);
+        $data=$request->except(['ano_lectivo','curso','profesor']);
         $data['password']=bcrypt(random_bytes(10));
         $usuario=User::create($data);
         $usuario->alumno()->create($request->only(['ano_lectivo','curso','profesor']));
         $usuario->assignRole('Alumno');
-        if($request->has('foto')){
-            $usuario->foto=$request->file('foto')->store('public/alumnos');
+        if($request->has('foto')  && $request->get('foto')!=null ){
+            $usuario->foto=$request->file('foto')->store('public/alumnos/'.$request->get('institucion_id'));
             $usuario->save();
         }
         $this->crearQR($request->get('institucion_id'),$usuario->id);
-        return redirect('institucion/'.$request->get('institucion_id').'/alumno/'.$usuario->id);
+        return ($request->is('api/*'))? response()->json(['creado'=>true]): redirect('institucion/'.$request->get('institucion_id').'/alumno/'.$usuario->id);
     }
 
     /**
