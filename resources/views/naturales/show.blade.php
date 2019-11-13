@@ -18,7 +18,7 @@
                     <div class="page-wrapper">
                         <!-- [ Main Content ] start -->
                         <div class="row">
-                            {{-- <!--[ daily sales section ] start-->
+                            <!--[ daily sales section ] start-->
                             <div class="col-md-6 col-xl-4">
                                 <div class="card daily-sales">
                                     <div class="card-block">
@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--[ year  sales section ] end--> --}}
+                            <!--[ year  sales section ] end-->
                             <!-- [ statistics year chart ] start -->
                             <div class="col-xl-4 col-md-6">
                                 <div class="card card-event">
@@ -96,15 +96,15 @@
                                             </div> --}}
                                         </div>
                                         <h6 class="text-muted mt-4 mb-0">
-                                            @if(Auth::user()->hasRole('Institucion'))
-                                            <a href="{{route('institucion.edit',$institucion->id)}}" class="label theme-bg text-white f-12">Editar</a> 
-                                            <a href="{{route('institucion.configuracion.edit')}}" class="label theme-bg2 text-white f-12">Configuraciones</a>
+                                            @if(Auth::user()->hasRole('PersonaNatural'))
+                                            <a href="{{route('naturales.edit',$institucion->id)}}" class="label theme-bg text-white f-12">Editar</a> 
+                                            <a href="{{route('naturales.configuracion.edit')}}" class="label theme-bg2 text-white f-12">Configuraciones</a>
                                             @endif
                                         </h6>
                                         <i class="far fa-building text-c-purple f-50"></i>
                                     </div>
                                 </div>
-                                <div class="card">
+                                {{-- <div class="card">
                                     <div class="card-block border-bottom">
                                         <div class="row d-flex align-items-center">
                                             <div class="col-auto">
@@ -139,7 +139,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <!-- [ statistics year chart ] end -->
                             <?php function seleccionado($val,$pes){
@@ -154,7 +154,10 @@
                                         <a class="nav-link {{seleccionado('E',$pest)}}" id="estadisticas-tab" data-toggle="tab" href="#estadisticas" role="tab" aria-controls="estadisticas" aria-selected="false">Estadisticas</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{seleccionado('T',$pest)}}" id="transacciones-tab" data-toggle="tab" href="#transacciones" role="tab" aria-controls="transacciones" aria-selected="true">Transacciones</a>
+                                        <a class="nav-link {{seleccionado('T',$pest)}}" id="transacciones-tab" data-toggle="tab" href="#transacciones" role="tab" aria-controls="transacciones" aria-selected="true">Ventas</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{seleccionado('T',$pest)}}" id="transacciones-tab" data-toggle="tab" href="#transacciones" role="tab" aria-controls="transacciones" aria-selected="true">Compras</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link {{seleccionado('U',$pest)}}" id="usuarios-tab" data-toggle="tab" href="#usuarios" role="tab" aria-controls="usuarios" aria-selected="false">Usuarios</a>
@@ -313,7 +316,7 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade {{seleccionado('U',$pest)}}" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
-                                        <a href="{{route('institucion.usuario.crear',[$id])}}" class="btn btn-primary float-right f-12">Crear</a>
+                                        <a href="{{route('naturales.usuario.crear',[$id])}}" class="btn btn-primary float-right f-12">Crear</a>
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
@@ -343,7 +346,7 @@
                                                             <h6 class="m-0">{{$user->telefonos}}</h6>
                                                         </td>
                                                         <td class="text-right">
-                                                            <a href="{{route('institucion.usuario.edit',[$id,$user->id])}}" class="label theme-bg2 text-white f-12">Editar</a>
+                                                            <a href="{{route('naturales.usuario.edit',[$id,$user->id])}}" class="label theme-bg2 text-white f-12">Editar</a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -766,132 +769,132 @@
 @endsection
 @push('scripts')
 <script type="text/javascript">
-                                                    $(document).ready(function() {
-                                                        var chartDatac = [{
-                                                            "Year": "Jan",
-                                                            "value": 50
-                                                        }, {
-                                                            "Year": "Feb",
-                                                            "value": 60
-                                                        }, {
-                                                            "Year": "Mar",
-                                                            "value": 55
-                                                        }, {
-                                                            "Year": "Apr",
-                                                            "value": 62
-                                                        }, {
-                                                            "Year": "May",
-                                                            "value": 55
-                                                        }, {
-                                                            "Year": "Jun",
-                                                            "value": 62
-                                                        }];
-                                                        var chartc = AmCharts.makeChart("Chartline", {
-                                                            "type": "serial",
-                                                            "addClassNames": true,
-                                                            "defs": {
-                                                                "filter": [{
-                                                                        "x": "-50%",
-                                                                        "y": "-50%",
-                                                                        "width": "200%",
-                                                                        "height": "200%",
-                                                                        "id": "blur",
-                                                                        "feGaussianBlur": {
-                                                                            "in": "SourceGraphic",
-                                                                            "stdDeviation": "30"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "id": "shadow",
-                                                                        "x": "-10%",
-                                                                        "y": "-10%",
-                                                                        "width": "120%",
-                                                                        "height": "120%",
-                                                                        "feOffset": {
-                                                                            "result": "offOut",
-                                                                            "in": "SourceAlpha",
-                                                                            "dx": "0",
-                                                                            "dy": "20"
-                                                                        },
-                                                                        "feGaussianBlur": {
-                                                                            "result": "blurOut",
-                                                                            "in": "offOut",
-                                                                            "stdDeviation": "10"
-                                                                        },
-                                                                        "feColorMatrix": {
-                                                                            "result": "blurOut",
-                                                                            "type": "matrix",
-                                                                            "values": "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .2 0"
-                                                                        },
-                                                                        "feBlend": {
-                                                                            "in": "SourceGraphic",
-                                                                            "in2": "blurOut",
-                                                                            "mode": "normal"
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            },
-                                                            "fontSize": 15,
-                                                            "dataProvider": chartDatac,
-                                                            "autoMarginOffset": 0,
-                                                            "marginRight": 0,
-                                                            "categoryField": "Year",
-                                                            "categoryAxis": {
-                                                                "color": '#fff',
-                                                                "gridAlpha": 0,
-                                                                "axisAlpha": 0,
-                                                                "lineAlpha": 0,
-                                                                "offset": -20,
-                                                                "minPeriod": "YYYY",
-                                                                "inside": true,
-                                                            },
-                                                            "valueAxes": [{
-                                                                "fontSize": 0,
-                                                                "inside": true,
-                                                                "gridAlpha": 0,
-                                                                "axisAlpha": 0,
-                                                                "lineAlpha": 0,
-                                                                "minimum": 0,
-                                                                "maximum": 80,
-                                                            }],
-                                                            "chartCursor": {
-                                                                "valueLineEnabled": false,
-                                                                "valueLineBalloonEnabled": false,
-                                                                "cursorAlpha": 0,
-                                                                "zoomable": false,
-                                                                "valueZoomable": false,
-                                                                "cursorColor": "#fff",
-                                                                "categoryBalloonDateFormat": "YYYY",
-                                                                "categoryBalloonColor": "#1dd6d1",
-                                                                "valueLineAlpha": 0
-                                                            },
-                                                            "graphs": [{
-                                                                "id": "g1",
-                                                                "type": "line",
-                                                                "valueField": "value",
-                                                                "bullet": "round",
-                                                                "lineColor": "#ffffff",
-                                                                "lineAlpha": 1,
-                                                                "lineThickness": 3,
-                                                                "fillAlphas": 0,
-                                                                "showBalloon": true,
-                                                                "balloon": {
-                                                                    "drop": true,
-                                                                    "adjustBorderColor": false,
-                                                                    "color": "#000",
-                                                                    "fillAlphas": 0.2,
-                                                                    "bullet": "round",
-                                                                    "bulletBorderAlpha": 1,
-                                                                    "bulletSize": 5,
-                                                                    "hideBulletsCount": 50,
-                                                                    "lineThickness": 2,
-                                                                    "type": "smoothedLine",
-                                                                    "useLineColorForBulletBorder": true,
-                                                                    "valueField": "value",
-                                                                    "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
-                                                                },
-                                                            }],
-                                                        });
-                                                    });
-                                                </script>
+    $(document).ready(function() {
+        var chartDatac = [{
+            "Year": "Jan",
+            "value": 50
+        }, {
+            "Year": "Feb",
+            "value": 60
+        }, {
+            "Year": "Mar",
+            "value": 55
+        }, {
+            "Year": "Apr",
+            "value": 62
+        }, {
+            "Year": "May",
+            "value": 55
+        }, {
+            "Year": "Jun",
+            "value": 62
+        }];
+        var chartc = AmCharts.makeChart("Chartline", {
+            "type": "serial",
+            "addClassNames": true,
+            "defs": {
+                "filter": [{
+                        "x": "-50%",
+                        "y": "-50%",
+                        "width": "200%",
+                        "height": "200%",
+                        "id": "blur",
+                        "feGaussianBlur": {
+                            "in": "SourceGraphic",
+                            "stdDeviation": "30"
+                        }
+                    },
+                    {
+                        "id": "shadow",
+                        "x": "-10%",
+                        "y": "-10%",
+                        "width": "120%",
+                        "height": "120%",
+                        "feOffset": {
+                            "result": "offOut",
+                            "in": "SourceAlpha",
+                            "dx": "0",
+                            "dy": "20"
+                        },
+                        "feGaussianBlur": {
+                            "result": "blurOut",
+                            "in": "offOut",
+                            "stdDeviation": "10"
+                        },
+                        "feColorMatrix": {
+                            "result": "blurOut",
+                            "type": "matrix",
+                            "values": "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .2 0"
+                        },
+                        "feBlend": {
+                            "in": "SourceGraphic",
+                            "in2": "blurOut",
+                            "mode": "normal"
+                        }
+                    }
+                ]
+            },
+            "fontSize": 15,
+            "dataProvider": chartDatac,
+            "autoMarginOffset": 0,
+            "marginRight": 0,
+            "categoryField": "Year",
+            "categoryAxis": {
+                "color": '#fff',
+                "gridAlpha": 0,
+                "axisAlpha": 0,
+                "lineAlpha": 0,
+                "offset": -20,
+                "minPeriod": "YYYY",
+                "inside": true,
+            },
+            "valueAxes": [{
+                "fontSize": 0,
+                "inside": true,
+                "gridAlpha": 0,
+                "axisAlpha": 0,
+                "lineAlpha": 0,
+                "minimum": 0,
+                "maximum": 80,
+            }],
+            "chartCursor": {
+                "valueLineEnabled": false,
+                "valueLineBalloonEnabled": false,
+                "cursorAlpha": 0,
+                "zoomable": false,
+                "valueZoomable": false,
+                "cursorColor": "#fff",
+                "categoryBalloonDateFormat": "YYYY",
+                "categoryBalloonColor": "#1dd6d1",
+                "valueLineAlpha": 0
+            },
+            "graphs": [{
+                "id": "g1",
+                "type": "line",
+                "valueField": "value",
+                "bullet": "round",
+                "lineColor": "#ffffff",
+                "lineAlpha": 1,
+                "lineThickness": 3,
+                "fillAlphas": 0,
+                "showBalloon": true,
+                "balloon": {
+                    "drop": true,
+                    "adjustBorderColor": false,
+                    "color": "#000",
+                    "fillAlphas": 0.2,
+                    "bullet": "round",
+                    "bulletBorderAlpha": 1,
+                    "bulletSize": 5,
+                    "hideBulletsCount": 50,
+                    "lineThickness": 2,
+                    "type": "smoothedLine",
+                    "useLineColorForBulletBorder": true,
+                    "valueField": "value",
+                    "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+                },
+            }],
+        });
+    });
+</script>
 @endpush

@@ -20,8 +20,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
     Route::group(['prefix' => 'admin'], function () {
-        
-        
+        Route::get('institucion','Admin\InstitucionController@index')->name('admin.institucion.index');
+        Route::get('institucion/create','Admin\InstitucionController@create')->name('admin.institucion.create');
+        Route::post('institucion/store','Admin\InstitucionController@store')->name('admin.institucion.store');
+        Route::get('institucion/{id}/{pest?}','Admin\InstitucionController@show')->name('admin.institucion.show');
     });
 
     
@@ -86,6 +88,21 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('institucion/{id}/menus/menus/{tipo}','Institucion\MenuController@menus')->name('institucion.menus.menus');
     });
     
+    
+    Route::group(['prefix' => 'naturales'], function() {
+        Route::resource('naturales','Naturales\InstitucionController');
+        Route::get('/persona/{id}/{pest?}','Naturales\InstitucionController@show')->name('naturales.show');
+        Route::get('configuracion/editar','Naturales\InstitucionController@configuracion')->name('naturales.configuracion.edit');
+        Route::put('configuracion/update/{id}','Naturales\InstitucionController@configuracionUpdate')->name('naturales.configuracion.update');
+
+        Route::get('usuario/','Naturales\UsuarioController@index')->name('naturales.usuario.index');
+        Route::get('usuario/{id}','Naturales\UsuarioController@show')->name('naturales.usuario.show');
+        Route::get('{id}/usuario/crear/','Naturales\UsuarioController@create')->name('naturales.usuario.crear');
+        Route::post('/usuario/store/','Naturales\UsuarioController@store')->name('naturales.usuario.store');
+        Route::get('{id}/usuario/editar/{usuario_id}','Naturales\UsuarioController@edit')->name('naturales.usuario.edit');
+        Route::put('/usuario/{id}/update/','Naturales\UsuarioController@update')->name('naturales.usuario.update');
+        Route::delete('usuario/{id}','Naturales\UsuarioController@destroy')->name('naturales.usuario.destroy');
+    });
     
     
 });

@@ -32,8 +32,11 @@
                     </div>
                 </div>
                 <!-- [ breadcrumb ] end -->
-               
+                @if($tipo=='naturales')
+                <form action="{{($usuario!=null)?route('naturales.usuario.update',[$usuario->id]):route('naturales.usuario.store')}}" method="POST" enctype="multipart/form-data">
+                @else
                 <form action="{{($usuario!=null)?route('institucion.usuario.update',[$usuario->id]):route('institucion.usuario.store')}}" method="POST" enctype="multipart/form-data">
+                @endif
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <input type="hidden" name="_method" value="{{($usuario!=null)?'PUT':'POST'}}"/>
                     {!! Form::hidden('institucion_id', $id) !!}
@@ -78,18 +81,18 @@
                                            
                                             <div class="form-group col-md-6 ">
                                                 <label for="exampleInputEmail1">Nombre *</label>
-                                                <input type="text" value="@if($usuario!=null){{$usuario->nombre}} @else {{old('nombre')}} @endif" name="nombre"  required="required" class="form-control" aria-describedby="emailHelp" placeholder="Nombre">
+                                                <input type="text" value="@if($usuario!=null){{$usuario->nombre}} @else{{old('nombre')}}@endif" name="nombre"  required="required" class="form-control" aria-describedby="emailHelp" placeholder="Nombre">
                                                 <label for="exampleInputPassword1">Apellido *</label>
-                                                <input type="text" value="@if($usuario!=null){{$usuario->apellido}} @else {{old('apellido')}} @endif" name="apellido"  required="required" class="form-control" id="exampleInputPassword1" placeholder="Apellido">
-                                                <label for="exampleInputPassword1">Cedula *</label>
-                                                <input type="text" value="@if($usuario!=null){{$usuario->cedula}} @else {{old('cedula')}} @endif" name="cedula"  required="required" class="form-control" id="exampleInputPassword1" placeholder="Cedula">
+                                                <input type="text" value="@if($usuario!=null){{$usuario->apellido}} @else{{old('apellido')}}@endif" name="apellido"  required="required" class="form-control" id="exampleInputPassword1" placeholder="Apellido">
+                                                <label for="exampleInputPassword1">Cedula</label>
+                                                <input type="text" value="@if($usuario!=null){{$usuario->cedula}} @else{{old('cedula')}}@endif" name="cedula"  class="form-control" id="exampleInputPassword1" placeholder="Cedula">
                                             </div>
                                                 @if ($errors->has('email'))
                                                     <div class="error">{{ $errors->first('email') }}</div>
                                                 @endif
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Email *</label>
-                                                <input type="email" value="@if($usuario!=null){{$usuario->email}} @else {{old('email')}} @endif" name="email" class="form-control" required="required" id="exampleInputPassword1" placeholder="Email" @if($usuario!=null && !Auth::user()->hasRole('Administrador')) readonly="readonly" @endif>
+                                                <input type="email" value="@if($usuario!=null){{$usuario->email}} @else{{old('email')}}@endif" name="email" class="form-control" required="required" id="exampleInputPassword1" placeholder="Email" @if($usuario!=null && !Auth::user()->hasRole('Administrador')) readonly="readonly" @endif>
                                                 @if ($errors->has('email'))
                                                     <div class="text-c-red">{{ $errors->first('email') }}</div>
                                                 @endif

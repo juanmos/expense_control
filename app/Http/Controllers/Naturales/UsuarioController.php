@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Institucion;
+namespace App\Http\Controllers\Naturales;
 
 
 use App\Http\Controllers\Controller;
@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Institucion;
 use App\Models\User;
 use Auth;
+
 class UsuarioController extends Controller
 {
     /**
@@ -20,7 +21,7 @@ class UsuarioController extends Controller
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $usuarios = $institucion->alumnos()->whereHas('roles',function($query){
-            $query->whereIn('name',['Institucion','Institucion-operador']);
+            $query->whereIn('name',['PersonaNatural']);
         })->with('roles')->paginate(50);
         return view('usuario.index',compact('usuarios'));
     }
@@ -32,9 +33,9 @@ class UsuarioController extends Controller
      */
     public function create($id)
     {
-        $tipo='institucion';
+        $tipo='naturales';
         $usuario=null;
-        $roles = Role::where('name','like','Institucion%')->orderBy('name')->get()->pluck('name','name');
+        $roles = Role::where('name','like','PersonaNatural%')->orderBy('name')->get()->pluck('name','name');
         return view('usuario.form',compact('usuario','id','roles','tipo'));
     }
 
@@ -51,7 +52,7 @@ class UsuarioController extends Controller
         if($email->count()>0){
             return back()->withErrors(['email'=>'Email ya existe'])->withInput();
         }
-        if($request->has('password') && $request->get('password')!=null){
+        if($request->has('password')){
             if(strlen($request->get('password'))>5)
                 $data['password']=bcrypt($request->get('password'));
             else {
@@ -64,7 +65,7 @@ class UsuarioController extends Controller
             $usuario->save();
         }
         $usuario->syncRoles($request->get('role'));
-        return redirect()->route('institucion.show',[$request->get('institucion_id'),'U']);
+        return redirect()->route('naturales.show',[$request->get('institucion_id'),'U']);
     }
 
     /**
@@ -86,9 +87,9 @@ class UsuarioController extends Controller
      */
     public function edit($id,$user_id)
     {
-        $tipo='institucion';
+        $tipo='naturales';
         $usuario=User::find($user_id);
-        $roles = Role::where('name','like','Institucion%')->orderBy('name')->get()->pluck('name','name');
+        $roles = Role::where('name','like','PersonaNatural%')->orderBy('name')->get()->pluck('name','name');
         return view('usuario.form',compact('usuario','id','roles','tipo'));
     }
 
@@ -112,7 +113,7 @@ class UsuarioController extends Controller
             $usuario->save();
         }
         if($request->has('role')) $usuario->syncRoles($request->get('role'));
-        return redirect()->route('institucion.show',[$request->get('institucion_id'),'U']);
+        return redirect()->route('naturales.show',[$request->get('institucion_id'),'U']);
         
     }
 
@@ -127,3 +128,4 @@ class UsuarioController extends Controller
         //
     }
 }
+

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Institucion;
+namespace App\Http\Controllers\Naturales;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -18,11 +18,6 @@ use Auth;
 
 class InstitucionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return redirect()->route('institucion.show',Auth::user()->institucion_id);
@@ -55,7 +50,7 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id,$pest=null)
+    public function show($id,$pest='E')
     {
         if($pest==null)$pest='E';
         $institucion = Institucion::find($id);
@@ -63,7 +58,7 @@ class InstitucionController extends Controller
             $query->where('name','Alumno');
         })->with('roles')->get();
         $usuarios = $institucion->alumnos()->whereHas('roles',function($query){
-            $query->whereIn('name',['Institucion','Institucion-operador']);
+            $query->whereIn('name',['PersonaNatural']);
         })->with('roles')->get();
         $transacciones = $institucion->transacciones()->orderBy('fecha_hora','desc')->paginate(50);
         $hoy = Carbon::now()->toDateTimeString();
@@ -72,7 +67,7 @@ class InstitucionController extends Controller
                                 ->where('tipo_transaccion_id',2)->get();
         $compras =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
                                 ->where('tipo_transaccion_id',1)->get();
-        return view('institucion.show',compact('institucion','alumnos','id','transacciones','compras','recargas','pest','usuarios'));
+        return view('naturales.show',compact('institucion','alumnos','id','transacciones','compras','recargas','pest','usuarios'));
     }
 
     /**
@@ -83,12 +78,7 @@ class InstitucionController extends Controller
      */
     public function edit($id)
     {
-        $institucion = Institucion::find($id);
-        $paises = Pais::orderBy('pais')->get()->pluck('pais','id');
-        $ciudad = Ciudad::orderBy('ciudad')->get()->pluck('ciudad','id');
-        $estado = EstadoInstitucion::get()->pluck('estado','id');
-        $tipos=TipoInstitucion::get()->pluck('tipo','id');
-        return view('institucion.form',compact('institucion','ciudad','estado','paises','tipos'));
+        //
     }
 
     /**
@@ -100,8 +90,7 @@ class InstitucionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $institucion = Institucion::find($id)->update($request->all());
-        return redirect()->route('institucion.index',$id);
+        //
     }
 
     /**

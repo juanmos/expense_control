@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TipoInstitucion;
 use App\Models\TipoRefrigerio;
 use App\Models\EstadoInstitucion;
 use App\Models\Transaccion;
@@ -13,7 +14,7 @@ use App\Models\User;
 
 class Institucion extends Model
 {
-    protected $fillable=['nombre','siglas','direccion','telefono','celular','ruc','email','web','facebook','twitter','instagram','estado_id','ciudad_id','latitud','longitud'];
+    protected $fillable=['nombre','siglas','direccion','telefono','celular','ruc','email','web','facebook','twitter','instagram','estado_id','ciudad_id','latitud','longitud','tipo_institucion_id'];
 
     public function ciudad(){
         return $this->belongsTo(Ciudad::class,'ciudad_id');
@@ -43,5 +44,9 @@ class Institucion extends Model
 
     public function menus(){
         return $this->hasMany(MenuRefrigerio::class,'institucion_id');
+    }
+
+    public function tipo_institucion(){
+        return $this->belongsTo(TipoInstitucion::class,'tipo_institucion_id');
     }
 }
