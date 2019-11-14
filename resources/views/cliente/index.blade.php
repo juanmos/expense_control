@@ -44,7 +44,7 @@
                                                     <tr>
                                                         <th>Razón social</th>
                                                         <th>RUC/Cedula</th>
-                                                        <th>Telefono</th>
+                                                        <th>Teléfono</th>
                                                         <th>Nombre completo</th>
                                                         <th>Acciones</th>
                                                     </tr>
