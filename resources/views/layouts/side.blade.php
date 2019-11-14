@@ -57,17 +57,17 @@
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.refrigerio.index')?'active':''}}">
                     <a href="{{route('institucion.refrigerio.index')}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Compras</span></a>
                 </li>
-                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.menus.index')?'active':''}}">
-                    <a href="{{route('institucion.menus.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Clientes</span></a>
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.clientes.index')?'active':''}}">
+                    <a href="{{route('naturales.clientes.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Clientes</span></a>
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Administración</label>
                 </li>
-                <li data-username="" class="nav-item pcoded-hasmenu {{(Route::currentRouteName()=='institucion.refrigerios.tipos.index' || Route::currentRouteName()=='institucion.usuario.index' || Route::currentRouteName()=='institucion.configuracion.edit')?'active pcoded-trigger':''}}">
+                <li data-username="" class="nav-item pcoded-hasmenu {{( Route::currentRouteName()=='naturales.usuario.index' || Route::currentRouteName()=='naturales.configuracion.edit')?'active pcoded-trigger':''}}">
                     <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-settings"></i></span><span class="pcoded-mtext">Administración</span></a>
                     <ul class="pcoded-submenu">                        
                         
-                        <li class="{{(Route::currentRouteName()=='institucion.usuario.index')?'active':''}}"><a href="{{route('institucion.usuario.index')}}" class="">Usuarios</a></li>
+                        <li class="{{(Route::currentRouteName()=='naturales.usuario.index')?'active':''}}"><a href="{{route('naturales.usuario.index')}}" class="">Usuarios</a></li>
                         <li class="{{(Route::currentRouteName()=='naturales.configuracion.edit')?'active':''}}"><a href="{{route('naturales.configuracion.edit')}}" class="">Configuraciones</a></li>
                     </ul>
                 </li>

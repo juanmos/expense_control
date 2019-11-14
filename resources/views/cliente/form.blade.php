@@ -19,7 +19,7 @@
                                 </div>
                                 <ul class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="feather icon-home"></i></a></li>
-                                    <li class="breadcrumb-item"><a href="{{route('cliente.index')}}">cliente</a></li>
+                                    <li class="breadcrumb-item"><a href="{{route('naturales.clientes.index',$institucion_id)}}">Clientes</a></li>
                                     @if($cliente!=null)
                                     <li class="breadcrumb-item"><a href="javascript:">Editar</a></li>
                                     @else
@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <!-- [ breadcrumb ] end -->
-                <form action="{{($cliente!=null)?route('cliente.update',$cliente->id):route('cliente.store')}}" method="POST">
+                <form action="{{($cliente!=null)?route('naturales.clientes.update',[$institucion_id,$cliente->id]):route('naturales.clientes.store',$institucion_id)}}" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <input type="hidden" name="_method" value="{{($cliente!=null)?'PUT':'POST'}}"/>
                 <div class="main-body">
@@ -45,120 +45,41 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
-                                            
+                                            <div class="form-group col-md-12 ">
+                                                <label for="ruc">RUC / Cedula *</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->ruc}}@endif" id="ruc" name="ruc" class="form-control" required="required" aria-describedby="emailHelp" placeholder="RUC / Cedula del cliente">
+                                                <label id="ruc-error" style="display:none"></label>
+                                            </div>
                                             <div class="form-group col-md-6 ">
-                                                <label for="exampleInputEmail1">Cliente *</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->nombre}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Cliente">
+                                                <label for="exampleInputEmail1">Nombre *</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->nombre}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Nombre de cliente">
+                                            </div>
+                                            <div class="form-group col-md-6 ">
+                                                <label for="exampleInputEmail1">Apellido *</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->apellido}}@endif" name="apellido" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Apellido de cliente">
                                             </div>
                                             <div class="form-group col-md-6">
+                                                <label for="exampleInputPassword1">Razón Social</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->razon_social}}@endif" name="razon_social" class="form-control" id="exampleInputPassword1" placeholder="Razón social">
+                                            </div>
+                                            <div class="form-group col-md-6 ">
+                                                <label for="exampleInputPassword1">Email</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->email}}@endif" name="email" class="form-control" id="exampleInputPassword1" placeholder="Email">
+                                            </div>
+                                            <div class="form-group col-md-6 ">
                                                 <label for="exampleInputPassword1">Teléfono</label>
                                                 <input type="text" value="@if($cliente!=null){{$cliente->telefono}}@endif" name="telefono" class="form-control" id="exampleInputPassword1" placeholder="Teléfono">
                                             </div>
-                                            
-                                            <div class="form-group col-md-6 ">
-                                                <label for="exampleInputPassword1">Web</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->web}}@endif" name="web" class="form-control" id="exampleInputPassword1" placeholder="Web">
-                                            </div>
                                             <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Clasificación</label>
-                                                {{-- <input type="text" value="@if($cliente!=null){{$cliente->activo}}@endif" name="activo" class="form-control" id="exampleInputPassword1" placeholder="Activo"> --}}
-                                                {!! Form::select('clasificacion_id', $clasificacion, ($cliente!=null)?$cliente->clasificacion_id : 1 ,["class"=>"form-control"]) !!}
-                                            </div>
-                                            
-                                            <div class="form-group col-md-{{($cliente!=null)?'6':'12'}}">
-                                                <label for="exampleInputPassword1">Vendedor</label>
-                                                {{-- <input type="text" value="@if($cliente!=null){{$cliente->activo}}@endif" name="activo" class="form-control" id="exampleInputPassword1" placeholder="Activo"> --}}
-                                                {!! Form::select('usuario_id', $vendedores, ($cliente!=null)?$cliente->usuario_id : 1 ,["class"=>"form-control"]) !!}
-                                            </div>
-                                            
-                                            @if($cliente!=null)
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Activo</label>
-                                                {!! Form::select('activo', ["0"=>"Inactivo","1"=>"Activo"], ($cliente!=null)?$cliente->activo : 1 ,["class"=>"form-control"]) !!}
-                                            </div>
-                                            @endif
-                                            
+                                                <label for="exampleInputPassword1">Dirección</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->direccion}}@endif" name="direccion" class="form-control" id="exampleInputPassword1" placeholder="Dirección">
+                                            </div>                                            
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5>Datos de facturación</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            @if($cliente==null)
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">País</label>
-                                                {!! Form::select('pais_id', $paises, ($cliente!=null)?$oficina->pais_is : 1 ,["class"=>"form-control"]) !!}
-                                            </div> 
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Ciudad</label>
-                                                {!! Form::select('ciudad_id', $ciudades, ($cliente!=null)?$oficina->ciudad_id : 1 ,["class"=>"form-control"]) !!}
-                                            </div> 
-                                            @endif
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputEmail1">Dirección</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->facturacion->direccion}}@endif" name="direccion" class="form-control" placeholder="Dirección">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Teléfono</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->facturacion->telefono_facturacion}}@endif" name="telefono_facturacion" class="form-control" placeholder="Teléfono">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">RUC</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->facturacion->ruc}}@endif" name="ruc" class="form-control" placeholder="RUC">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Email</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->facturacion->email}}@endif" name="email" class="form-control" placeholder="Email">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if($cliente==null)
                                 
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5>Datos del contacto</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="form-group col-md-6 ">
-                                                <label for="exampleInputEmail1">Nombre *</label>
-                                                <input type="text"  name="nombre_contacto" class="form-control" aria-describedby="emailHelp"  required="required" placeholder="Nombre">
-                                            </div>
-                                            <div class="form-group col-md-6 ">
-                                                <label for="exampleInputPassword1">Apellido *</label>
-                                                <input type="text" name="apellido_contacto" class="form-control" id="exampleInputPassword1" required="required" placeholder="Apellido">
-                                            </div>
-                                            
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Email</label>
-                                                <input type="email" name="email_contacto" class="form-control" id="exampleInputPassword1" placeholder="Email">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Cargo</label>
-                                                <input type="text" name="cargo_contacto" class="form-control" id="exampleInputPassword1" placeholder="Cargo">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Teléfono</label>
-                                                <input type="text" name="telefono_contacto" class="form-control" id="exampleInputPassword1" placeholder="Teléfono">
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Extensión</label>
-                                                <input type="text" name="extension_contacto" class="form-control" id="exampleInputPassword1" placeholder="Extensión">
-                                            </div> 
-                                            
-                                            <button type="submit" class="btn btn-primary"><span class="pcoded-micon"><i class="feather icon-save"></i></span><span class="pcoded-mtext">Guardar</span></button>
-                                            
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                                @else
                                 <button type="submit" class="btn btn-primary"><span class="pcoded-micon"><i class="feather icon-save"></i></span><span class="pcoded-mtext">Guardar</span></button>
-                                @endif
+                                
                             </div>
                         </div>
                         <!-- [ Main Content ] end -->
@@ -170,4 +91,23 @@
     </div>
 </div>
 @endsection
-
+@push('scripts')
+<script type="text/javascript" src="{{asset('assets/plugins/ruc/ruc_jquery_validator.min.js')}}"></script>
+<script>
+    $(document).ready(function(){
+        var opciones = {
+            strict: true,              // va a validar siempre, aunque la cantidad de caracteres no sea 10 ni 13
+            events: "change",          // evento que va a disparar la validación
+            the_classes: "invalid",    // clase que se va a agregar al nodo en el que se realiza la validación
+            onValid: function () {
+                $('#ruc-error').html('La cedula/RUC es valida').removeClass('invalid-feedback').addClass('success-feedback').show();
+            },   // callback cuando la cédula es correcta.
+            onInvalid: function () {
+                $('#ruc-error').html('La cedula/RUC no es valida').removeClass('success-feedback').addClass('invalid-feedback').show()
+                
+            }  // callback cuando la cédula es incorrecta.
+        };
+        $("#ruc").validarCedulaEC(opciones);
+    })
+</script>
+@endpush

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ClienteInstitucion;
 use App\Models\TipoInstitucion;
 use App\Models\TipoRefrigerio;
 use App\Models\EstadoInstitucion;
@@ -48,5 +49,9 @@ class Institucion extends Model
 
     public function tipo_institucion(){
         return $this->belongsTo(TipoInstitucion::class,'tipo_institucion_id');
+    }
+
+    public function clientes(){
+        return $this->hasMany(ClienteInstitucion::class,'institucion_id');
     }
 }

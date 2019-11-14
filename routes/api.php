@@ -68,6 +68,12 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('transacciones','Transacciones\PaymentController@transacciones');
         Route::get('transacciones/hoy','Transacciones\PaymentController@transacciones_hoy');
     });
+
+    Route::group(['prefix' => 'naturales'], function() {
+        Route::get('clientes/','Naturales\ClienteController@index');
+        Route::post('cliente/by/cedula','Naturales\ClienteController@findCedula');
+        Route::post('clientes/store','Naturales\ClienteController@store');
+    });
     
     
 });

@@ -95,6 +95,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('configuracion/editar','Naturales\InstitucionController@configuracion')->name('naturales.configuracion.edit');
         Route::put('configuracion/update/{id}','Naturales\InstitucionController@configuracionUpdate')->name('naturales.configuracion.update');
 
+        Route::resource('naturales.clientes','Naturales\ClienteController');
+        Route::get('naturales/{institucion}/clientes/data','Naturales\ClienteController@data')->name('naturales.clientes.data');
+        Route::get('naturales/{institucion}/clientes/upload','Naturales\ClienteController@upload')->name('naturales.clientes.upload');;
+
         Route::get('usuario/','Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}','Naturales\UsuarioController@show')->name('naturales.usuario.show');
         Route::get('{id}/usuario/crear/','Naturales\UsuarioController@create')->name('naturales.usuario.crear');
