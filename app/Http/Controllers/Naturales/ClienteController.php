@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Naturales;
 
+
 use App\Http\Controllers\Controller;
+use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
@@ -22,6 +24,13 @@ class ClienteController extends Controller
         $institucion = Institucion::find($institucion_id);
         $clientes = $institucion->clientes()->with(['cliente'])->paginate(50);
         return ($request->is('api/*'))? response()->json(compact('clientes')):view('cliente.index',compact('clientes','institucion_id'));
+    }
+
+    public function clientesData(Request $request,$institucion_id=null){
+        $institucion_id=Auth::user()->institucion_id;
+        $institucion = Institucion::find($institucion_id);
+        $clientes = $institucion->clientes()->with(['cliente'])->get();
+        return Datatables::of($clientes)->make(true);
     }
 
     public function findCedula(Request $request){

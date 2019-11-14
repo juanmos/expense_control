@@ -96,7 +96,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('configuracion/update/{id}','Naturales\InstitucionController@configuracionUpdate')->name('naturales.configuracion.update');
 
         Route::resource('naturales.clientes','Naturales\ClienteController');
-        Route::get('naturales/{institucion}/clientes/data','Naturales\ClienteController@data')->name('naturales.clientes.data');
+        Route::get('naturales/{institucion}/cliente/data','Naturales\ClienteController@clientesData')->name('naturales.clientes.data');
         Route::get('naturales/{institucion}/clientes/upload','Naturales\ClienteController@upload')->name('naturales.clientes.upload');;
 
         Route::get('usuario/','Naturales\UsuarioController@index')->name('naturales.usuario.index');
