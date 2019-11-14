@@ -99,6 +99,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('naturales/{institucion}/cliente/data','Naturales\ClienteController@clientesData')->name('naturales.clientes.data');
         Route::get('naturales/{institucion}/clientes/upload','Naturales\ClienteController@upload')->name('naturales.clientes.upload');;
 
+        Route::resource('naturales.categoria','Naturales\CategoriaController');
+        Route::get('naturales/{tipo}/categoria/data/tablas','Naturales\CategoriaController@categoriaData')->name('naturales.categoria.data');
+
         Route::get('usuario/','Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}','Naturales\UsuarioController@show')->name('naturales.usuario.show');
         Route::get('{id}/usuario/crear/','Naturales\UsuarioController@create')->name('naturales.usuario.crear');

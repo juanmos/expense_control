@@ -7,7 +7,13 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
-
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{url('/home')}}"><i class="feather icon-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('naturales.clientes.index',$institucion_id)}}">Clientes</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Listado</li>
+                    </ol>                 
+                </nav>
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">
@@ -100,13 +106,13 @@ $(function() {
         columns: [
             // { data: 'id', name: 'id' },
             
-            { data: 'cliente.razon_social', name: 'razon_social' },
-            { data: 'cliente.ruc', name: 'ruc' },
-            { data: 'cliente.telefono', name: 'telefono' },
+            { data: 'cliente.razon_social', name: 'cliente.razon_social' },
+            { data: 'cliente.ruc', name: 'cliente.ruc' },
+            { data: 'cliente.telefono', name: 'cliente.telefono' },
             { data: 'nombre', name: 'nombre' },
             { data: 'apellido', name: 'apellido' },
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/show" class="label theme-bg2 text-white f-12">Ver</a>';
+                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                 link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';
                     return link;
                 } 

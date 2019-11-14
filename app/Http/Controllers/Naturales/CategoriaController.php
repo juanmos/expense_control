@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Naturales;
 
 use App\Http\Controllers\Controller;
+use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
+use App\Models\CategoriaProducto;
+use App\Models\CategoriaServicio;
+use App\Models\Institucion;
+use Carbon\Carbon;
+use Crypt;
+use Auth;
 
 class CategoriaController extends Controller
 {
@@ -12,9 +19,21 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request,$tipo)
     {
-        //
+        return view('categoria.index',compact('tipo'));
+    }
+
+    public function categoriaData(Request $request,$tipo){
+        
+        if($tipo=='producto'){
+            $categorias=CategoriaProducto::all();
+        }else if($tipo=='servicio'){
+            $categorias=CategoriaServicio::all();
+        }else{
+            return 'no data';
+        }
+        return Datatables::of($categorias)->make(true);
     }
 
     /**
@@ -22,9 +41,10 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request,$tipo)
     {
-        //
+        $categoria=null;
+        return view('categoria.form',compact('tipo','categoria'));
     }
 
     /**
@@ -33,9 +53,22 @@ class CategoriaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$tipo)
     {
-        //
+        $data=$request->except(['foto','_token']);
+        $data['institucion_id']=Auth::user()->institucion_id;
+        if($tipo=='producto'){
+            $categoria=CategoriaProducto::create($data);
+        }else if($tipo=='servicio'){
+            $categoria=CategoriaServicio::create($data);
+        }else{
+            return redirect()->route('naturales.categoria.index',$tipo)->with(['error-mensaje'=>'No hemos podido crear la categoria proque el tipo es incorrecto']);
+        }
+        if($request->has('foto') && $request->get('foto')!=null){
+            $categoria->foto=$request->file('foto')->store('public/categoria/'.Auth::user()->institucion_id);
+            $categoria->save();
+        }
+        return ($request->is('api/*')) ? reponse()->json(['creado'=>true]) : redirect()->route('naturales.categoria.index',$tipo)->with(['success'=>'La categoria ha sido creada']);
     }
 
     /**
@@ -55,9 +88,16 @@ class CategoriaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($tipo,$id)
     {
-        //
+        if($tipo=='producto'){
+            $categoria=CategoriaProducto::find($id);
+        }else if($tipo=='servicio'){
+            $categoria=CategoriaServicio::find($id);
+        }else{
+            return redirect()->route('naturales.categoria.index',$tipo)->with(['error-mensaje'=>'No hemos podido crear la categoria proque el tipo es incorrecto']);
+        }
+        return view('categoria.form',compact('tipo','categoria'));
     }
 
     /**
@@ -67,9 +107,23 @@ class CategoriaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$tipo, $id)
     {
-        //
+        $data=$request->except(['foto','_token']);
+        $data['institucion_id']=Auth::user()->institucion_id;
+        if($tipo=='producto'){
+            $categoria=CategoriaProducto::find($id);
+        }else if($tipo=='servicio'){
+            $categoria=CategoriaServicio::find($id);
+        }else{
+            return redirect()->route('naturales.categoria.index',$tipo)->with(['error-mensaje'=>'No hemos podido crear la categoria proque el tipo es incorrecto']);
+        }
+        $categoria->update($data);
+        if($request->has('foto') && $request->get('foto')!=null){
+            $categoria->foto=$request->file('foto')->store('public/categoria/'.Auth::user()->institucion_id);
+            $categoria->save();
+        }
+        return ($request->is('api/*')) ? reponse()->json(['creado'=>true]) : redirect()->route('naturales.categoria.index',$tipo)->with(['success'=>'La categoria ha sido creada']);
     }
 
     /**

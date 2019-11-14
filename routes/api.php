@@ -72,7 +72,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::group(['prefix' => 'naturales'], function() {
         Route::get('clientes/','Naturales\ClienteController@index');
         Route::post('cliente/by/cedula','Naturales\ClienteController@findCedula');
+        Route::post('cliente/buscar','Naturales\ClienteController@buscar');
         Route::post('clientes/store','Naturales\ClienteController@store');
+        Route::put('clientes/update/{id}','Naturales\ClienteController@update');
     });
     
     

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
 use App\Models\Cliente;
+use Crypt;
 use Auth;
 
 class ClienteController extends Controller
@@ -23,7 +24,7 @@ class ClienteController extends Controller
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
         $clientes = $institucion->clientes()->with(['cliente'])->paginate(50);
-        return ($request->is('api/*'))? response()->json(compact('clientes')):view('cliente.index',compact('clientes','institucion_id'));
+        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')),false) :view('cliente.index',compact('clientes','institucion_id'));
     }
 
     public function clientesData(Request $request,$institucion_id=null){
@@ -34,9 +35,20 @@ class ClienteController extends Controller
     }
 
     public function findCedula(Request $request){
-        
-        $cliente =  Cliente::where('ruc','like',($request->is('api/*'))?base64_decode($request->get('ruc')):$request->get('ruc').'%')->get();
-        return response()->json(compact('cliente'));
+        $clientes =  Cliente::where('ruc','like',($request->is('api/*'))?base64_decode($request->get('ruc')):$request->get('ruc').'%')->get();
+        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')),false) : response()->json(compact('clientes'));
+    }
+
+    public function buscar(Request $request){
+        $texto=($request->is('api/*'))?base64_decode($request->get('texto')):$request->get('texto');
+        $clientes =  ClienteInstitucion::where('institucion_id',Auth::user()->institucion_id)->whereHas('cliente',function($query) use($texto){
+            $query->where(function($q) use ($texto){
+                $q->orWhere('ruc','like',$texto.'%');
+                $q->orWhere('razon_social','like','%'.$texto.'%');
+            });
+        })->with('cliente')->paginate(50);
+        // return $clientes;
+        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')),false) : response()->json(compact('clientes'));
     }
 
     /**
@@ -115,9 +127,9 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$institucion_id, $id)
+    public function update(Request $request,$institucion_id, $id=null)
     {
-        $cliente = ClienteInstitucion::find($id);
+        $cliente = ClienteInstitucion::find(($request->is('api/*'))? base64_decode($institucion_id) :$id);
         $data=$request->only(['nombre','apellido','telefono','email']);
         if($request->has('email_facturacion') && $request->get('email_facturacion')!=null){
             $data['email_facturacion']=$request->get('email_facturacion');
@@ -125,7 +137,8 @@ class ClienteController extends Controller
             $data['email_facturacion']=$request->get('email');
         }
         $cliente->update($data);
-        return ($request->is('api/*'))?response()->json(['editado'=>true]):redirect()->route('naturales.clientes.show',[$institucion_id, $id]);
+        $cliente = ClienteInstitucion::where('id',$cliente->id)->with('cliente')->first();
+        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('cliente')),false) :redirect()->route('naturales.clientes.show',[$institucion_id, $id]);
     }
 
     /**
