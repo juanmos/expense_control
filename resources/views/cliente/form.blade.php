@@ -44,35 +44,44 @@
                                         <h5>Datos de la cliente</h5>
                                     </div>
                                     <div class="card-body">
+                                            @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
                                         <div class="row">
                                             <div class="form-group col-md-12 ">
                                                 <label for="ruc">RUC / Cedula *</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->ruc}}@endif" id="ruc" name="ruc" class="form-control" required="required" aria-describedby="emailHelp" placeholder="RUC / Cedula del cliente">
+                                                <input type="text" value="@if($cliente!=null){{$cliente->cliente->ruc}}@else{{old('ruc')}}@endif" @if($cliente!=null)readonly="readonly" @endif id="ruc" name="ruc" class="form-control" required="required" aria-describedby="emailHelp" placeholder="RUC / Cedula del cliente">
                                                 <label id="ruc-error" style="display:none"></label>
                                             </div>
                                             <div class="form-group col-md-6 ">
                                                 <label for="exampleInputEmail1">Nombre *</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->nombre}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Nombre de cliente">
+                                                <input type="text" value="@if($cliente!=null){{$cliente->nombre}}@else{{old('nombre')}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Nombre de cliente">
                                             </div>
                                             <div class="form-group col-md-6 ">
                                                 <label for="exampleInputEmail1">Apellido *</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->apellido}}@endif" name="apellido" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Apellido de cliente">
+                                                <input type="text" value="@if($cliente!=null){{$cliente->apellido}}@else{{old('apellido')}}@endif" name="apellido" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Apellido de cliente">
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Razón Social</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->razon_social}}@endif" name="razon_social" class="form-control" id="exampleInputPassword1" placeholder="Razón social">
+                                                <label for="exampleInputPassword1">Razón Social *</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->cliente->razon_social}}@else{{old('razon_social')}}@endif" name="razon_social" required="required" class="form-control" id="exampleInputPassword1" placeholder="Razón social">
                                             </div>
                                             <div class="form-group col-md-6 ">
                                                 <label for="exampleInputPassword1">Email</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->email}}@endif" name="email" class="form-control" id="exampleInputPassword1" placeholder="Email">
+                                                <input type="text" value="@if($cliente!=null){{$cliente->email}}@else{{old('email')}}@endif" name="email" class="form-control" id="exampleInputPassword1" placeholder="Email">
                                             </div>
                                             <div class="form-group col-md-6 ">
-                                                <label for="exampleInputPassword1">Teléfono</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->telefono}}@endif" name="telefono" class="form-control" id="exampleInputPassword1" placeholder="Teléfono">
+                                                <label for="exampleInputPassword1">Teléfono *</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->cliente->telefono}}@else{{old('telefono')}}@endif" name="telefono" required="required" class="form-control" id="exampleInputPassword1" placeholder="Teléfono">
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Dirección</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->direccion}}@endif" name="direccion" class="form-control" id="exampleInputPassword1" placeholder="Dirección">
+                                                <label for="exampleInputPassword1">Dirección *</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->cliente->direccion}}@else{{old('direccion')}}@endif" name="direccion" required="required" class="form-control" id="exampleInputPassword1" placeholder="Dirección">
                                             </div>                                            
                                         </div>
                                     </div>

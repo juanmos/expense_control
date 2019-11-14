@@ -58,7 +58,7 @@
                     <a href="{{route('institucion.refrigerio.index')}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Compras</span></a>
                 </li>
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.clientes.index')?'active':''}}">
-                    <a href="{{route('naturales.clientes.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Clientes</span></a>
+                    <a href="{{route('naturales.clientes.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-office-building"></i></span><span class="pcoded-mtext">Clientes</span></a>
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Administración</label>

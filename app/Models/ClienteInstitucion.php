@@ -20,5 +20,10 @@ class ClienteInstitucion extends Model
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->nombre} {$this->apellido}";
+    }
     
 }

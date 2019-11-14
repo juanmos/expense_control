@@ -42,7 +42,7 @@
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Nombre</th>
+                                                        <th>Razón social</th>
                                                         <th>RUC/Cedula</th>
                                                         <th>Telefono</th>
                                                         <th>Nombre completo</th>

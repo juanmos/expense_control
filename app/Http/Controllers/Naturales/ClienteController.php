@@ -49,8 +49,20 @@ class ClienteController extends Controller
      */
     public function store(Request $request,$institucion_id=null)
     {
-        $dataCliente = $request->only(['razon_social','ruc','telefono','direccion']);
-        $cliente = Cliente::create($dataCliente);
+        $request->validate([
+            'razon_social'=>'required',
+            'ruc'=>'required',
+            'telefono'=>'required',
+            'direccion'=>'required',
+            'nombre'=>'required',
+            'apellido'=>'required',
+        ]);
+        $cliente=Cliente::where('ruc',$request->get('ruc'));
+        if($cliente==null){
+            $dataCliente = $request->only(['razon_social','ruc','telefono','direccion']);
+            $$dataCliente['usuario_crea_id']=Auth::user()->id;
+            $cliente = Cliente::create($dataCliente);
+        }       
         $data=$request->only(['nombre','apellido','telefono','email']);
         if($request->has('email_facturacion') && $request->get('email_facturacion')!=null){
             $data['email_facturacion']=$request->get('email_facturacion');
@@ -69,9 +81,10 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$institucion_id,$id)
     {
-        //
+        $cliente = ClienteInstitucion::find($id);
+        return ($request->is('api/*'))?response()->json(compact('cliente')):view('cliente.show',compact('cliente','institucion_id'));
     }
 
     /**
@@ -80,9 +93,10 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request,$institucion_id,$id)
     {
-        //
+        $cliente=ClienteInstitucion::find($id);
+        return view('cliente.form',compact('cliente','institucion_id'));
     }
 
     /**
@@ -92,9 +106,17 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$institucion_id, $id)
     {
-        //
+        $cliente = ClienteInstitucion::find($id);
+        $data=$request->only(['nombre','apellido','telefono','email']);
+        if($request->has('email_facturacion') && $request->get('email_facturacion')!=null){
+            $data['email_facturacion']=$request->get('email_facturacion');
+        }else{
+            $data['email_facturacion']=$request->get('email');
+        }
+        $cliente->update($data);
+        return ($request->is('api/*'))?response()->json(['editado'=>true]):redirect()->route('naturales.clientes.show',[$institucion_id, $id]);
     }
 
     /**

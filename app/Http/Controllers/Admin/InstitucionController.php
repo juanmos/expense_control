@@ -48,7 +48,7 @@ class InstitucionController extends Controller
     {
         $institucion = Institucion::create($request->all());
         $institucion->configuracion()->create();
-        return redirect()->route('admin.insitucion.index');
+        return redirect()->route('admin.institucion.index');
     }
 
     public function show($id,$pest='E'){
