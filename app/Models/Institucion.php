@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ClienteInstitucion;
 use App\Models\TipoInstitucion;
@@ -15,6 +16,8 @@ use App\Models\User;
 
 class Institucion extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable=['nombre','siglas','direccion','telefono','celular','ruc','email','web','facebook','twitter','instagram','estado_id','ciudad_id','latitud','longitud','tipo_institucion_id'];
 
     public function ciudad(){

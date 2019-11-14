@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\DatosFacturacion;
 use App\Models\FacturaDetalle;
 use App\Models\Institucion;
 use App\Models\EstadoFactura;
 use App\Models\Pago;
+
 class Factura extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable=['datos_facturacion_id','pago_id','estado_id','factura_no','fecha','subtotal','subtotal0','propina','descuento','servicio','iva','total','clave','autorizacion','pdf','xml','ambiente','institucion_id'];
 
     public function datos_facturacion()

@@ -25,7 +25,15 @@ class CategoriaController extends Controller
     }
 
     public function categoriaData(Request $request,$tipo){
-        
+        if($request->is('api/*')){
+            if($tipo=='producto'){
+                $categorias=CategoriaProducto::orderBy('categoria')->paginate(50);
+            }else if($tipo=='servicio'){
+                $categorias=CategoriaServicio::orderBy('categoria')->paginate(50);
+            }
+            return Crypt::encrypt(json_encode(compact('categorias')),false);
+            // return response()->json(compact('categorias'));
+        }
         if($tipo=='producto'){
             $categorias=CategoriaProducto::all();
         }else if($tipo=='servicio'){
@@ -68,7 +76,7 @@ class CategoriaController extends Controller
             $categoria->foto=$request->file('foto')->store('public/categoria/'.Auth::user()->institucion_id);
             $categoria->save();
         }
-        return ($request->is('api/*')) ? reponse()->json(['creado'=>true]) : redirect()->route('naturales.categoria.index',$tipo)->with(['success'=>'La categoria ha sido creada']);
+        return ($request->is('api/*')) ? response()->json(['creado'=>true]) : redirect()->route('naturales.categoria.index',$tipo)->with(['success'=>'La categoria ha sido creada']);
     }
 
     /**
@@ -123,7 +131,7 @@ class CategoriaController extends Controller
             $categoria->foto=$request->file('foto')->store('public/categoria/'.Auth::user()->institucion_id);
             $categoria->save();
         }
-        return ($request->is('api/*')) ? reponse()->json(['creado'=>true]) : redirect()->route('naturales.categoria.index',$tipo)->with(['success'=>'La categoria ha sido creada']);
+        return ($request->is('api/*')) ? response()->json(['creado'=>true]) : redirect()->route('naturales.categoria.index',$tipo)->with(['success'=>'La categoria ha sido creada']);
     }
 
     /**
