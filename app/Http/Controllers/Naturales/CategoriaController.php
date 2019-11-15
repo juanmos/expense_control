@@ -140,8 +140,14 @@ class CategoriaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$tipo,$id)
     {
-        //
+        if($tipo=='producto'){
+            $categoria=CategoriaProducto::find($id);
+        }else if($tipo=='servicio'){
+            $categoria=CategoriaServicio::find($id);
+        }
+        $categoria->delete();
+        return ($request->is('api/*')) ? response()->json(['eliminado'=>true]) : redirect()->route('naturales.categoria.index',$tipo)->with(['success'=>'La categoria ha sido eliminada']);
     }
 }

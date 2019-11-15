@@ -82,8 +82,12 @@
         </div>
     </div>
 </div>
+{!! Form::open(['method'=>'POST','id'=>'elimina_categoria']) !!}
+    {!! Form::hidden('_method', 'DELETE') !!}
+{!! Form::close() !!}
 @endsection
 @push('scripts')
+<script src='{{asset("assets/plugins/sweetalert/js/sweetalert.min.js")}}'></script>
 <script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
 <script>
 $(function() {
@@ -102,6 +106,7 @@ $(function() {
             { "data": "id", render: function (dataField) { 
                 var link='<a href="{{ url("naturales/naturales/servicio/categoria")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                 link+='<a href="{{ url("naturales/naturales/servicio/categoria")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';
+                link+='<a href="#" myid="'+dataField+'" tipo="servicio" class="label theme-bg eliminar-categoria text-white f-12">Eliminar</a>';
                     return link;
                 } 
             }
@@ -122,13 +127,39 @@ $(function() {
             { "data": "id", render: function (dataField) { 
                 var link='<a href="{{ url("naturales/naturales/producto/categoria")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                 link+='<a href="{{ url("naturales/naturales/producto/categoria")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';
+                link+='<a href="#" myid="'+dataField+'" tipo="producto" class="label theme-bg eliminar-categoria text-white f-12">Eliminar</a>';
                     return link;
                 } 
             }
         ]
     });
 });
-    
+$(document).ready(function(){
+    $(document).on('click','.eliminar-categoria', function() {
+        var tid=$(this).attr('myid');
+        var tipo=$(this).attr('tipo');
+        swal({
+                title: "Estas seguro?",
+                text: "Estas seguro que deseas eliminar la categoria y todos sus productos!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal("Tu categoria sera eliminada!", {
+                        icon: "success",
+                    });
+                    $('#elimina_categoria').attr('action','{{url("naturales/naturales/")}}/'+tipo+'/categoria/'+tid);
+                    $('#elimina_categoria').submit();
+                } else {
+                    swal("Your imaginary file is safe!", {
+                        icon: "error",
+                    });
+                }
+            });
+    });
+})    
 </script>
 @endpush
 @push('styles')

@@ -60,12 +60,12 @@
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.clientes.index')?'active':''}}">
                     <a href="{{route('naturales.clientes.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-office-building"></i></span><span class="pcoded-mtext">Clientes</span></a>
                 </li>
-                <li data-username="" class="nav-item pcoded-hasmenu {{( Route::currentRouteName()=='naturales.usuario.index' || Route::currentRouteName()=='naturales.categoria.index')?'active pcoded-trigger':''}}">
+                <li data-username="" class="nav-item pcoded-hasmenu {{( Route::currentRouteName()=='naturales.producto.index' || Route::currentRouteName()=='naturales.servicio.index')?'active pcoded-trigger':''}}">
                     <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-barcode"></i></span><span class="pcoded-mtext">Productos y Servicios</span></a>
                     <ul class="pcoded-submenu">                        
                         
-                        <li class="{{(Route::currentRouteName()=='naturales.usuario.index')?'active':''}}"><a href="{{route('naturales.usuario.index')}}" class="">Productos</a></li>
-                        <li class="{{(Route::currentRouteName()=='naturales.configuracion.edit')?'active':''}}"><a href="{{route('naturales.configuracion.edit')}}" class="">Sevicios</a></li>
+                        <li class="{{(Route::currentRouteName()=='naturales.producto.index')?'active':''}}"><a href="{{route('naturales.producto.index',Auth::user()->institucion_id)}}" class="">Productos</a></li>
+                        <li class="{{(Route::currentRouteName()=='naturales.servicio.index')?'active':''}}"><a href="{{route('naturales.servicio.index',Auth::user()->institucion_id)}}" class="">Sevicios</a></li>
                         <li class="{{(Route::currentRouteName()=='naturales.categoria.index')?'active':''}}"><a href="{{route('naturales.categoria.index','producto')}}" class="">Categorias</a></li>
                     </ul>
                 </li>

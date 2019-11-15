@@ -9,7 +9,7 @@ use App\Models\Cliente;
 
 class ClienteInstitucion extends Model
 {
-    use SofDeletes;
+    use SoftDeletes;
     
     protected $fillable=['institucion_id','cliente_id','nombre','apellido','telefono','email','email_facturacion'];
 

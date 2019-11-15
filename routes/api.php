@@ -80,6 +80,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('categorias/{tipo}','Naturales\CategoriaController@categoriaData');
         Route::post('categorias/store/{tipo}','Naturales\CategoriaController@store');
         Route::put('categorias/update/{tipo}/{id}','Naturales\CategoriaController@update');
+        Route::delete('categorias/destroy/{tipo}/{id}','Naturales\CategoriaController@destroy');
     });
     
     
