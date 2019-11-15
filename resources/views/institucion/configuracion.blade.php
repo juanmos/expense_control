@@ -43,12 +43,11 @@
                                                     {{-- <li class="nav-item">
                                                         <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false">Agenda</a>
                                                     </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Usuarios</a>
-                                                    </li> --}}
+                                                     --}}
                                                     <li class="nav-item">
                                                         <a class="nav-link active show" id="facturacion-tab" data-toggle="tab" href="#facturacion" role="tab" aria-controls="facturacion" aria-selected="false">Facturacion</a>
                                                     </li>
+                                                    
                                                 </ul>
                                                 <div class="tab-content" id="myTabContent">
                                                     <div class="tab-pane fade active show" id="facturacion" role="tabpanel" aria-labelledby="facturacion-tab">
@@ -108,7 +107,7 @@
                                                                 {!! Form::text('fecha_expiracion', ($configuracion->configuraciones!=null && array_key_exists('fecha_expiracion',$configuracion->configuraciones))?$configuracion->configuraciones['fecha_expiracion'] : '' ,["class"=>"form-control","placeholder"=>'Obtendremos la fecha de expiracion de tu firma electronica']) !!}
                                                             </div>
                                                             <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">En modo:</label>
+                                                                <label for="exampleInputPassword1">En modo:</label><br>
                                                                 <div class="radio d-inline">
                                                                     <input type="radio" name="ambiente_facturacion" id="radio-produccion" value="2" {{($configuracion->configuraciones!=null && array_key_exists('ambiente_facturacion',$configuracion->configuraciones))?($configuracion->configuraciones['ambiente_facturacion']==2)?'checked':'':''}}>
                                                                     <label for="radio-produccion" class="cr">Producción</label>
@@ -117,6 +116,10 @@
                                                                     <input type="radio" name="ambiente_facturacion" id="radio-pruebas" value="1" {{($configuracion->configuraciones!=null && array_key_exists('ambiente_facturacion',$configuracion->configuraciones))?($configuracion->configuraciones['ambiente_facturacion']==1)?'checked':'':''}}>
                                                                     <label for="radio-pruebas" class="cr">Pruebas</label>
                                                                 </div>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="exampleInputPassword1">Clave SRI para obtener compras</label>
+                                                                {!! Form::password('clave_sri',["class"=>"form-control"]) !!}
                                                             </div>
                                                         </div>
                                                     </div>

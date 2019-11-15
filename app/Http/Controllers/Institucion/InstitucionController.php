@@ -127,7 +127,7 @@ class InstitucionController extends Controller
 
     public function configuracionUpdate(Request $request,$id){
         $configuracion=Configuracion::find($id);
-        $data=$request->except(['firma','clave','_method',"_token"]);
+        $data=$request->except(['firma','clave','clave_sri','_method',"_token"]);
         if($request->has('firma') ){
             $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
         }else{
@@ -137,6 +137,11 @@ class InstitucionController extends Controller
             $data['clave']=Crypt::encrypt($request->get('clave'));
         }else{
             $data['clave']=$configuracion->configuraciones['clave'];
+        }
+        if($request->has('clave_sri') && $request->get('clave_sri')!=null){
+            $data['clave_sri']=Crypt::encrypt($request->get('clave_sri'));
+        }else{
+            $data['clave_sri']=$configuracion->configuraciones['clave_sri'];
         }
         $configuracion->configuraciones=$data;
         $configuracion->save();

@@ -114,21 +114,5 @@ class InstitucionController extends Controller
         return view('institucion.configuracion',compact('configuracion','institucion'));
     }
 
-    public function configuracionUpdate(Request $request,$id){
-        $configuracion=Configuracion::find($id);
-        $data=$request->except(['firma','clave','_method',"_token"]);
-        if($request->has('firma') ){
-            $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
-        }else{
-            $data['firma']=$configuracion->configuraciones['firma'];
-        }
-        if($request->has('clave') && $request->get('clave')!=null){
-            $data['clave']=Crypt::encrypt($request->get('clave'));
-        }else{
-            $data['clave']=$configuracion->configuraciones['clave'];
-        }
-        $configuracion->configuraciones=$data;
-        $configuracion->save();
-        return back()->with('mensaje','Configuraciones guardadas con exito');
-    }
+    
 }

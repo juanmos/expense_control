@@ -12,6 +12,7 @@ use App\Models\Transaccion;
 use App\Models\Configuracion;
 use App\Models\MenuRefrigerio;
 use App\Models\Ciudad;
+use App\Models\Compra;
 use App\Models\User;
 
 class Institucion extends Model
@@ -56,5 +57,9 @@ class Institucion extends Model
 
     public function clientes(){
         return $this->hasMany(ClienteInstitucion::class,'institucion_id');
+    }
+
+    public function compras(){
+        return $this->hasMany(Compra::class,'institucion_id');
     }
 }
