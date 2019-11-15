@@ -23,14 +23,18 @@ class ClienteController extends Controller
     {
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
-        $clientes = $institucion->clientes()->with(['cliente'])->paginate(50);
+        $clientes = Cliente::whereHas('cliente_institucion',function($query) use($institucion_id){
+            $query->where('institucion_id',$institucion_id);
+        })->with('cliente_institucion')->orderBy('razon_social')->paginate(50);
         return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')),false) :view('cliente.index',compact('clientes','institucion_id'));
     }
 
     public function clientesData(Request $request,$institucion_id=null){
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
-        $clientes = $institucion->clientes()->with(['cliente'])->get();
+        $clientes = $institucion->clientes()->orderBy()->with(['cliente'])->get()->sortBy(function($useritem, $key) {
+            return $useritem->cliente->razon_social;
+            });;
         return Datatables::of($clientes)->make(true);
     }
 

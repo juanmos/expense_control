@@ -105,6 +105,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('naturales.producto','Naturales\ProductoController');
         Route::resource('naturales.servicio','Naturales\ProductoController');
 
+        Route::resource('naturales.compras','Naturales\ComprasController');
+        Route::get('naturales/{institucion}/cliente/data','Naturales\ComprasController@comprasData')->name('naturales.compras.data');
+
         Route::get('usuario/','Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}','Naturales\UsuarioController@show')->name('naturales.usuario.show');
         Route::get('{id}/usuario/crear/','Naturales\UsuarioController@create')->name('naturales.usuario.crear');

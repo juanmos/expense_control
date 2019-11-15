@@ -126,7 +126,7 @@ class InstitucionController extends Controller
     }
 
     public function configuracionUpdate(Request $request,$id){
-        $configuracion=Configuracion::find($id);
+        $configuracion=Configuracion::find(($request->is('api/*'))? base64_decode($id):$id);
         $data=$request->except(['firma','clave','clave_sri','_method',"_token"]);
         if($request->has('firma') ){
             $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
@@ -139,12 +139,12 @@ class InstitucionController extends Controller
             $data['clave']=$configuracion->configuraciones['clave'];
         }
         if($request->has('clave_sri') && $request->get('clave_sri')!=null){
-            $data['clave_sri']=Crypt::encrypt($request->get('clave_sri'));
+            $data['clave_sri']=Crypt::encrypt(($request->is('api/*'))? base64_decode($request->get('clave_sri')) :$request->get('clave_sri'));
         }else{
             $data['clave_sri']=$configuracion->configuraciones['clave_sri'];
         }
         $configuracion->configuraciones=$data;
         $configuracion->save();
-        return back()->with('mensaje','Configuraciones guardadas con exito');
+        return ($request->is('api/*'))? Crypt::encrypt(json_encode(compact('configuracion')),false) :back()->with('mensaje','Configuraciones guardadas con exito');
     }
 }
