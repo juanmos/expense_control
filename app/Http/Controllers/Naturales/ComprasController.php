@@ -40,7 +40,7 @@ class ComprasController extends Controller
             $dia=$institucion->compras()->whereBetween('fecha',[Carbon::now()->subDays(7)->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
             $mes=$institucion->compras()->whereBetween('fecha',[Carbon::now()->firstOfMonth()->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
             $ano=$institucion->compras()->whereBetween('fecha',[Carbon::now()->startOfYear()->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
-            $compras=$institucion->compras()->whereBetween('fecha',[$start,$end])->with('cliente.cliente')->paginate(50);
+            $compras=$institucion->compras()->whereBetween('fecha',[$start,$end])->with('cliente.cliente')->orderBy('fecha','desc')->paginate(50);
             return Crypt::encrypt(json_encode(compact('dia','mes','ano','compras')),false);
             
             return json_encode(compact('dia','mes','ano','compras'));
@@ -77,9 +77,19 @@ class ComprasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($institucion_id,$id)
     {
-        //
+        $compra = Compra::find($id);
+        $detalle = $compra->detalles['detalle'];
+        unset($detalle['impuestos']);
+         
+        $multiple=false;
+        if (!(count($detalle) == count($detalle, COUNT_RECURSIVE)) )
+        {
+            $multiple=true;
+        }   
+        
+        return view('compras.show',compact('compra','multiple'));
     }
 
     /**
@@ -114,5 +124,11 @@ class ComprasController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function pdf($institucion,$id)
+    {
+        $factura = Compra::find($id);
+        return response()->file(storage_path('app/'.$factura->pdf));
     }
 }

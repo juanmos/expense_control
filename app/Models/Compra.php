@@ -8,9 +8,10 @@ use App\Models\ClienteInstitucion;
 
 class Compra extends Model
 {
-    protected $fillable=['institucion_id','cliente_id','fecha','establecimiento','puntoEmision','secuencial','tipoComprobante','codigoTipoDocumento','codigoComprobanteRecibido','claveAcceso','total','totalSinImpuestos','propina','totalDescuento','impuestos','sincronizado'];
+    protected $fillable=['institucion_id','cliente_id','fecha','establecimiento','puntoEmision','secuencial','tipoComprobante','codigoTipoDocumento','codigoComprobanteRecibido','claveAcceso','total','totalSinImpuestos','propina','totalDescuento','impuestos','sincronizado','detalles'];
     protected $casts = [
         'impuestos' => 'array',
+        'detalles' => 'array',
     ];
 
     public function institucion()
@@ -21,5 +22,10 @@ class Compra extends Model
     public function cliente()
     {
         return $this->belongsTo(ClienteInstitucion::class, 'cliente_id');
+    }
+
+    public function getFacturaNumeroAttribute()
+    {
+        return "{$this->establecimiento}-{$this->puntoEmision}-{$this->secuencial}";
     }
 }

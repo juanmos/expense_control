@@ -47,6 +47,7 @@ class ObtenerComprasSri extends Command
         $meses=[1,2,3,4,5,6,7,8,9,10,11,12];
         $sri_web='https://srienlinea.sri.gob.ec/movil-servicios/api/';
         $instituciones = Institucion::with('configuracion')->get();
+        $hoy = Carbon::now();
         foreach($instituciones as $institucion){
             $ruc = (array_key_exists('ruc',$institucion->configuracion->configuraciones) && $institucion->configuracion->configuraciones['ruc'])?$institucion->configuracion->configuraciones['ruc']:null;
             $clave = (array_key_exists('clave_sri',$institucion->configuracion->configuraciones) && $institucion->configuracion->configuraciones['clave_sri'])?Crypt::decrypt($institucion->configuracion->configuraciones['clave_sri']):null;
@@ -70,8 +71,8 @@ class ObtenerComprasSri extends Command
                             ],
                             'query' => [
                                 'tipoComprobante' => '1',
-                                'anio'=>'2019',
-                                'mes'=>$mes]
+                                'anio'=>$hoy->format('Y'),
+                                'mes'=>$hoy->format('m')]
                         ]);
                         if( $resp->getStatusCode()==200){
                             $json=(string) $resp->getBody();

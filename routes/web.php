@@ -107,6 +107,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::resource('naturales.compras','Naturales\ComprasController');
         Route::get('naturales/{institucion}/cliente/data','Naturales\ComprasController@comprasData')->name('naturales.compras.data');
+        Route::get('naturales/{institucion}/compras/pdf/{id}','Naturales\ComprasController@pdf')->name('naturales.compras.pdf');
 
         Route::get('usuario/','Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}','Naturales\UsuarioController@show')->name('naturales.usuario.show');

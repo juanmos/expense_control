@@ -11,6 +11,7 @@ use App\Models\Ciudad;
 use App\Models\EstadoInstitucion;
 use App\Models\Configuracion;
 use App\Models\TipoInstitucion;
+use App\Jobs\ObtenerComprasAnterioresJob;
 use Carbon\Carbon;
 use Crypt;
 use Hash;
@@ -140,11 +141,13 @@ class InstitucionController extends Controller
         }
         if($request->has('clave_sri') && $request->get('clave_sri')!=null){
             $data['clave_sri']=Crypt::encrypt(($request->is('api/*'))? base64_decode($request->get('clave_sri')) :$request->get('clave_sri'));
+            ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id));
         }else{
             $data['clave_sri']=$configuracion->configuraciones['clave_sri'];
         }
         $configuracion->configuraciones=$data;
         $configuracion->save();
+        
         return ($request->is('api/*'))? Crypt::encrypt(json_encode(compact('configuracion')),false) :back()->with('mensaje','Configuraciones guardadas con exito');
     }
 }
