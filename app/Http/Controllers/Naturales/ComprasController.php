@@ -126,7 +126,7 @@ class ComprasController extends Controller
         //
     }
 
-    public function pdf($institucion,$id)
+    public function pdf(Request $request,$institucion,$id)
     {
         $factura = Compra::find($id);
         return response()->file(storage_path('app/'.$factura->pdf));
