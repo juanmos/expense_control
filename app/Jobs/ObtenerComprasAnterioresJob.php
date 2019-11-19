@@ -41,8 +41,14 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
         // $instituciones = Institucion::with('configuracion')->get();
         // dd($this->institucion);
         $institucion=$this->institucion;
-        $ruc = (array_key_exists('ruc', $institucion->configuracion->configuraciones) && $institucion->configuracion->configuraciones['ruc'])?$institucion->configuracion->configuraciones['ruc']:null;
-        $clave = (array_key_exists('clave_sri', $institucion->configuracion->configuraciones) && $institucion->configuracion->configuraciones['clave_sri'])?Crypt::decrypt($institucion->configuracion->configuraciones['clave_sri']):null;
+        $ruc = (
+                array_key_exists('ruc', $institucion->configuracion->configuraciones) &&
+                $institucion->configuracion->configuraciones['ruc']
+            )?$institucion->configuracion->configuraciones['ruc']:null;
+        $clave = (
+                array_key_exists('clave_sri', $institucion->configuracion->configuraciones) &&
+                $institucion->configuracion->configuraciones['clave_sri']
+            )?Crypt::decrypt($institucion->configuracion->configuraciones['clave_sri']):null;
         if ($ruc!=null && $clave!=null) {
             $client = new \GuzzleHttp\Client();
             $res = $client->request('POST', $sri_web.'v2.0/secured', [
@@ -75,50 +81,60 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                                     $json=(string) $resp->getBody();
                                     $compras= json_decode($json);
                                     foreach ($compras as $compra) {
-                                        foreach ($compra->comprobantes as $comprobante) {
-                                            $cliente = Cliente::where('ruc', $comprobante->rucEmisor)->first();
+                                        foreach ($compra->comprobantes as $comp) {
+                                            $cliente = Cliente::where('ruc', $comp->rucEmisor)->first();
                                             if ($cliente==null) {
                                                 $cliente=Cliente::create([
-                                                    'razon_social'=>$comprobante->razonSocialEmisor,
-                                                    'ruc'=>$comprobante->rucEmisor
+                                                    'razon_social'=>$comp->razonSocialEmisor,
+                                                    'ruc'=>$comp->rucEmisor
                                                 ]);
                                             }
-                                            $cliente_institucion = ClienteInstitucion::where('institucion_id', $institucion->id)->where('cliente_id', $cliente->id)->first();
+                                            $cliente_institucion = ClienteInstitucion::
+                                                                    where('institucion_id', $institucion->id)
+                                                                    ->where('cliente_id', $cliente->id)->first();
                                             if ($cliente_institucion==null) {
                                                 $cliente_institucion =$institucion->clientes()->create([
                                                     'cliente_id'=>$cliente->id,
-                                                    'nombre'=>$comprobante->razonSocialEmisor
+                                                    'nombre'=>$comp->razonSocialEmisor
                                                 ]);
                                             }
                                             $compra = Compra::where('institucion_id', $institucion->id)
                                                     ->where('cliente_id', $cliente_institucion->id)
-                                                    ->where('codigoComprobanteRecibido', $comprobante->codigoComprobanteRecibido)
-                                                    ->where('tipoComprobante', $comprobante->tipoComprobante)->first();
+                                                    ->where(
+                                                        'codigoComprobanteRecibido',
+                                                        $comp->codigoComprobanteRecibido
+                                                    )
+                                                    ->where('tipoComprobante', $comp->tipoComprobante)->first();
                                             if ($compra==null) {
-                                                $respDetalle = $client->request('GET', $sri_web.'v2.0/comprobantes/detalle', [
-                                                    'headers' => [
-                                                        'User-Agent' => 'PostmanRuntime/7.19.0',
-                                                        'Accept'     => '*/*',
-                                                        'Authorization'      => $token
-                                                    ],
-                                                    'query' => [
-                                                        'codigoComprobanteRecibido' => $comprobante->codigoComprobanteRecibido,
-                                                        'tipoDeComprobante'=>$comprobante->codigoTipoDocumento,
-                                                        'fechaEmision'=>$comprobante->fechaEmisionFormato
+                                                $respDetalle = $client->request(
+                                                    'GET',
+                                                    $sri_web.'v2.0/comprobantes/detalle',
+                                                    [
+                                                        'headers' => [
+                                                            'User-Agent' => 'PostmanRuntime/7.19.0',
+                                                            'Accept'     => '*/*',
+                                                            'Authorization'      => $token
+                                                        ],
+                                                        'query' => [
+                                                            'codigoComprobanteRecibido' =>
+                                                                                    $comp->codigoComprobanteRecibido,
+                                                            'tipoDeComprobante'=>$comp->codigoTipoDocumento,
+                                                            'fechaEmision'=>$comp->fechaEmisionFormato
+                                                        ]
                                                     ]
-                                                ]);
+                                                );
                                                 if ($respDetalle->getStatusCode()==200) {
                                                     $json=(string) $respDetalle->getBody();
                                                     $detalle= json_decode($json);
                                                     $compra= $institucion->compras()->create([
                                                         'cliente_id'=>$cliente_institucion->id,
-                                                        'fecha'=>$comprobante->fechaEmision,
-                                                        'establecimiento'=>$comprobante->establecimiento,
-                                                        'puntoEmision'=>$comprobante->puntoEmision,
-                                                        'secuencial'=>$comprobante->secuencial,
-                                                        'tipoComprobante'=>$comprobante->tipoComprobante,
-                                                        'codigoTipoDocumento'=>$comprobante->codigoTipoDocumento,
-                                                        'codigoComprobanteRecibido'=>$comprobante->codigoComprobanteRecibido,
+                                                        'fecha'=>$comp->fechaEmision,
+                                                        'establecimiento'=>$comp->establecimiento,
+                                                        'puntoEmision'=>$comp->puntoEmision,
+                                                        'secuencial'=>$comp->secuencial,
+                                                        'tipoComprobante'=>$comp->tipoComprobante,
+                                                        'codigoTipoDocumento'=>$comp->codigoTipoDocumento,
+                                                        'codigoComprobanteRecibido'=>$comp->codigoComprobanteRecibido,
                                                         'claveAcceso'=>$detalle->claveAcceso,
                                                         'total'=>$detalle->importeTotal,
                                                         'totalSinImpuestos'=>$detalle->totalSinImpuestos,

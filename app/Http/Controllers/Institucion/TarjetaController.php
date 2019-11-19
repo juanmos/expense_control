@@ -135,6 +135,10 @@ class TarjetaController extends Controller
         if ($tarjeta==null) {
             response()->json(['error'=>'No hay tarjeta'], 400);
         }
-        return response(QrCode::format('png')->size(600)->generate($tarjeta->codigo), 200, ['Content-Type' => 'image/png']);
+        return response(
+            QrCode::format('png')->size(600)->generate($tarjeta->codigo),
+            200,
+            ['Content-Type' => 'image/png']
+        );
     }
 }

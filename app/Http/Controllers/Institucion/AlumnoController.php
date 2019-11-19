@@ -76,7 +76,9 @@ class AlumnoController extends Controller
         if ($request->has('email') && $request->get('email')!=null) {
             $user = User::where('email', $request->get('email'))->first();
             if ($user!=null) {
-                return ($request->is('api/*'))? reposne()->json(['error'=>'Email ya usado'], 404) : back()->withErrors(['email'=>'Email ya usado'])->withInput($request->input());
+                return ($request->is('api/*'))?
+                            reposne()->json(['error'=>'Email ya usado'], 404) :
+                            back()->withErrors(['email'=>'Email ya usado'])->withInput($request->input());
             }
         }
         $data=$request->except(['ano_lectivo','curso','profesor']);
@@ -89,7 +91,9 @@ class AlumnoController extends Controller
             $usuario->save();
         }
         $this->crearQR($request->get('institucion_id'), $usuario->id);
-        return ($request->is('api/*'))? response()->json(['creado'=>true]): redirect('institucion/'.$request->get('institucion_id').'/alumno/'.$usuario->id);
+        return ($request->is('api/*'))?
+                    response()->json(['creado'=>true]):
+                    redirect('institucion/'.$request->get('institucion_id').'/alumno/'.$usuario->id);
     }
 
     /**
@@ -102,7 +106,10 @@ class AlumnoController extends Controller
     {
         $usuario =User::find($alumno_id);
         $institucion = Institucion::find($id);
-        $transacciones = $institucion->transacciones()->where('usuario_id', $alumno_id)->orderBy('fecha_hora', 'desc')->paginate(50);
+        $transacciones = $institucion->
+                            transacciones()->
+                            where('usuario_id', $alumno_id)->
+                            orderBy('fecha_hora', 'desc')->paginate(50);
         $hoy = Carbon::now()->toDateTimeString();
         $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
         $recargas =$institucion->transacciones()->whereBetween('fecha_hora', [$menos30,$hoy])
@@ -115,7 +122,20 @@ class AlumnoController extends Controller
         $tipos_refrigerio=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo', 'id');
         $formas_pago = FormaPago::where('habilitado', 1)->orderBy('forma_pago')->get()->pluck('forma_pago', 'id');
         $tipo_pago = TipoTransaccion::whereIn('id', [5])->orderBy('tipo')->get()->pluck('tipo', 'id');
-        return view('alumno.show', compact('usuario', 'transacciones', 'recargas', 'compras', 'id', 'tipo_tarjetas', 'tipos_refrigerio', 'formas_pago', 'tipo_pago'));
+        return view(
+            'alumno.show',
+            compact(
+                'usuario',
+                'transacciones',
+                'recargas',
+                'compras',
+                'id',
+                'tipo_tarjetas',
+                'tipos_refrigerio',
+                'formas_pago',
+                'tipo_pago'
+            )
+        );
     }
 
     /**
@@ -141,7 +161,9 @@ class AlumnoController extends Controller
     {
         $usuario =User::find(($request->is('api/*'))?base64_decode($id) :$id);
         if ($usuario==null) {
-            return ($request->is('api/*'))? reposne()->json(['error'=>'Usuario no encontrado'], 404) : back()->withErrors(['error'=>'Usuario no encontrado'])->withInput($request->input());
+            return ($request->is('api/*'))?
+                        reposne()->json(['error'=>'Usuario no encontrado'], 404) :
+                        back()->withErrors(['error'=>'Usuario no encontrado'])->withInput($request->input());
         }
         $data=$request->except(['ano_lectivo','curso','profesor']);
         $usuario->update($data);
@@ -151,7 +173,9 @@ class AlumnoController extends Controller
             $usuario->save();
         }
         $this->crearQR($request->get('institucion_id'), $usuario->id);
-        return ($request->is('api/*'))? response()->json(['editado'=>true]): redirect('institucion/'.$request->get('institucion_id').'/alumno/'.$usuario->id);
+        return ($request->is('api/*'))?
+                    response()->json(['editado'=>true]):
+                    redirect('institucion/'.$request->get('institucion_id').'/alumno/'.$usuario->id);
     }
 
     /**
@@ -193,7 +217,13 @@ class AlumnoController extends Controller
     {
         $usuario =User::find($alumno_id);
         $cryptId=base64_encode($usuario->id);
-        $usuario->codigo=Crypt::encryptString($usuario->cedula.'|'.$usuario->full_name.'|'.$usuario->alumno->ano_lectivo.'|'.$usuario->alumno->curso.'|'. $cryptId);
+        $usuario->codigo=Crypt::encryptString(
+            $usuario->cedula.'|'.
+            $usuario->full_name.'|'.
+            $usuario->alumno->ano_lectivo.'|'.
+            $usuario->alumno->curso.'|'.
+            $cryptId
+        );
         $usuario->save();
         return true;
     }
@@ -207,7 +237,9 @@ class AlumnoController extends Controller
     public function transacciones(Request $request, $id)
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
-        $transacciones = $institucion->transacciones()->where('usuario_id', base64_decode($id))->orderBy('fecha_hora', 'desc')->paginate(50);
+        $transacciones = $institucion->transacciones()
+                            ->where('usuario_id', base64_decode($id))
+                            ->orderBy('fecha_hora', 'desc')->paginate(50);
         return Crypt::encrypt(json_encode(compact('transacciones')), false);
         // if($request->is('api/*')) return response()->json(compact('transacciones'));
     }
@@ -219,7 +251,7 @@ class AlumnoController extends Controller
         return Crypt::encrypt(json_encode(compact('tarjetas')), false);
     }
 
-    public function datos_facturacion(Request $request, $id)
+    public function datosFacturacion(Request $request, $id)
     {
         if ($request->is('api/*')) {
             $datos=DatosFacturacion::where('usuario_id', base64_decode($id))->get();

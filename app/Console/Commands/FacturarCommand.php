@@ -50,29 +50,40 @@ class FacturarCommand extends Command
     public function handle()
     {
  
-        $facturas = Factura::whereIn('estado_id', [1,7])->with(['institucion.configuracion','datos_facturacion','detalle'])->get();
+        $facturas = Factura::whereIn('estado_id', [1,7])
+                    ->with(['institucion.configuracion','datosFacturacion','detalle'])
+                    ->get();
         foreach ($facturas as $factura) {
-            $urlEnvio = 'https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
-            $urlAutorizacion = 'https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
+            $urlEnvio='https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
+            $urlAutorizacion='https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
             $urlImg = "https://doctopro.com/images/logo.png";
             
             if ($factura->ambiente==1) {
-                $urlEnvio = 'https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
-                $urlAutorizacion = 'https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
+                $urlEnvio='https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
+                $urlAutorizacion=
+                        'https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
             }
 
-            $configuraciones = Configuracion::where('institucion_id', $factura->institucion_id)->first()->configuraciones;
-            $clave=Carbon::now()->format("dmY") . '01' . $configuraciones['ruc']. $factura->ambiente.str_replace('-', '', $factura->factura_no). rand(10000000, 99999999).'1' ;
+            $configuraciones = Configuracion::where('institucion_id', $factura->institucion_id)
+                                    ->first()
+                                    ->configuraciones;
+            $clave=Carbon::now()->format("dmY").
+                        '01'.
+                        $configuraciones['ruc'].
+                        $factura->ambiente.
+                        str_replace('-', '', $factura->factura_no).rand(10000000, 99999999).
+                        '1';
             $modulo = Helpers::modulo($clave);
             $clave.=$modulo;
             $tipoDoc=Helpers::obtieneTipoDoc($factura->datos_facturacion->ruc);
             $nombre=($tipoDoc!='07')?$factura->datos_facturacion->nombre:'Consumidor Final';
             $nombreFinal=str_ireplace(' ', '', Helpers::normaliza($nombre));
             $nombreFinal=str_ireplace('/', '', $nombreFinal);
-            $documento ='xml/'.$factura->institucion_id.'/'. Carbon::now()->format('Ymd').'-'. $nombreFinal.'-SF.xml';
-            $docFirmado ='xml/'.$factura->institucion_id.'/'. Carbon::now()->format('Ymd').'-'.preg_replace('/\s+/', '', $nombreFinal).'.xml';
-            $ride='pdf/'.$factura->institucion_id.'/'.Carbon::now()->format('Ymd').'-'.preg_replace('/\s+/', '', $nombreFinal).'.pdf';
-            $xmlAut='xml/'.$factura->institucion_id.'/'.Carbon::now()->format('Ymd').'-'.preg_replace('/\s+/', '', $nombreFinal).'_aut.xml';
+            $file=$factura->institucion_id.'/'. Carbon::now()->format('Ymd').'-';
+            $documento ='xml/'.$file. $nombreFinal.'-SF.xml';
+            $docFirmado ='xml/'.$file.preg_replace('/\s+/', '', $nombreFinal).'.xml';
+            $ride='pdf/'.$file.preg_replace('/\s+/', '', $nombreFinal).'.pdf';
+            $xmlAut='xml/'.$file.preg_replace('/\s+/', '', $nombreFinal).'_aut.xml';
 
             $secuencia=explode('-', $factura->factura_no);
             if ($factura->estado_id==1) {
@@ -153,7 +164,13 @@ class FacturarCommand extends Command
                 $claveFirma =Crypt::decrypt($configuraciones['clave']);
                 
                 Storage::put($documento, $xml);
-                exec('/usr/bin/java -jar sri.jar '.storage_path('app/').$configuraciones['firma'].' '.$claveFirma.' '.storage_path('app/'.$documento).' '.storage_path('app/').' '.$docFirmado);
+                exec('/usr/bin/java -jar sri.jar '.
+                            storage_path('app/').
+                            $configuraciones['firma'].' '.
+                            $claveFirma.' '.
+                            storage_path('app/'.$documento).' '.
+                            storage_path('app/').' '.
+                            $docFirmado);
                 Storage::delete($documento);
                 $factura->estado_id=6;
                 $factura->save();
@@ -239,13 +256,17 @@ class FacturarCommand extends Command
                     curl_setopt($handler, CURLOPT_VERBOSE, false);
                     $response = curl_exec($handler);
                     
-                    Storage::put($xmlAut, $respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->comprobante);
+                    Storage::put(
+                        $xmlAut,
+                        $respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->comprobante
+                    );
                     Storage::put($ride, $response);
                     curl_close($handler);
                     Storage::delete($docFirmado);
                     $factura['xml']=$xmlAut;
                     $factura['pdf']=$ride;
-                    $factura['autorizacion']=$respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->numeroAutorizacion;
+                    $factura['autorizacion']=$respAut->RespuestaAutorizacionComprobante
+                                    ->autorizaciones->autorizacion->numeroAutorizacion;
                     $factura['estado_id']=2;
                     $factura->save();
                     // if (!filter_var($u->email, FILTER_VALIDATE_EMAIL) === false) {
@@ -277,7 +298,13 @@ class FacturarCommand extends Command
                     $factura->save();
                 }
             }
-            //Slack::to('#facturacion')->send('Nueva factura # '.$factura->facturaNo.' id '.$factura->id.' de '.$u->nombre." ".$u->apellido.'. Estado de factura: '.$factura->estado_id);
+            // Slack::to('#facturacion')
+            //         ->send(
+            //             'Nueva factura # '.$factura->facturaNo.
+            //             ' id '.$factura->id.
+            //             ' de '.$u->nombre." ".$u->apellido.
+            //             '. Estado de factura: '.$factura->estado_id
+            //         );
 
             // $task['title'] = 'Nueva factura';
             // $task['facturaNo'] = $factura->facturaNo;

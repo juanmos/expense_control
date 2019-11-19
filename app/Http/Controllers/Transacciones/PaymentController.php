@@ -32,7 +32,14 @@ class PaymentController extends Controller
             $compras =$institucion->transacciones()//->whereBetween('fecha_hora',[$menos30,$hoy])
                                     ->where('usuario_id', $user->id)
                                     ->where('tipo_transaccion_id', 1)->get();
-            return Crypt::encrypt(json_encode(['saldo'=>$user->saldo,'recargas'=>$recargas->sum('valor'),'compras'=>$compras->sum('valor')]), false);
+            return Crypt::encrypt(
+                json_encode([
+                    'saldo'=>$user->saldo,
+                    'recargas'=>$recargas->sum('valor'),
+                    'compras'=>$compras->sum('valor')
+                ]),
+                false
+            );
         } catch (Illuminate\Contracts\Encryption\DecryptException $e) {
             //
         }
@@ -46,15 +53,25 @@ class PaymentController extends Controller
             return response()->json(['error'=>'Tarjeta no existe'], 404);
         }
         if ($tarjeta->perdida) {
-            return response()->json(['valida'=>false,'mensaje'=>'La tarjeta ha sido reportada como perdida el '.Carbon::parse($tarjeta->fecha_perdida)->format('d-m-Y')]);
+            return response()->json([
+                'valida'=>false,
+                'mensaje'=>'La tarjeta ha sido reportada como perdida el '.
+                                Carbon::parse($tarjeta->fecha_perdida)->format('d-m-Y')
+            ]);
         }
         if ($tarjeta->estado!='Aprobada') {
-            return response()->json(['valida'=>false,'mensaje'=>'La tarjeta no ha sido aprobada aún, por favor ir al proceso de aprobación']);
+            return response()->json([
+                'valida'=>false,
+                'mensaje'=>'La tarjeta no ha sido aprobada aún, por favor ir al proceso de aprobación'
+            ]);
         }
         if (Carbon::now()->isBefore(Carbon::parse($tarjeta->fecha_vencimiento))) {
             return response()->json(['valida'=>true]);
         } else {
-            return response()->json(['valida'=>false,'mensaje'=>'La tarjeta ha vencido el '.Carbon::parse($tarjeta->fecha_vencimiento)->format('d-m-Y')]);
+            return response()->json([
+                'valida'=>false,
+                'mensaje'=>'La tarjeta ha vencido el '.Carbon::parse($tarjeta->fecha_vencimiento)->format('d-m-Y')
+            ]);
         }
     }
 
@@ -238,7 +255,8 @@ class PaymentController extends Controller
                 $pago['comprobante']=$request->file('comprobante')->store('public/comprobantes/'.$institucion->id);
             }
             if ($request->has('refrigerio_id')) {
-                $pago['refrigerio_id']=($request->is('api/*'))? base64_decode($request->get('refrigerio_id')) :$request->get('refrigerio_id');
+                $pago['refrigerio_id']=($request->is('api/*'))?
+                                        base64_decode($request->get('refrigerio_id')) :$request->get('refrigerio_id');
             }
             if ($request->has('mes_pago')) {
                 $pago['mes_pago']=Carbon::parse($request->get('mes_pago'))->toDateString();
@@ -247,7 +265,11 @@ class PaymentController extends Controller
             if ($request->is('api/*')) {
                 return response()->json(['realizado'=>true,'pago_id'=>$elpago->id]);
             } else {
-                return back()->with(['facturar'=>true,'mensaje'=>'Se ha guardado correctamente','pago_id'=>$elpago->id]);
+                return back()->with([
+                    'facturar'=>true,
+                    'mensaje'=>'Se ha guardado correctamente',
+                    'pago_id'=>$elpago->id
+                ]);
             }
         } else {
             return response()->json(['error'=>'Saldo insuficiente'], 404);
@@ -258,29 +280,39 @@ class PaymentController extends Controller
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $transacciones = $institucion->transacciones()->orderBy('fecha_hora', 'desc')->paginate(50);
-        return Crypt::encrypt(json_encode(compact('transacciones')), false);//response()->json(compact('transacciones'));
+        return Crypt::encrypt(json_encode(compact('transacciones')), false);
+        //response()->json(compact('transacciones'));
     }
 
-    public function transacciones_hoy()
+    public function transaccionesHoy()
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $recargas = $institucion->transacciones()
-                ->whereBetween('fecha_hora', [Carbon::now()->toDateString().' 00:00:00',Carbon::now()->toDateString().' 23:59:59'])
+                ->whereBetween('fecha_hora', [
+                    Carbon::now()->toDateString().' 00:00:00',
+                    Carbon::now()->toDateString().' 23:59:59'
+                    ])
                 ->whereHas('tipo_transaccion', function ($query) {
                     $query->where('operacion', '+');
                 })
                 ->orderBy('fecha_hora', 'desc')->get();
         $cobros = $institucion->transacciones()
-                ->whereBetween('fecha_hora', [Carbon::now()->toDateString().' 00:00:00',Carbon::now()->toDateString().' 23:59:59'])
+                ->whereBetween('fecha_hora', [
+                    Carbon::now()->toDateString().' 00:00:00',
+                    Carbon::now()->toDateString().' 23:59:59'
+                    ])
                 ->whereHas('tipo_transaccion', function ($query) {
                     $query->where('operacion', '-');
                 })
                 ->orderBy('fecha_hora', 'desc')->get();
-        return Crypt::encrypt(json_encode(['recargas'=>$recargas->sum('valor'),'cobros'=>$cobros->sum('valor')]), false);
+        return Crypt::encrypt(json_encode([
+                'recargas'=>$recargas->sum('valor'),
+                'cobros'=>$cobros->sum('valor')
+            ]), false);
         //return response()->json(['recargas'=>$recargas->sum('valor'),'cobros'=>$cobros->sum('valor')]);
     }
 
-    public function forma_pago()
+    public function formaPago()
     {
         $formas = FormaPago::where('habilitado', 1)->get();
         return response()->json(compact('formas'));

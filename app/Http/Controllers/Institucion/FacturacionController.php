@@ -45,7 +45,9 @@ class FacturacionController extends Controller
     public function store(Request $request)
     {
         $data=$request->except(['_token','pago_id','datos_factura_id']);
-        $datos_factura_id = ($request->is('api/*'))? base64_decode($request->get('datos_factura_id')):$request->get('datos_factura_id');
+        $datos_factura_id = ($request->is('api/*'))?
+                    base64_decode($request->get('datos_factura_id')):
+                    $request->get('datos_factura_id');
         if ($datos_factura_id==0) {
             $datosFacturacion = DatosFacturacion::create($data);
         } else {
@@ -53,7 +55,9 @@ class FacturacionController extends Controller
         }
         
         $configuracion = Configuracion::where('institucion_id', Auth::user()->institucion_id)->first();
-        $secuencia = $configuracion->configuraciones['establecimiento'].'-'.$configuracion->configuraciones['punto'].'-'.str_pad($configuracion->configuraciones['secuencia'], 9, "0", STR_PAD_LEFT);
+        $secuencia = $configuracion->configuraciones['establecimiento'].'-'.
+                        $configuracion->configuraciones['punto'].'-'.
+                        str_pad($configuracion->configuraciones['secuencia'], 9, "0", STR_PAD_LEFT);
         $nuevaSecuencia = intval($configuracion->configuraciones['secuencia'])+1;
         $configuraciones = $configuracion->configuraciones;
         $configuraciones['secuencia']=$nuevaSecuencia;

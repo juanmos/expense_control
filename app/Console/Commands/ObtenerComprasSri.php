@@ -49,8 +49,14 @@ class ObtenerComprasSri extends Command
         $instituciones = Institucion::with('configuracion')->get();
         $hoy = Carbon::now();
         foreach ($instituciones as $institucion) {
-            $ruc = (array_key_exists('ruc', $institucion->configuracion->configuraciones) && $institucion->configuracion->configuraciones['ruc'])?$institucion->configuracion->configuraciones['ruc']:null;
-            $clave = (array_key_exists('clave_sri', $institucion->configuracion->configuraciones) && $institucion->configuracion->configuraciones['clave_sri'])?Crypt::decrypt($institucion->configuracion->configuraciones['clave_sri']):null;
+            $ruc = (
+                    array_key_exists('ruc', $institucion->configuracion->configuraciones) &&
+                    $institucion->configuracion->configuraciones['ruc']
+                    )?$institucion->configuracion->configuraciones['ruc']:null;
+            $clave = (
+                    array_key_exists('clave_sri', $institucion->configuracion->configuraciones) &&
+                    $institucion->configuracion->configuraciones['clave_sri']
+                    )?Crypt::decrypt($institucion->configuracion->configuraciones['clave_sri']):null;
             if ($ruc!=null && $clave!=null) {
                 $client = new \GuzzleHttp\Client();
                 $res = $client->request('POST', $sri_web.'v2.0/secured', [
@@ -86,7 +92,8 @@ class ObtenerComprasSri extends Command
                                             'ruc'=>$comprobante->rucEmisor
                                         ]);
                                     }
-                                    $cliente_institucion = ClienteInstitucion::where('institucion_id', $institucion->id)->where('cliente_id', $cliente->id)->first();
+                                    $cliente_institucion = ClienteInstitucion::where('institucion_id', $institucion->id)
+                                                                ->where('cliente_id', $cliente->id)->first();
                                     if ($cliente_institucion==null) {
                                         $cliente_institucion =$institucion->clientes()->create([
                                             'cliente_id'=>$cliente->id,
@@ -95,7 +102,10 @@ class ObtenerComprasSri extends Command
                                     }
                                     $compra = Compra::where('institucion_id', $institucion->id)
                                             ->where('cliente_id', $cliente_institucion->id)
-                                            ->where('codigoComprobanteRecibido', $comprobante->codigoComprobanteRecibido)
+                                            ->where(
+                                                'codigoComprobanteRecibido',
+                                                $comprobante->codigoComprobanteRecibido
+                                            )
                                             ->where('tipoComprobante', $comprobante->tipoComprobante)->first();
                                     if ($compra==null) {
                                         $respDetalle = $client->request('GET', $sri_web.'v2.0/comprobantes/detalle', [

@@ -19,7 +19,8 @@ class Institucion extends Model
 {
     use SoftDeletes;
     
-    protected $fillable=['nombre','siglas','direccion','telefono','celular','ruc','email','web','facebook','twitter','instagram','estado_id','ciudad_id','latitud','longitud','tipo_institucion_id'];
+    protected $fillable=['nombre','siglas','direccion','telefono','celular','ruc','email','web','facebook',
+                            'twitter','instagram','estado_id','ciudad_id','latitud','longitud','tipo_institucion_id'];
 
     public function ciudad()
     {
@@ -46,7 +47,7 @@ class Institucion extends Model
         return $this->morphMany('App\Models\Transaccion', 'transaccionable');
     }
 
-    public function tipo_refrigerio()
+    public function tipoRefrigerio()
     {
         return $this->hasMany(TipoRefrigerio::class, 'institucion_id');
     }
@@ -56,7 +57,7 @@ class Institucion extends Model
         return $this->hasMany(MenuRefrigerio::class, 'institucion_id');
     }
 
-    public function tipo_institucion()
+    public function tipoInstitucion()
     {
         return $this->belongsTo(TipoInstitucion::class, 'tipo_institucion_id');
     }

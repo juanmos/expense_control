@@ -75,7 +75,10 @@ class InstitucionController extends Controller
                                 ->where('tipo_transaccion_id', 2)->get();
         $compras =$institucion->transacciones()->whereBetween('fecha_hora', [$menos30,$hoy])
                                 ->where('tipo_transaccion_id', 1)->get();
-        return view('institucion.show', compact('institucion', 'alumnos', 'id', 'transacciones', 'compras', 'recargas', 'pest', 'usuarios'));
+        return view(
+            'institucion.show',
+            compact('institucion', 'alumnos', 'id', 'transacciones', 'compras', 'recargas', 'pest', 'usuarios')
+        );
     }
 
     /**
@@ -144,7 +147,11 @@ class InstitucionController extends Controller
             $data['clave']=$configuracion->configuraciones['clave'];
         }
         if ($request->has('clave_sri') && $request->get('clave_sri')!=null) {
-            $data['clave_sri']=Crypt::encrypt(($request->is('api/*'))? base64_decode($request->get('clave_sri')) :$request->get('clave_sri'));
+            $data['clave_sri']=Crypt::encrypt(
+                ($request->is('api/*'))?
+                        base64_decode($request->get('clave_sri')) :
+                        $request->get('clave_sri')
+            );
             ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id));
         } else {
             $data['clave_sri']=$configuracion->configuraciones['clave_sri'];
@@ -152,6 +159,8 @@ class InstitucionController extends Controller
         $configuracion->configuraciones=$data;
         $configuracion->save();
         
-        return ($request->is('api/*'))? Crypt::encrypt(json_encode(compact('configuracion')), false) :back()->with('mensaje', 'Configuraciones guardadas con exito');
+        return ($request->is('api/*'))?
+                    Crypt::encrypt(json_encode(compact('configuracion')), false) :
+                    back()->with('mensaje', 'Configuraciones guardadas con exito');
     }
 }

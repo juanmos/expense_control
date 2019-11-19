@@ -26,7 +26,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'nombre','apellido', 'email', 'password','telefono','celular','facebook_id','token_and','token_ios','institucion_id','foto','activo','primer_login','latitud','longitud','cedula','fecha_nacimiento','saldo','credito','monto_credito'
+        'nombre','apellido', 'email', 'password','telefono','celular','facebook_id','token_and',
+        'token_ios','institucion_id','foto','activo','primer_login','latitud','longitud','cedula',
+        'fecha_nacimiento','saldo','credito','monto_credito'
     ];
     
     /**
@@ -35,7 +37,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','codigo','facebook_id','token_and','token_ios','email_verified_at','saldo','credito','monto_credito'
+        'password', 'remember_token','codigo','facebook_id','token_and','token_ios','email_verified_at',
+        'saldo','credito','monto_credito'
     ];
 
     /**
@@ -73,7 +76,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->morphMany(Refrigerio::class, 'userable');
     }
 
-    public function datos_facturacion()
+    public function datosFacturacion()
     {
         return $this->hasMany(DatosFacturacion::class, 'usuario_id');
     }

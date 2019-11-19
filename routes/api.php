@@ -27,7 +27,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     
     Route::group(['prefix' => 'institucion'], function () {
         Route::get('alumnos/{id}', 'Institucion\AlumnoController@alumnosData')->name('institucion.alumnos');
-        Route::get('alumno/datos_facturacion/{id}', 'Institucion\AlumnoController@datos_facturacion');
+        Route::get('alumno/datos_facturacion/{id}', 'Institucion\AlumnoController@datosFacturacion');
         Route::post('alumno/store', 'Institucion\AlumnoController@store');
         Route::put('alumno/update/{id}', 'Institucion\AlumnoController@update');
 
@@ -66,7 +66,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('recargar', 'Transacciones\PaymentController@recargar');
         Route::get('forma_pago', 'Transacciones\PaymentController@forma_pago');
         Route::get('transacciones', 'Transacciones\PaymentController@transacciones');
-        Route::get('transacciones/hoy', 'Transacciones\PaymentController@transacciones_hoy');
+        Route::get('transacciones/hoy', 'Transacciones\PaymentController@transaccionesHoy');
     });
 
     Route::group(['prefix' => 'naturales'], function () {

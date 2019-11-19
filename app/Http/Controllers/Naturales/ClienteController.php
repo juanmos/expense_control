@@ -22,40 +22,49 @@ class ClienteController extends Controller
     {
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
-        $clientes = Cliente::whereHas('cliente_institucion', function ($query) use ($institucion_id) {
+        $clientes = Cliente::whereHas('clienteInstitucion', function ($query) use ($institucion_id) {
             $query->where('institucion_id', $institucion_id);
-        })->with('cliente_institucion')->orderBy('razon_social')->paginate(50);
-        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')), false) :view('cliente.index', compact('clientes', 'institucion_id'));
+        })->with('clienteInstitucion')->orderBy('razon_social')->paginate(50);
+        return ($request->is('api/*'))?
+                    Crypt::encrypt(json_encode(compact('clientes')), false) :
+                    view('cliente.index', compact('clientes', 'institucion_id'));
     }
 
     public function clientesData(Request $request, $institucion_id = null)
     {
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
-        $clientes = $institucion->clientes()->orderBy()->with(['cliente'])->get()->sortBy(function ($useritem, $key) {
+        $clientes = $institucion->clientes()->with(['cliente'])->get()->sortBy(function ($useritem, $key) {
             return $useritem->cliente->razon_social;
         });
-        ;
         return Datatables::of($clientes)->make(true);
     }
 
     public function findCedula(Request $request)
     {
-        $clientes =  Cliente::where('ruc', 'like', ($request->is('api/*'))?base64_decode($request->get('ruc')):$request->get('ruc').'%')->get();
-        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')), false) : response()->json(compact('clientes'));
+        $clientes =  Cliente::where('ruc', 'like', ($request->is('api/*'))?
+                                                        base64_decode($request->get('ruc')):
+                                                        $request->get('ruc').'%')
+                                                    ->get();
+        return ($request->is('api/*'))?
+                    Crypt::encrypt(json_encode(compact('clientes')), false):
+                    response()->json(compact('clientes'));
     }
 
     public function buscar(Request $request)
     {
         $texto=($request->is('api/*'))?base64_decode($request->get('texto')):$request->get('texto');
-        $clientes =  ClienteInstitucion::where('institucion_id', Auth::user()->institucion_id)->whereHas('cliente', function ($query) use ($texto) {
-            $query->where(function ($q) use ($texto) {
-                $q->orWhere('ruc', 'like', $texto.'%');
-                $q->orWhere('razon_social', 'like', '%'.$texto.'%');
-            });
-        })->with('cliente')->paginate(50);
+        $clientes =  ClienteInstitucion::where('institucion_id', Auth::user()->institucion_id)
+                        ->whereHas('cliente', function ($query) use ($texto) {
+                            $query->where(function ($q) use ($texto) {
+                                $q->orWhere('ruc', 'like', $texto.'%');
+                                $q->orWhere('razon_social', 'like', '%'.$texto.'%');
+                            });
+                        })->with('cliente')->paginate(50);
         // return $clientes;
-        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')), false) : response()->json(compact('clientes'));
+        return ($request->is('api/*'))?
+                Crypt::encrypt(json_encode(compact('clientes')), false):
+                response()->json(compact('clientes'));
     }
 
     /**
@@ -100,7 +109,9 @@ class ClienteController extends Controller
         $data['cliente_id']=$cliente->id;
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $institucion->clientes()->create($data);
-        return ($request->is('api/*'))?response()->json(['creado'=>true]):redirect()->route('naturales.clientes.index', Auth::user()->institucion_id);
+        return ($request->is('api/*'))?
+                        response()->json(['creado'=>true]):
+                        redirect()->route('naturales.clientes.index', Auth::user()->institucion_id);
     }
 
     /**
@@ -112,7 +123,9 @@ class ClienteController extends Controller
     public function show(Request $request, $institucion_id, $id)
     {
         $cliente = ClienteInstitucion::find($id);
-        return ($request->is('api/*'))?response()->json(compact('cliente')):view('cliente.show', compact('cliente', 'institucion_id'));
+        return ($request->is('api/*'))?
+                            response()->json(compact('cliente')):
+                            view('cliente.show', compact('cliente', 'institucion_id'));
     }
 
     /**
@@ -145,7 +158,9 @@ class ClienteController extends Controller
         }
         $cliente->update($data);
         $cliente = ClienteInstitucion::where('id', $cliente->id)->with('cliente')->first();
-        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('cliente')), false) :redirect()->route('naturales.clientes.show', [$institucion_id, $id]);
+        return ($request->is('api/*'))?
+                        Crypt::encrypt(json_encode(compact('cliente')), false) :
+                        redirect()->route('naturales.clientes.show', [$institucion_id, $id]);
     }
 
     /**

@@ -9,7 +9,10 @@ use App\Models\CategoriaCompra;
 
 class Compra extends Model
 {
-    protected $fillable=['institucion_id','cliente_id','fecha','establecimiento','puntoEmision','secuencial','tipoComprobante','codigoTipoDocumento','codigoComprobanteRecibido','claveAcceso','total','totalSinImpuestos','propina','totalDescuento','impuestos','sincronizado','detalles','categoria_id'];
+    protected $fillable=['institucion_id','cliente_id','fecha','establecimiento','puntoEmision','secuencial',
+                            'tipoComprobante','codigoTipoDocumento','codigoComprobanteRecibido','claveAcceso',
+                            'total','totalSinImpuestos','propina','totalDescuento','impuestos','sincronizado',
+                            'detalles','categoria_id'];
     protected $casts = [
         'impuestos' => 'array',
         'detalles' => 'array',

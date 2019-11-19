@@ -40,7 +40,7 @@
                                                     <p class="m-0 m-t-10">{{$compra->cliente->cliente->ruc}}</p>
                                                     <p class="m-0">{{$compra->cliente->cliente->direccion}}</p>
                                                     <p class="m-0">{{$compra->cliente->cliente->telefono}}</p>
-                                                    {{--  <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">{{$factura->datos_facturacion->email}}</a></p>  --}}
+                                                    {{--  <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">{{$factura->datosFacturacion->email}}</a></p>  --}}
                                                 </div>
                                                 <div class="col-md-4 col-sm-6">
                                                     <h6>Datos de factura :</h6>

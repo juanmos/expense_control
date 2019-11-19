@@ -21,9 +21,18 @@ class ComprasController extends Controller
     public function index(Request $request, $institucion_id)
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
-        $dia=$institucion->compras()->whereBetween('fecha', [Carbon::now()->subDays(7)->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
-        $mes=$institucion->compras()->whereBetween('fecha', [Carbon::now()->firstOfMonth()->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
-        $ano=$institucion->compras()->whereBetween('fecha', [Carbon::now()->startOfYear()->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
+        $dia=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->subDays(7)->toDateString(),
+                Carbon::now()->toDateString()
+            ])->with('cliente.cliente')->get()->sum('total');
+        $mes=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->with('cliente.cliente')->get()->sum('total');
+        $ano=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->with('cliente.cliente')->get()->sum('total');
         $start=Carbon::now()->firstOfMonth()->format('d-m-Y');
         $end=Carbon::now()->format('d-m-Y');
         return  view('compras.index', compact('institucion', 'institucion_id', 'dia', 'mes', 'ano', 'start', 'end'));
@@ -42,13 +51,23 @@ class ComprasController extends Controller
             $end=Carbon::parse($request->get('end_date'))->toDateString();
         }
         if ($request->is('api/*')) {
-            $dia=$institucion->compras()->whereBetween('fecha', [Carbon::now()->subDays(7)->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
-            $mes=$institucion->compras()->whereBetween('fecha', [Carbon::now()->firstOfMonth()->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
-            $ano=$institucion->compras()->whereBetween('fecha', [Carbon::now()->startOfYear()->toDateString(),Carbon::now()->toDateString()])->with('cliente.cliente')->get()->sum('total');
-            $compras=$institucion->compras()->whereBetween('fecha', [$start,$end])->with('cliente.cliente')->orderBy('fecha', 'desc')->paginate(50);
+            $dia=$institucion->compras()->whereBetween('fecha', [
+                    Carbon::now()->subDays(7)->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->with('cliente.cliente')->get()->sum('total');
+            $mes=$institucion->compras()->whereBetween('fecha', [
+                    Carbon::now()->firstOfMonth()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->with('cliente.cliente')->get()->sum('total');
+            $ano=$institucion->compras()->whereBetween('fecha', [
+                    Carbon::now()->startOfYear()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->with('cliente.cliente')->get()->sum('total');
+            $compras=$institucion->compras()->whereBetween('fecha', [$start,$end])
+                        ->with('cliente.cliente')->orderBy('fecha', 'desc')->paginate(50);
             return Crypt::encrypt(json_encode(compact('dia', 'mes', 'ano', 'compras')), false);
             
-            return json_encode(compact('dia', 'mes', 'ano', 'compras'));
+            // return json_encode(compact('dia', 'mes', 'ano', 'compras'));
         }
         
         $compras=$institucion->compras()->whereBetween('fecha', [$start,$end])->with('cliente.cliente')->get();

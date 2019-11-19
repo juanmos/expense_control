@@ -97,11 +97,10 @@
                                             <table  id="tableData" class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Razón social</th>
                                                         <th>Fecha</th>
+                                                        <th>Razón social</th>                                                        
                                                         <th>Tipo</th>
-                                                        <th>Total</th>
-                                                        
+                                                        <th>Total</th>                                                        
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
@@ -162,13 +161,13 @@ $(function() {
         processing: true,
         serverSide: true,
         "pageLength": 50,
-        "order": [[ 1, "desc" ]],
+        "order": [[ 0, "desc" ]],
         ajax: "{!! route('naturales.compras.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
         columns: [
             // { data: 'id', name: 'id' },
-            
-            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
             { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            
             { data: 'tipoComprobante', name: 'tipoComprobante' },
             { data: 'total', name: 'total' },
             

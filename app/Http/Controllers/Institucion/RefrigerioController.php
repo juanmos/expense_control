@@ -38,12 +38,12 @@ class RefrigerioController extends Controller
         if ($request->is('api/*')) {
             $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles', function ($query) {
                 $query->where('name', 'Alumno');
-            })->with('alumno', 'refrigerio.tipo_refrigerio')->orderBy('apellido')->paginate(50);
+            })->with('alumno', 'refrigerio.tipoRefrigerio')->orderBy('apellido')->paginate(50);
             return response()->json(compact('alumnos'));
         }
         $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles', function ($query) {
             $query->where('name', 'Alumno');
-        })->with('alumno', 'refrigerio.tipo_refrigerio')->get();
+        })->with('alumno', 'refrigerio.tipoRefrigerio')->get();
         return Datatables::of($alumnos)->make(true);
     }
 
@@ -68,7 +68,9 @@ class RefrigerioController extends Controller
      */
     public function store(Request $request)
     {
-        $usuario = User::find(($request->is('api/*'))? base64_decode($request->get('usuario_id')) :$request->get('usuario_id'));
+        $usuario = User::find(
+            ($request->is('api/*'))? base64_decode($request->get('usuario_id')) :$request->get('usuario_id')
+        );
         $tipo=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
         if ($request->is('api/*')) {
             $dias=explode(',', $request->get('dias'));
@@ -170,7 +172,11 @@ class RefrigerioController extends Controller
 
     public function historialPagos(Request $request, $id)
     {
-        $pagos=Pago::where('refrigerio_id', ($request->is('api/*'))?base64_decode($id) :$id)->with(['transaccion.transaccion_relacionada','factura'])->get();
+        $pagos=Pago::where(
+            'refrigerio_id',
+            ($request->is('api/*'))?base64_decode($id) :$id
+        )
+                    ->with(['transaccion.transaccion_relacionada','factura'])->get();
         if ($request->is('api/*')) {
             return Crypt::encrypt(json_encode(compact('pagos')), false);
         }

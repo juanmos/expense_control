@@ -57,11 +57,17 @@ class APIAuthController extends Controller
         try {
             // attempt to verify the credentials and create a token for the user
             if (! $token = auth('api')->attempt($credentials)) {
-                return response()->json(['success' => false, 'error' => 'No hemos encontrado tus credenciales de usuario. Por favor contacte al administrador.'], 404);
+                return response()->json([
+                    'success' => false,
+                    'error' => 'No hemos encontrado tus credenciales de usuario. Por favor contacte al administrador.'
+                ], 404);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['success' => false, 'error' => 'Error al iniciar sesión, por favor intente nuevamente.'], 500);
+            return response()->json([
+                'success' => false,
+                'error' => 'Error al iniciar sesión, por favor intente nuevamente.'
+            ], 500);
         }
         // all good so return the token
         return response()->json([
@@ -84,8 +90,11 @@ class APIAuthController extends Controller
             $tipo_tarjetas = TipoTarjeta::orderBy('tipo_tarjeta')->get();
             $tipo_refrigerios = TipoRefrigerio::orderBy('tipo')->get();
             // $vendedores = User::where('empresa_id',auth('api')->user()->empresa_id)->with(['roles'])->get();
-            return Crypt::encrypt(json_encode(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios')), false);
-            return response()->json(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios'));
+            return Crypt::encrypt(
+                json_encode(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios')),
+                false
+            );
+            // return response()->json(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios'));
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json(['token_absent'], $e->getStatusCode());
         }

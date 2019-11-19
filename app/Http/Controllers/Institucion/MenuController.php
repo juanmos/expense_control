@@ -20,7 +20,9 @@ class MenuController extends Controller
     public function index(Request $request, $institucion_id)
     {
         $tipos = TipoRefrigerio::where('institucion_id', $institucion_id)->get();
-        return ($request->is('api/*'))? response()->json(compact('tipos'))->json() :view('menus.index', compact('tipos', 'institucion_id'));
+        return ($request->is('api/*'))?
+                    response()->json(compact('tipos'))->json() :
+                    view('menus.index', compact('tipos', 'institucion_id'));
     }
 
     public function menus(Request $request, $institucion_id, $tipo_refrigerio)
@@ -65,7 +67,9 @@ class MenuController extends Controller
             $menu->foto=$request->file('foto')->store('public/menus/'.$institucion_id);
             $menu->save();
         }
-        return ($request->is('api/*'))? response()->json(['creado'=>true]): redirect()->route('institucion.menus.index', $institucion_id);
+        return ($request->is('api/*'))?
+                    response()->json(['creado'=>true]):
+                    redirect()->route('institucion.menus.index', $institucion_id);
     }
 
     /**
@@ -110,7 +114,9 @@ class MenuController extends Controller
             $menu->foto=$request->file('foto')->store('public/menus/'.$institucion_id);
             $menu->save();
         }
-        return ($request->is('api/*'))? response()->json(['creado'=>true]): redirect()->route('institucion.menus.index', $institucion_id);
+        return ($request->is('api/*'))?
+                    response()->json(['creado'=>true]):
+                    redirect()->route('institucion.menus.index', $institucion_id);
     }
 
     /**

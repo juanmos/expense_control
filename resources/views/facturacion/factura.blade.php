@@ -62,11 +62,11 @@
                                             <div class="row invoive-info">
                                                 <div class="col-md-4 col-xs-12 invoice-client-info">
                                                     <h6>Cliente :</h6>
-                                                    <h6 class="m-0">{{$factura->datos_facturacion->nombre}}</h6>
-                                                    <p class="m-0 m-t-10">{{$factura->datos_facturacion->ruc}}</p>
-                                                    <p class="m-0">{{$factura->datos_facturacion->direccion}}</p>
-                                                    <p class="m-0">{{$factura->datos_facturacion->telefono}}</p>
-                                                    <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">{{$factura->datos_facturacion->email}}</a></p>
+                                                    <h6 class="m-0">{{$factura->datosFacturacion->nombre}}</h6>
+                                                    <p class="m-0 m-t-10">{{$factura->datosFacturacion->ruc}}</p>
+                                                    <p class="m-0">{{$factura->datosFacturacion->direccion}}</p>
+                                                    <p class="m-0">{{$factura->datosFacturacion->telefono}}</p>
+                                                    <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">{{$factura->datosFacturacion->email}}</a></p>
                                                 </div>
                                                 <div class="col-md-4 col-sm-6">
                                                     <h6>Datos de factura :</h6>

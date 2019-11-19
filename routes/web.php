@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/{id}/alumno/codificar/{alumno_id}', 'Institucion\AlumnoController@codificar')->name('institucion.alumno.codificar');
         Route::get('/{id}/alumno/edit/{alumno_id}', 'Institucion\AlumnoController@edit')->name('institucion.alumno.edit');
         Route::put('/alumno/update/{alumno_id}', 'Institucion\AlumnoController@update')->name('institucion.alumno.update');
-        Route::get('/{id}/alumno/datos/factura/{alumno_id}', 'Institucion\AlumnoController@datos_facturacion')->name('institucion.alumno.datos.facturacion');
+        Route::get('/{id}/alumno/datos/factura/{alumno_id}', 'Institucion\AlumnoController@datosFacturacion')->name('institucion.alumno.datos.facturacion');
 
         Route::get('/alumno/{id}/tarjeta/crear', 'Institucion\TarjetaController@create')->name('institucion.alumno.tarjeta.create');
         Route::post('/alumno/{id}/tarjeta/store', 'Institucion\TarjetaController@store')->name('institucion.alumno.tarjeta.store');
@@ -96,19 +96,21 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('configuracion/update/{id}', 'Naturales\InstitucionController@configuracionUpdate')->name('naturales.configuracion.update');
 
         Route::resource('naturales.clientes', 'Naturales\ClienteController');
-        Route::get('naturales/{institucion}/cliente/data', 'Naturales\ClienteController@clientesData')->name('naturales.clientes.data');
+        Route::get('naturales/{institucion?}/cliente/data', 'Naturales\ClienteController@clientesData')->name('naturales.clientes.data');
         Route::get('naturales/{institucion}/clientes/upload', 'Naturales\ClienteController@upload')->name('naturales.clientes.upload');
-        ;
-
+        
         Route::resource('naturales.categoria', 'Naturales\CategoriaController');
         Route::get('naturales/{tipo}/categoria/data/tablas', 'Naturales\CategoriaController@categoriaData')->name('naturales.categoria.data');
+        
 
         Route::resource('naturales.producto', 'Naturales\ProductoController');
         Route::resource('naturales.servicio', 'Naturales\ProductoController');
 
         Route::resource('naturales.compras', 'Naturales\ComprasController');
-        Route::get('naturales/{institucion}/cliente/data', 'Naturales\ComprasController@comprasData')->name('naturales.compras.data');
+        Route::get('naturales/{institucion}/compras/data/table', 'Naturales\ComprasController@comprasData')->name('naturales.compras.data');
         Route::get('naturales/{institucion}/compras/pdf/{id}', 'Naturales\ComprasController@pdf')->name('naturales.compras.pdf');
+        
+
 
         Route::get('usuario/', 'Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}', 'Naturales\UsuarioController@show')->name('naturales.usuario.show');

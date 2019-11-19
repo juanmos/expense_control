@@ -71,7 +71,7 @@
                                         @forelse ($usuario->tarjetas as $index => $tarjeta)
                                             <div class="card theme-bg{{($index%2 ==0)?'2':''}} bitcoin-wallet  mb-0">
                                                 <div class="card-block">
-                                                    <h5 class="text-white mb-2">Tarjeta {{$tarjeta->tipo_tarjeta->tipo_tarjeta}}</h5>
+                                                    <h5 class="text-white mb-2">Tarjeta {{$tarjeta->tipoTarjeta->tipo_tarjeta}}</h5>
                                                     <h2 class="text-white mb-3 f-w-300">$ {{$tarjeta->transacciones()->where('tipo_transaccion_id',2)->get()->sum('valor')}}</h2>
                                                     <span class="text-white d-block">{{($tarjeta->cupo>0)?'Cupo: $'.$tarjeta->cupo:'Sin cupo establecido'}}</span>
                                                     <h6 class="f-w-600 text-white">
@@ -148,7 +148,7 @@
                                                     <i class="mdi mdi-food f-30 text-c-purple"></i>
                                                 </div>
                                                 <div class="media-body">
-                                                    <h6 class="f-20">{{$refrigerio->tipo_refrigerio->tipo}}</h6>
+                                                    <h6 class="f-20">{{$refrigerio->tipoRefrigerio->tipo}}</h6>
                                                     <span class="f-20 float-right text-muted">${{$refrigerio->costo}}</span>
                                                     <p class="text-muted m-0">
                                                         {{strtoupper(implode(', ',array_values($refrigerio->dias)))}}
@@ -364,7 +364,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Datos de facturación:</label>
-                    {!! Form::select('datos_facturacion_id', [0=>'Nuevo'] + $usuario->datos_facturacion->pluck('nombre','id')->toArray(), 0, ['class'=>'form-control','id'=>'datos_facturacion']) !!}
+                    {!! Form::select('datos_facturacion_id', [0=>'Nuevo'] + $usuario->datosFacturacion->pluck('nombre','id')->toArray(), 0, ['class'=>'form-control','id'=>'datos_facturacion']) !!}
                 </div>
                 <hr>
                 <div class="form-group">

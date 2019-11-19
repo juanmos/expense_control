@@ -36,7 +36,8 @@ class HomeController extends Controller
             return redirect()->route('naturales.show', $user->institucion_id);
         } elseif ($user->hasRole('Administrador') || $user->hasRole('JefeVentas')) {
             if ($user->primer_login) {
-                return redirect('/e/usuario/'.$user->id.'/edit')->with('info', 'Debes cambiar tu contraseña e ingresar tu foto');
+                return redirect('/e/usuario/'.$user->id.'/edit')
+                            ->with('info', 'Debes cambiar tu contraseña e ingresar tu foto');
             }
             $empresa = Empresa::find($user->empresa_id);
             $clientes = Cliente::where('empresa_id', $user->empresa_id)->get();

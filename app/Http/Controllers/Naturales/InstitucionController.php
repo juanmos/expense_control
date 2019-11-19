@@ -69,7 +69,16 @@ class InstitucionController extends Controller
                                 ->where('tipo_transaccion_id', 2)->get();
         $compras =$institucion->transacciones()->whereBetween('fecha_hora', [$menos30,$hoy])
                                 ->where('tipo_transaccion_id', 1)->get();
-        return view('naturales.show', compact('institucion', 'alumnos', 'id', 'transacciones', 'compras', 'recargas', 'pest', 'usuarios'));
+        return view('naturales.show', compact(
+            'institucion',
+            'alumnos',
+            'id',
+            'transacciones',
+            'compras',
+            'recargas',
+            'pest',
+            'usuarios'
+        ));
     }
 
     /**

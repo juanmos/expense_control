@@ -14,9 +14,11 @@ class Factura extends Model
 {
     use SoftDeletes;
     
-    protected $fillable=['datos_facturacion_id','pago_id','estado_id','factura_no','fecha','subtotal','subtotal0','propina','descuento','servicio','iva','total','clave','autorizacion','pdf','xml','ambiente','institucion_id'];
+    protected $fillable=['datos_facturacion_id','pago_id','estado_id','factura_no','fecha','subtotal',
+                        'subtotal0','propina','descuento','servicio','iva','total','clave','autorizacion',
+                        'pdf','xml','ambiente','institucion_id'];
 
-    public function datos_facturacion()
+    public function datosFacturacion()
     {
         return $this->belongsTo(DatosFacturacion::class, 'datos_facturacion_id');
     }
