@@ -9,7 +9,8 @@ class CategoriaCompra extends Model
 {
     protected $fillable =['categoria'];
 
-    public function compras(){
-        return $this->hasMany(Compra::class,'categoria_id');
+    public function compras()
+    {
+        return $this->hasMany(Compra::class, 'categoria_id');
     }
 }

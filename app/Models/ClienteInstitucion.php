@@ -28,5 +28,4 @@ class ClienteInstitucion extends Model
     {
         return "{$this->nombre} {$this->apellido}";
     }
-    
 }

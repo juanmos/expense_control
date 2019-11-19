@@ -12,7 +12,8 @@ class Alumno extends Model
 
     protected $fillable=['ano_lectivo','curso','usuario_id','profesor'];
 
-    public function usuario(){
-        return $this->belongsTo(User::class,'usuario_id');
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 }

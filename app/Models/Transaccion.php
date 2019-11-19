@@ -9,6 +9,7 @@ use App\Models\FormaPago;
 use App\Models\Institucion;
 use App\Models\Pago;
 use App\Models\User;
+
 //use App\Traits\Encryptable;
 
 class Transaccion extends Model
@@ -22,36 +23,44 @@ class Transaccion extends Model
     ];
     
 
-    public function tipo_transaccion(){
-        return $this->belongsTo(TipoTransaccion::class,'tipo_transaccion_id');
+    public function tipo_transaccion()
+    {
+        return $this->belongsTo(TipoTransaccion::class, 'tipo_transaccion_id');
     }
-    public function forma_pago(){
-        return $this->belongsTo(FormaPago::class,'forma_pago_id');
+    public function forma_pago()
+    {
+        return $this->belongsTo(FormaPago::class, 'forma_pago_id');
     }
-    public function institucion(){
-        return $this->belongsTo(Institucion::class,'institucion_id');
+    public function institucion()
+    {
+        return $this->belongsTo(Institucion::class, 'institucion_id');
     }
-    public function usuario_crea(){
-        return $this->belongsTo(User::class,'usuario_crea_id');
+    public function usuario_crea()
+    {
+        return $this->belongsTo(User::class, 'usuario_crea_id');
     }
-    public function usuario(){
-        return $this->belongsTo(User::class,'usuario_id');
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario_id');
     }
     public function transaccionable()
     {
         return $this->morphTo();
     }
 
-    public function tarjeta(){
-        return $this->belongsTo(Tarjeta::class,'tarjeta_id');
-    } 
-
-    public function pago(){
-        return $this->hasOne(Pago::class,'transanccion_id');
+    public function tarjeta()
+    {
+        return $this->belongsTo(Tarjeta::class, 'tarjeta_id');
     }
 
-    public function transaccion_relacionada(){
-        return $this->belongsTo(Transaccion::class,'transaccion_id');
+    public function pago()
+    {
+        return $this->hasOne(Pago::class, 'transanccion_id');
+    }
+
+    public function transaccion_relacionada()
+    {
+        return $this->belongsTo(Transaccion::class, 'transaccion_id');
     }
 
     // public function getUsuarioIdAttribute($value) {
@@ -69,5 +78,4 @@ class Transaccion extends Model
     // public function setValorAttribute($value) {
     //     $this->attributes['valor'] = Crypt::encryptString($value);
     // }
-
 }

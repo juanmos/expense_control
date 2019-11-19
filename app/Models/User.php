@@ -48,16 +48,19 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     
-    public function institucion(){
-        return $this->belongsTo(Institucion::class,'institucion_id');
+    public function institucion()
+    {
+        return $this->belongsTo(Institucion::class, 'institucion_id');
     }
 
-    public function alumno(){
-        return $this->hasOne(Alumno::class,'usuario_id');
+    public function alumno()
+    {
+        return $this->hasOne(Alumno::class, 'usuario_id');
     }
 
-    public function tarjetas(){
-        return $this->hasMany(Tarjeta::class,'usuario_id');
+    public function tarjetas()
+    {
+        return $this->hasMany(Tarjeta::class, 'usuario_id');
     }
 
     public function transacciones()
@@ -65,12 +68,14 @@ class User extends Authenticatable implements JWTSubject
         return $this->morphMany(Transaccion::class, 'transaccionable');
     }
 
-    public function refrigerio(){
-        return $this->morphMany(Refrigerio::class,'userable');
+    public function refrigerio()
+    {
+        return $this->morphMany(Refrigerio::class, 'userable');
     }
 
-    public function datos_facturacion(){
-        return $this->hasMany(DatosFacturacion::class,'usuario_id');
+    public function datos_facturacion()
+    {
+        return $this->hasMany(DatosFacturacion::class, 'usuario_id');
     }
 
     public function getFullNameAttribute()

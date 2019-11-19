@@ -13,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Auth;
 use Crypt;
+
 class RefrigerioController extends Controller
 {
     /**
@@ -26,7 +27,7 @@ class RefrigerioController extends Controller
         $institucion = Institucion::find($id);
         
        // dd($alumnos);
-        return view('alumno.index',compact('institucion','id'));
+        return view('alumno.index', compact('institucion', 'id'));
     }
 
     public function refrigeriosData(Request $request)
@@ -34,15 +35,15 @@ class RefrigerioController extends Controller
         
         $id=Auth::user()->institucion_id;
         $institucion = Institucion::find($id);
-        if($request->is('api/*')) {
-            $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles',function($query){
-                $query->where('name','Alumno');
-            })->with('alumno','refrigerio.tipo_refrigerio')->orderBy('apellido')->paginate(50);
+        if ($request->is('api/*')) {
+            $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles', function ($query) {
+                $query->where('name', 'Alumno');
+            })->with('alumno', 'refrigerio.tipo_refrigerio')->orderBy('apellido')->paginate(50);
             return response()->json(compact('alumnos'));
         }
-        $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles',function($query){
-            $query->where('name','Alumno');
-        })->with('alumno','refrigerio.tipo_refrigerio')->get();
+        $alumnos = $institucion->alumnos()->has('refrigerio')->whereHas('roles', function ($query) {
+            $query->where('name', 'Alumno');
+        })->with('alumno', 'refrigerio.tipo_refrigerio')->get();
         return Datatables::of($alumnos)->make(true);
     }
 
@@ -55,8 +56,8 @@ class RefrigerioController extends Controller
     {
         $usuario =User::find($id);
         $refrigerio=null;
-        $tipos=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo','id');
-        return view('refrigerio.form',compact('usuario','tipos','id','refrigerio'));
+        $tipos=TipoRefrigerio::orderBy('tipo')->get()->pluck('tipo', 'id');
+        return view('refrigerio.form', compact('usuario', 'tipos', 'id', 'refrigerio'));
     }
 
     /**
@@ -69,13 +70,14 @@ class RefrigerioController extends Controller
     {
         $usuario = User::find(($request->is('api/*'))? base64_decode($request->get('usuario_id')) :$request->get('usuario_id'));
         $tipo=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
-        if($request->is('api/*')){
-            $dias=explode(',',$request->get('dias'));
+        if ($request->is('api/*')) {
+            $dias=explode(',', $request->get('dias'));
+        } else {
+            $dias=array_values($request->get('dias'));
         }
-        else $dias=array_values($request->get('dias'));
-        if($tipo->forma_pago=='diario'){
+        if ($tipo->forma_pago=='diario') {
             $costo=$tipo->costo*count($dias);
-        }else{
+        } else {
             $costo=$tipo->costo;
         }
         $usuario->refrigerio()->create([
@@ -86,8 +88,10 @@ class RefrigerioController extends Controller
             'fecha_fin'=>Carbon::parse($request->get('fecha_fin'))->toDateString(),
             'costo'=>$costo
         ]);
-        if($request->is('api/*')) return response()->json(['creado'=>true]);
-        return redirect()->route('institucion.alumno.show',[Auth::user()->institucion_id,$usuario->id]);
+        if ($request->is('api/*')) {
+            return response()->json(['creado'=>true]);
+        }
+        return redirect()->route('institucion.alumno.show', [Auth::user()->institucion_id,$usuario->id]);
     }
 
     /**
@@ -124,7 +128,7 @@ class RefrigerioController extends Controller
     {
         $refrigerio = Refrigerio::find(($request->is('api/*'))? base64_decode($id) :$id);
         $tipos=TipoRefrigerio::find($request->get('tipo_refrigerio_id'));
-        $dias=($request->is('api/*'))?explode(',',$request->get('dias')):array_values($request->get('dias'));
+        $dias=($request->is('api/*'))?explode(',', $request->get('dias')):array_values($request->get('dias'));
         
         $costo=$tipos->costo*count($dias);
         $refrigerio->update([
@@ -134,8 +138,10 @@ class RefrigerioController extends Controller
             'fecha_fin'=>Carbon::parse($request->get('fecha_fin'))->toDateString(),
             'costo'=>$costo
         ]);
-        if($request->is('api/*')) return response()->json(['editado'=>true]);
-        return redirect()->route('institucion.alumno.show',[Auth::user()->institucion_id,$refrigerio->userable_id]);
+        if ($request->is('api/*')) {
+            return response()->json(['editado'=>true]);
+        }
+        return redirect()->route('institucion.alumno.show', [Auth::user()->institucion_id,$refrigerio->userable_id]);
     }
 
     /**
@@ -144,24 +150,30 @@ class RefrigerioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         $refrigerio = Refrigerio::find(($request->is('api/*'))? base64_decode($id) :$id);
         $refrigerio->delete();
-        if($request->is('api/*')) return response()->json(['eliminado'=>true]);
+        if ($request->is('api/*')) {
+            return response()->json(['eliminado'=>true]);
+        }
         return back();
     }
 
-    public function refrigerios($id){
+    public function refrigerios($id)
+    {
         $user = User::find(base64_decode($id));
         $refrigerios = $user->refrigerio()->with(['tipo_refrigerio'])->paginate(50);
         // return response()->json(compact('refrigerios'));
-        return Crypt::encrypt(json_encode(compact('refrigerios')),false);
+        return Crypt::encrypt(json_encode(compact('refrigerios')), false);
     }
 
-    public function historialPagos(Request $request,$id){
-        $pagos=Pago::where('refrigerio_id',($request->is('api/*'))?base64_decode($id) :$id)->with(['transaccion.transaccion_relacionada','factura'])->get();
-        if($request->is('api/*')) return Crypt::encrypt(json_encode(compact('pagos')),false);
+    public function historialPagos(Request $request, $id)
+    {
+        $pagos=Pago::where('refrigerio_id', ($request->is('api/*'))?base64_decode($id) :$id)->with(['transaccion.transaccion_relacionada','factura'])->get();
+        if ($request->is('api/*')) {
+            return Crypt::encrypt(json_encode(compact('pagos')), false);
+        }
         return response()->json(compact('pagos'));
     }
 }

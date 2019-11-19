@@ -12,7 +12,8 @@ class Cliente extends Model
     
     protected $fillable=['razon_social','ruc','telefono','direccion','usuario_crea_id'];
 
-    public function cliente_institucion(){
-        return $this->hasMany(ClienteInstitucion::class,'cliente_id');
+    public function cliente_institucion()
+    {
+        return $this->hasMany(ClienteInstitucion::class, 'cliente_id');
     }
 }

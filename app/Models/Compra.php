@@ -25,8 +25,9 @@ class Compra extends Model
         return $this->belongsTo(ClienteInstitucion::class, 'cliente_id');
     }
 
-    public function categoria(){
-        return $this->belongsTo(CategoriaCompra::class,'categoria_id');
+    public function categoria()
+    {
+        return $this->belongsTo(CategoriaCompra::class, 'categoria_id');
     }
 
     public function getFacturaNumeroAttribute()

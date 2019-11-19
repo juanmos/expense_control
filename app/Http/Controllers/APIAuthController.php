@@ -30,7 +30,7 @@ class APIAuthController extends Controller
        // Apply the jwt.auth middleware to all methods in this controller
        // except for the authenticate method. We don't want to prevent
        // the user from retrieving their token if they don't already have it
-       $this->middleware('jwt.auth', ['except' => ['login','authenticate','nuevoUsuario','passForgot']]);
+        $this->middleware('jwt.auth', ['except' => ['login','authenticate','nuevoUsuario','passForgot']]);
     }
     /**
      * Display a listing of the resource.
@@ -50,7 +50,7 @@ class APIAuthController extends Controller
             'password' => 'required',
         ];
         $validator = Validator::make($credentials, $rules);
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['success'=> false, 'error'=> $validator->messages()], 401);
         }
         
@@ -78,19 +78,17 @@ class APIAuthController extends Controller
     public function me()
     {
         try {
-            $user = User::where('id',auth('api')->user()->id)->with(['institucion.configuracion'])->first();
+            $user = User::where('id', auth('api')->user()->id)->with(['institucion.configuracion'])->first();
             $roles = $user->getRoleNames();
             $ciudades = Ciudad::orderBy('ciudad')->get();
             $tipo_tarjetas = TipoTarjeta::orderBy('tipo_tarjeta')->get();
             $tipo_refrigerios = TipoRefrigerio::orderBy('tipo')->get();
             // $vendedores = User::where('empresa_id',auth('api')->user()->empresa_id)->with(['roles'])->get();
-            return Crypt::encrypt(json_encode(compact('user','roles','ciudades','tipo_tarjetas','tipo_refrigerios')),false);
-            return response()->json(compact('user','roles','ciudades','tipo_tarjetas','tipo_refrigerios'));
+            return Crypt::encrypt(json_encode(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios')), false);
+            return response()->json(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios'));
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-
             return response()->json(['token_absent'], $e->getStatusCode());
-
-        } 
+        }
     }
 
     /**
@@ -115,16 +113,17 @@ class APIAuthController extends Controller
         return $this->respondWithToken(auth('api')->refresh());
     }
 
-    public function nuevoUsuario(Request $request){
+    public function nuevoUsuario(Request $request)
+    {
         $data= $request->except(['password','foto']);
-        $usuarioExiste = User::where('email','=',$request->get('email'))->first(); 
+        $usuarioExiste = User::where('email', '=', $request->get('email'))->first();
         $created=false;
-        if ($usuarioExiste != null){
+        if ($usuarioExiste != null) {
             return response()->json(['created'=>$created,'error'=>'Usuario ya existe']);
-        } 
+        }
         $data['password']=bcrypt($request->get('password'));
         $usuario=User::create($data);
-        if($request->has('foto')){
+        if ($request->has('foto')) {
             $usuario->foto=$request->file('foto')->store('public/usuarios');
             $usuario->save();
         }
@@ -137,41 +136,40 @@ class APIAuthController extends Controller
         if (! $token = JWTAuth::attempt(['email'=> $request->email, 'password' => $request->get('password')])) {
             return response()->json(['error' => 'invalid_credentials'], 401);
         }
-        return response()->json(compact('token','created'));    
+        return response()->json(compact('token', 'created'));
     }
 
-    public function registroPush(Request $request){
+    public function registroPush(Request $request)
+    {
         try {
             $data=array();
             if (! $user = auth('api')->user()) {
                 return response()->json(['user_not_found'], 404);
             }
-            if($request->get('tipo')=='2'){
+            if ($request->get('tipo')=='2') {
                 $data['tokenAND']=$request->get('dispositivo');
-            }else{
+            } else {
                 $data['tokenIOS']=$request->get('dispositivo');
             }
             $user->update($data);
             return response()->json(['tokenSaved'=>true]);
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-
             return response()->json(['token_absent'], $e->getStatusCode());
-
-        } 
+        }
     }
 
-    public function passForgot(Request $request){
-        $usuario = User::where('email','=',Input::get('email'))->first();
-        if ($usuario == null){
-            return response()->json(['error'=>'usuario no encontrado'],401);
-        } 
-        else{
+    public function passForgot(Request $request)
+    {
+        $usuario = User::where('email', '=', Input::get('email'))->first();
+        if ($usuario == null) {
+            return response()->json(['error'=>'usuario no encontrado'], 401);
+        } else {
             $password = Helpers::nuevoPassword();
             $data['password'] = bcrypt($password);
             $usuario->update($data);
             $info['nombre']=$usuario->nombre;
-            $info['apellido']=$usuario->apellido; 
-            $info['cedula']=$usuario->cedula; 
+            $info['apellido']=$usuario->apellido;
+            $info['cedula']=$usuario->cedula;
             $info['email']=$usuario->email;
             $info['password']=$password;
             // if (filter_var(Input::get('email'), FILTER_VALIDATE_EMAIL)) {
@@ -184,7 +182,8 @@ class APIAuthController extends Controller
         return response()->json(['enviado'=>true]);
     }
 
-    public function geoposicion(Request $request){
+    public function geoposicion(Request $request)
+    {
         try {
             $data=array();
             if (! $user = auth('api')->user()) {
@@ -195,14 +194,12 @@ class APIAuthController extends Controller
             $user->save();
             return response()->json(['created'=>true]);
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-
             return response()->json(['token_absent'], $e->getStatusCode());
-
-        } 
+        }
     }
 
-    public function saldo(){
+    public function saldo()
+    {
         return response()->json(['saldo'=>0]);
     }
-    
 }

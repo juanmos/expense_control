@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\TipoTarjeta;
 use App\Models\Transaccion;
 use App\Models\User;
+
 class Tarjeta extends Model
 {
     use SoftDeletes;
@@ -18,15 +19,18 @@ class Tarjeta extends Model
     // ];
     // protected $casts = ['extended_data' => 'array'];
 
-    public function usuario(){
-        return $this->belongsTo(User::class,'usuario_id');
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 
-    public function tipo_tarjeta(){
-        return $this->belongsTo(TipoTarjeta::class,'tipo_tarjeta_id');
+    public function tipo_tarjeta()
+    {
+        return $this->belongsTo(TipoTarjeta::class, 'tipo_tarjeta_id');
     }
 
-    public function transacciones(){
-        return $this->hasMany(Transaccion::class,'tarjeta_id');
-    } 
+    public function transacciones()
+    {
+        return $this->hasMany(Transaccion::class, 'tarjeta_id');
+    }
 }

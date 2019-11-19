@@ -12,7 +12,8 @@ class AlumnoImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChu
 {
     private $data;
 
-    public function __construct($data){
+    public function __construct($data)
+    {
         $this->data=$data;
     }
     /**
@@ -45,5 +46,4 @@ class AlumnoImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChu
     {
         return 1000;
     }
-    
 }

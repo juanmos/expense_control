@@ -50,36 +50,36 @@ class FacturarCommand extends Command
     public function handle()
     {
  
-        $facturas = Factura::whereIn('estado_id',[1,7])->with(['institucion.configuracion','datos_facturacion','detalle'])->get();
-        foreach($facturas as $factura){
-            $urlEnvio = 'https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';   
+        $facturas = Factura::whereIn('estado_id', [1,7])->with(['institucion.configuracion','datos_facturacion','detalle'])->get();
+        foreach ($facturas as $factura) {
+            $urlEnvio = 'https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
             $urlAutorizacion = 'https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
             $urlImg = "https://doctopro.com/images/logo.png";
             
-            if($factura->ambiente==1){
+            if ($factura->ambiente==1) {
                 $urlEnvio = 'https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
                 $urlAutorizacion = 'https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
-            } 
+            }
 
-            $configuraciones = Configuracion::where('institucion_id',$factura->institucion_id)->first()->configuraciones;
-            $clave=Carbon::now()->format("dmY") . '01' . $configuraciones['ruc']. $factura->ambiente.str_replace('-','',$factura->factura_no ). rand(10000000,99999999).'1' ;
+            $configuraciones = Configuracion::where('institucion_id', $factura->institucion_id)->first()->configuraciones;
+            $clave=Carbon::now()->format("dmY") . '01' . $configuraciones['ruc']. $factura->ambiente.str_replace('-', '', $factura->factura_no). rand(10000000, 99999999).'1' ;
             $modulo = Helpers::modulo($clave);
             $clave.=$modulo;
             $tipoDoc=Helpers::obtieneTipoDoc($factura->datos_facturacion->ruc);
             $nombre=($tipoDoc!='07')?$factura->datos_facturacion->nombre:'Consumidor Final';
-            $nombreFinal=str_ireplace(' ', '',Helpers::normaliza($nombre));
-            $nombreFinal=str_ireplace('/','',$nombreFinal);
+            $nombreFinal=str_ireplace(' ', '', Helpers::normaliza($nombre));
+            $nombreFinal=str_ireplace('/', '', $nombreFinal);
             $documento ='xml/'.$factura->institucion_id.'/'. Carbon::now()->format('Ymd').'-'. $nombreFinal.'-SF.xml';
             $docFirmado ='xml/'.$factura->institucion_id.'/'. Carbon::now()->format('Ymd').'-'.preg_replace('/\s+/', '', $nombreFinal).'.xml';
             $ride='pdf/'.$factura->institucion_id.'/'.Carbon::now()->format('Ymd').'-'.preg_replace('/\s+/', '', $nombreFinal).'.pdf';
             $xmlAut='xml/'.$factura->institucion_id.'/'.Carbon::now()->format('Ymd').'-'.preg_replace('/\s+/', '', $nombreFinal).'_aut.xml';
 
-            $secuencia=explode('-',$factura->factura_no);
-            if($factura->estado_id==1){
+            $secuencia=explode('-', $factura->factura_no);
+            if ($factura->estado_id==1) {
                 $factura->clave=$clave;
                 $detalles='';
-                foreach($factura->detalle as $detalle){
-                    $valor=strval(number_format($detalle->iva,2));
+                foreach ($factura->detalle as $detalle) {
+                    $valor=strval(number_format($detalle->iva, 2));
                     $detalles.='<detalle>
                         <codigoPrincipal>'.$detalle->codigo.'</codigoPrincipal>
                         <descripcion>'.$detalle->descripcion.'</descripcion>
@@ -152,17 +152,17 @@ class FacturarCommand extends Command
                     
                 $claveFirma =Crypt::decrypt($configuraciones['clave']);
                 
-                Storage::put( $documento,$xml );
+                Storage::put($documento, $xml);
                 exec('/usr/bin/java -jar sri.jar '.storage_path('app/').$configuraciones['firma'].' '.$claveFirma.' '.storage_path('app/'.$documento).' '.storage_path('app/').' '.$docFirmado);
                 Storage::delete($documento);
-                $factura->estado_id=6;   
+                $factura->estado_id=6;
                 $factura->save();
             }
             $options = [
                 'trace' => true,
                 'cache_wsdl' => WSDL_CACHE_NONE
             ];
-            if($factura->estado_id==6 || $factura->estado_id==3 ){
+            if ($factura->estado_id==6 || $factura->estado_id==3) {
                 $envio = new SoapClient($urlEnvio, $options); // null for non-wsdl mode
                 $respEnvio = $envio->validarComprobante(['xml'=>Storage::get($docFirmado)]);
                 // 'GetResult' being the name of the soap method
@@ -172,24 +172,24 @@ class FacturarCommand extends Command
                     print_r("SOAP Fault: (faultcode: {$respEnvio->faultcode}, faultstring: {$respEnvio->faultstring})");
                     $factura['estado_id']=3;
                     $factura->save();
-                }else{
+                } else {
                     print_r($respEnvio->RespuestaRecepcionComprobante->estado.' - ');
-                    if($respEnvio->RespuestaRecepcionComprobante->estado=='RECIBIDA'){
-                        $factura->estado_id=7;   
+                    if ($respEnvio->RespuestaRecepcionComprobante->estado=='RECIBIDA') {
+                        $factura->estado_id=7;
                         $factura->save();
                     }
                 }
             }
-            if($factura->estado_id==7){
-                $autorizacion = new SoapClient($urlAutorizacion,$options);
+            if ($factura->estado_id==7) {
+                $autorizacion = new SoapClient($urlAutorizacion, $options);
                 $respAut = $autorizacion->autorizacionComprobante(['claveAccesoComprobante'=>$factura->clave]);
                 if (is_soap_fault($respAut)) {
                     print_r("SOAP Fault: (faultcode: {$respAut->faultcode}, faultstring: {$respAut->faultstring})");
                 }
                 print_r($respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->estado.' - ');
-                if($respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->estado=='AUTORIZADO'){
+                if ($respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->estado=='AUTORIZADO') {
                     $detallesArray=[];
-                    foreach($factura->detalle as $detalle){
+                    foreach ($factura->detalle as $detalle) {
                         $detallesArray['detalle']= array(
                             "codigoPrincipal"=>$detalle->codigo,
                             "descripcion"=>$detalle->descripcion,
@@ -202,7 +202,7 @@ class FacturarCommand extends Command
                     $json=array(
                         "template"=>array("shortid" => "NJTN-fPUm"),
                         "data"=>array(
-                            "facturaNo"=> $factura->factura_no,                                
+                            "facturaNo"=> $factura->factura_no,
                             "autorizacion"=>$factura->clave,
                             "clave"=>$factura->clave,
                             "razonSocial"=>$configuraciones['razon_social'],
@@ -210,7 +210,7 @@ class FacturarCommand extends Command
                             "direccion"=>$configuraciones['direccion_facturacion'],
                             "telefono"=>$configuraciones['telefono_facturacion'],
                             "fechaAut"=>Carbon::now()->format("d/m/Y H:m:s"),
-                            "fecha"=>Carbon::now()->format("d/m/Y"), 
+                            "fecha"=>Carbon::now()->format("d/m/Y"),
                             "ambiente"=>($factura->ambiente==1)?'Pruebas':'Produccion',
                             "emision"=>"NORMAL",
                             "comprador"=> $nombre,
@@ -226,22 +226,22 @@ class FacturarCommand extends Command
                         
                     );
                                             
-                    $url = "https://facturas.doctopro.com/api/report";                            
+                    $url = "https://facturas.doctopro.com/api/report";
                     
-                    /*Convierte el array en el formato adecuado para cURL*/  
+                    /*Convierte el array en el formato adecuado para cURL*/
                     
-                    $handler = curl_init();  
-                    curl_setopt($handler, CURLOPT_URL, $url);  
-                    curl_setopt($handler, CURLOPT_POST,true);  
-                    curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1); 
-                    curl_setopt($handler, CURLOPT_POSTFIELDS, json_encode($json));  
+                    $handler = curl_init();
+                    curl_setopt($handler, CURLOPT_URL, $url);
+                    curl_setopt($handler, CURLOPT_POST, true);
+                    curl_setopt($handler, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($handler, CURLOPT_POSTFIELDS, json_encode($json));
                     curl_setopt($handler, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
                     curl_setopt($handler, CURLOPT_VERBOSE, false);
-                    $response = curl_exec ($handler);  
+                    $response = curl_exec($handler);
                     
-                    Storage::put($xmlAut,$respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->comprobante);
-                    Storage::put( $ride, $response );
-                    curl_close($handler);  
+                    Storage::put($xmlAut, $respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->comprobante);
+                    Storage::put($ride, $response);
+                    curl_close($handler);
                     Storage::delete($docFirmado);
                     $factura['xml']=$xmlAut;
                     $factura['pdf']=$ride;
@@ -260,8 +260,8 @@ class FacturarCommand extends Command
 
                     //     try{
                             
-                    //         Mail::to(Session::get('facturaEmail'))        
-                    //             ->send(new MailsFacturacion($info)); 
+                    //         Mail::to(Session::get('facturaEmail'))
+                    //             ->send(new MailsFacturacion($info));
 
                     //     }catch(Exception $e){
                     //         print_r("Error email");
@@ -270,8 +270,7 @@ class FacturarCommand extends Command
                     //     }
                         
                     // }
-
-                } else{
+                } else {
                     Storage::delete($docFirmado);
                     Storage::delete($documento);
                     $factura->estado_id=5;
@@ -283,8 +282,8 @@ class FacturarCommand extends Command
             // $task['title'] = 'Nueva factura';
             // $task['facturaNo'] = $factura->facturaNo;
             // $task['id'] = $factura->id;
-            // $task['nombre'] = $u->nombre;     
-            // $task['apellido'] = $u->apellido;   
+            // $task['nombre'] = $u->nombre;
+            // $task['apellido'] = $u->apellido;
             // $task['estado_id'] = $factura->estado_id;
             // Notification::send(Doctor::first(), new SlackFacturacion($task));
         }

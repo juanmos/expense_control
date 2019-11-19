@@ -12,7 +12,8 @@ class CategoriaServicio extends Model
     
     protected $fillable=['institucion_id','categoria','descripcion','icono'];
 
-    public function institucion(){
-        return $this->belongsTo(Institucion::class,'institucion_id');
+    public function institucion()
+    {
+        return $this->belongsTo(Institucion::class, 'institucion_id');
     }
 }

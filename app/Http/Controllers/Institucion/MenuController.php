@@ -19,16 +19,17 @@ class MenuController extends Controller
      */
     public function index(Request $request, $institucion_id)
     {
-        $tipos = TipoRefrigerio::where('institucion_id',$institucion_id)->get();
-        return ($request->is('api/*'))? response()->json(compact('tipos'))->json() :view('menus.index',compact('tipos','institucion_id'));
+        $tipos = TipoRefrigerio::where('institucion_id', $institucion_id)->get();
+        return ($request->is('api/*'))? response()->json(compact('tipos'))->json() :view('menus.index', compact('tipos', 'institucion_id'));
     }
 
-    public function menus(Request $request,$institucion_id,$tipo_refrigerio){
-        $menus = MenuRefrigerio::where('institucion_id',$institucion_id)
-                        ->where('tipo_refrigerio_id',$tipo_refrigerio)
-                        ->whereBetween('fecha',[$request->get('start'),$request->get('end')])
+    public function menus(Request $request, $institucion_id, $tipo_refrigerio)
+    {
+        $menus = MenuRefrigerio::where('institucion_id', $institucion_id)
+                        ->where('tipo_refrigerio_id', $tipo_refrigerio)
+                        ->whereBetween('fecha', [$request->get('start'),$request->get('end')])
                         ->get();
-        foreach($menus as $menu){
+        foreach ($menus as $menu) {
             $menu->start=$menu->fecha;
             $menu->end=$menu->fecha;
             $menu->title=$menu->titulo;
@@ -43,9 +44,9 @@ class MenuController extends Controller
      */
     public function create($institucion_id)
     {
-        $tipos = TipoRefrigerio::where('institucion_id',$institucion_id)->get()->pluck('tipo','id');
+        $tipos = TipoRefrigerio::where('institucion_id', $institucion_id)->get()->pluck('tipo', 'id');
         $menu = null;
-        return view('menus.form',compact('tipos','menu','institucion_id'));
+        return view('menus.form', compact('tipos', 'menu', 'institucion_id'));
     }
 
     /**
@@ -54,17 +55,17 @@ class MenuController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$institucion_id)
+    public function store(Request $request, $institucion_id)
     {
         $institucion = Institucion::find($institucion_id);
         $data=$request->except(['foto']);
         $data['fecha']=Carbon::parse($data['fecha'])->toDateString();
         $menu= $institucion->menus()->create($data);
-        if($request->has('foto') && $request->get('foto') !=null){
+        if ($request->has('foto') && $request->get('foto') !=null) {
             $menu->foto=$request->file('foto')->store('public/menus/'.$institucion_id);
             $menu->save();
         }
-        return ($request->is('api/*'))? response()->json(['creado'=>true]): redirect()->route('institucion.menus.index',$institucion_id);
+        return ($request->is('api/*'))? response()->json(['creado'=>true]): redirect()->route('institucion.menus.index', $institucion_id);
     }
 
     /**
@@ -84,11 +85,12 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($institucion_id,$id)
+    public function edit($institucion_id, $id)
     {
-        $tipos = TipoRefrigerio::where('institucion_id',$institucion_id)->get()->pluck('tipo','id');
-        $menu = MenuRefrigerio::find($id);;
-        return view('menus.form',compact('tipos','menu','institucion_id'));
+        $tipos = TipoRefrigerio::where('institucion_id', $institucion_id)->get()->pluck('tipo', 'id');
+        $menu = MenuRefrigerio::find($id);
+        ;
+        return view('menus.form', compact('tipos', 'menu', 'institucion_id'));
     }
 
     /**
@@ -98,17 +100,17 @@ class MenuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$institucion_id, $id)
+    public function update(Request $request, $institucion_id, $id)
     {
         $data=$request->except(['foto']);
         $data['fecha']=Carbon::parse($data['fecha'])->toDateString();
         $menu= MenuRefrigerio::find($id);
         $menu->update($data);
-        if($request->has('foto') && $request->get('foto') !=null){
+        if ($request->has('foto') && $request->get('foto') !=null) {
             $menu->foto=$request->file('foto')->store('public/menus/'.$institucion_id);
             $menu->save();
         }
-        return ($request->is('api/*'))? response()->json(['creado'=>true]): redirect()->route('institucion.menus.index',$institucion_id);
+        return ($request->is('api/*'))? response()->json(['creado'=>true]): redirect()->route('institucion.menus.index', $institucion_id);
     }
 
     /**
