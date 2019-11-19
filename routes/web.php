@@ -98,6 +98,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('naturales.clientes', 'Naturales\ClienteController');
         Route::get('naturales/{institucion?}/cliente/data', 'Naturales\ClienteController@clientesData')->name('naturales.clientes.data');
         Route::get('naturales/{institucion}/clientes/upload', 'Naturales\ClienteController@upload')->name('naturales.clientes.upload');
+        Route::get('naturales/{institucion}/clientes/id/{id}','Naturales\ClienteController@findById')->name('naturales.clientes.find.id');
         
         Route::resource('naturales.categoria', 'Naturales\CategoriaController');
         Route::get('naturales/{tipo}/categoria/data/tablas', 'Naturales\CategoriaController@categoriaData')->name('naturales.categoria.data');
@@ -110,7 +111,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('naturales/{institucion}/compras/data/table', 'Naturales\ComprasController@comprasData')->name('naturales.compras.data');
         Route::get('naturales/{institucion}/compras/pdf/{id}', 'Naturales\ComprasController@pdf')->name('naturales.compras.pdf');
         
-
+        Route::resource('naturales.facturas','Naturales\FacturacionController');
+        Route::get('naturales/{institucion}/facturas/data/table', 'Naturales\FacturacionController@facturasData')->name('naturales.facturas.data');
 
         Route::get('usuario/', 'Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}', 'Naturales\UsuarioController@show')->name('naturales.usuario.show');

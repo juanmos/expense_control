@@ -11,6 +11,7 @@ use App\Models\EstadoInstitucion;
 use App\Models\Transaccion;
 use App\Models\Configuracion;
 use App\Models\MenuRefrigerio;
+use App\Models\Factura;
 use App\Models\Ciudad;
 use App\Models\Compra;
 use App\Models\User;
@@ -70,5 +71,10 @@ class Institucion extends Model
     public function compras()
     {
         return $this->hasMany(Compra::class, 'institucion_id');
+    }
+
+    public function facturas()
+    {
+        return $this->hasMany(Factura::class, 'institucion_id');
     }
 }

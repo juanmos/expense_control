@@ -6,40 +6,43 @@ use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use App\Models\Institucion;
-use App\Models\Compra;
+use App\Models\FacturaDetalle;
+use App\Models\Factura;
+use App\Models\FormaPago;
+use App\Models\Cliente;
+use App\Models\ClienteInstitucion;
 use Carbon\Carbon;
 use Crypt;
 use Auth;
 
-class ComprasController extends Controller
+class FacturacionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $institucion_id)
+    public function index(Request $request,$institucion_id)
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
-        $dia=$institucion->compras()->whereBetween('fecha', [
+        $dia=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
             ])->with('cliente.cliente')->get()->sum('total');
-        $mes=$institucion->compras()->whereBetween('fecha', [
+        $mes=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])->with('cliente.cliente')->get()->sum('total');
-        $ano=$institucion->compras()->whereBetween('fecha', [
+        $ano=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
             ])->with('cliente.cliente')->get()->sum('total');
         $start=Carbon::now()->firstOfMonth()->format('d-m-Y');
         $end=Carbon::now()->format('d-m-Y');
-        return  view('compras.index', compact('institucion', 'institucion_id', 'dia', 'mes', 'ano', 'start', 'end'));
+        return view('facturacion.index', compact('institucion', 'institucion_id', 'dia', 'mes', 'ano', 'start', 'end'));
     }
 
-
-    public function comprasData(Request $request, $institucion_id = null)
+    public function facturasData(Request $request, $institucion_id = null)
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $start=Carbon::now()->firstOfMonth()->toDateString();
@@ -51,27 +54,27 @@ class ComprasController extends Controller
             $end=Carbon::parse($request->get('end_date'))->toDateString();
         }
         if ($request->is('api/*')) {
-            $dia=$institucion->compras()->whereBetween('fecha', [
+            $dia=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
                     Carbon::now()->toDateString()
                 ])->with('cliente.cliente')->get()->sum('total');
-            $mes=$institucion->compras()->whereBetween('fecha', [
+            $mes=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
                 ])->with('cliente.cliente')->get()->sum('total');
-            $ano=$institucion->compras()->whereBetween('fecha', [
+            $ano=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->startOfYear()->toDateString(),
                     Carbon::now()->toDateString()
                 ])->with('cliente.cliente')->get()->sum('total');
-            $compras=$institucion->compras()->whereBetween('fecha', [$start,$end])
+            $facturas=$institucion->facturas()->whereBetween('fecha', [$start,$end])
                         ->with('cliente.cliente')->orderBy('fecha', 'desc')->paginate(50);
-            return Crypt::encrypt(json_encode(compact('dia', 'mes', 'ano', 'compras')), false);
+            return Crypt::encrypt(json_encode(compact('dia', 'mes', 'ano', 'facturas')), false);
             
-            // return json_encode(compact('dia', 'mes', 'ano', 'compras'));
+            // return json_encode(compact('dia', 'mes', 'ano', 'facturas'));
         }
         
-        $compras=$institucion->compras()->whereBetween('fecha', [$start,$end])->with('cliente.cliente')->get();
-        return Datatables::of($compras)->make(true);
+        $facturas=$institucion->facturas()->whereBetween('fecha', [$start,$end])->with('cliente.cliente')->get();
+        return Datatables::of($facturas)->make(true);
     }
 
     /**
@@ -79,9 +82,11 @@ class ComprasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($institucion_id)
     {
-        
+        $factura=new Factura;
+        $formaPago = FormaPago::whereIn('id',[1,2,3,4,5,6])->get()->pluck('forma_pago','id');
+        return view('facturacion.form',compact('factura','formaPago','institucion_id'));
     }
 
     /**
@@ -101,18 +106,9 @@ class ComprasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($institucion_id, $id)
+    public function show($id)
     {
-        $compra = Compra::find($id);
-        $detalle = $compra->detalles['detalle'];
-        unset($detalle['impuestos']);
-         
-        $multiple=false;
-        if (!(count($detalle) == count($detalle, COUNT_RECURSIVE))) {
-            $multiple=true;
-        }
-        
-        return view('compras.show', compact('compra', 'multiple'));
+        //
     }
 
     /**
@@ -147,11 +143,5 @@ class ComprasController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function pdf(Request $request, $institucion, $id)
-    {
-        $factura = Compra::find($id);
-        return response()->file(storage_path('app/'.$factura->pdf));
     }
 }

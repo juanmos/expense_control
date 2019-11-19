@@ -16,7 +16,8 @@ class Factura extends Model
     
     protected $fillable=['datos_facturacion_id','pago_id','estado_id','factura_no','fecha','subtotal',
                         'subtotal0','propina','descuento','servicio','iva','total','clave','autorizacion',
-                        'pdf','xml','ambiente','institucion_id'];
+                        'pdf','xml','ambiente','institucion_id','cliente_id','establecimiento','puntoEmision',
+                        'secuencia'];
 
     public function datosFacturacion()
     {
@@ -37,5 +38,10 @@ class Factura extends Model
     public function detalle()
     {
         return $this->hasMany(FacturaDetalle::class, 'factura_id');
+    }
+
+    public function getFacturaNumeroAttribute()
+    {
+        return "{$this->establecimiento}-{$this->puntoEmision}-{$this->secuencial}";
     }
 }

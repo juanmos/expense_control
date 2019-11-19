@@ -51,8 +51,8 @@
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.show')?'active':''}}">
                     <a href="{{route('naturales.show',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Inicio</span></a>
                 </li>
-                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.alumnos')?'active':''}}">
-                    <a href="{{route('institucion.alumnos',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-credit-card"></i></span><span class="pcoded-mtext">Ventas</span></a>
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.facturas.index')?'active':''}}">
+                    <a href="{{route('naturales.facturas.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-credit-card"></i></span><span class="pcoded-mtext">Ventas</span></a>
                 </li>
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.compras.index')?'active':''}}">
                     <a href="{{route('naturales.compras.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-cart-outline"></i></span><span class="pcoded-mtext">Compras</span></a>

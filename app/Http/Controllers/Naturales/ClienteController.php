@@ -51,6 +51,17 @@ class ClienteController extends Controller
                     response()->json(compact('clientes'));
     }
 
+    public function findById(Request $request,$insitucion_id,$id)
+    {
+        $clientes =  Cliente::where('id',$id)->with(['clienteInstitucion'=>function($query) use($id){
+            $query->where('institucion_id',Auth::user()->institucion_id);
+            $query->where('cliente_id',$id);
+        }])->first();
+        return ($request->is('api/*'))?
+                    Crypt::encrypt(json_encode(compact('clientes')), false):
+                    response()->json(compact('clientes'));
+    }
+
     public function buscar(Request $request)
     {
         $texto=($request->is('api/*'))?base64_decode($request->get('texto')):$request->get('texto');
