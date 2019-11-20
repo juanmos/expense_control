@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ClienteInstitucion;
 use App\Models\DatosFacturacion;
 use App\Models\FacturaDetalle;
 use App\Models\Institucion;
@@ -18,7 +19,10 @@ class Factura extends Model
                         'subtotal0','propina','descuento','servicio','iva','total','clave','autorizacion',
                         'pdf','xml','ambiente','institucion_id','cliente_id','establecimiento','puntoEmision',
                         'secuencia'];
-
+    public function cliente()
+    {
+        return $this->belongsTo(ClienteInstitucion::class,'cliente_id');
+    }
     public function datosFacturacion()
     {
         return $this->belongsTo(DatosFacturacion::class, 'datos_facturacion_id');

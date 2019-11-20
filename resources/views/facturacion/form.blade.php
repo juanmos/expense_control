@@ -76,7 +76,7 @@
                                                         {!! Form::text('email_contacto', '', ['class'=>'form-control','id'=>'cliente_email_val','placeholder'=>'Ingrese el email para enviar la factura']) !!}
                                                         </div>
                                                     </div>
-                                                    <a href="#" data-toggle="modal" data-target="#buscarClienteModal" class="btn btn-primary"><i class=""></i>Buscar cliente</a>
+                                                    <a href="#" data-toggle="modal" data-target="#buscarClienteModal" class="btn btn-secondary"><i class=""></i>Buscar cliente</a>
                                                     @else
                                                     <h6 class="m-0">{{$factura->datosFacturacion->nombre}}</h6>
                                                     <p class="m-0 m-t-10">{{$factura->datosFacturacion->ruc}}</p>
@@ -151,28 +151,19 @@
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="table-responsive">
-                                                        <a href="#" data-toggle="modal" data-target="#modalProductos" class="btn btn-primary float-right">Ingresar items</a>
+                                                        <a href="#" data-toggle="modal" data-target="#modalProductos" class="btn btn-secondary float-right">Ingresar items</a>
                                                         <table class="table  invoice-detail-table">
                                                             <thead>
                                                                 <tr class="thead-default">
                                                                     <th>Descripción</th>
                                                                     <th>Cantidad</th>
+                                                                    <th>Tiene IVA</th>
                                                                     <th>Precio Unitario</th>
                                                                     <th>Precio Total</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
-                                                                @foreach ($factura->detalle as $detalle)
-                                                                   <tr>
-                                                                        <td>
-                                                                            <h6>{{$detalle->descripcion}}</h6>
-                                                                            <p>{{$detalle->codigo}}</p>
-                                                                        </td>
-                                                                        <td>{{$detalle->cantidad}}</td>
-                                                                        <td>${{$detalle->precio_unitario}}</td>
-                                                                        <td>${{$detalle->precio}}</td>
-                                                                    </tr> 
-                                                                @endforeach
+                                                            <tbody id="facturaItemsList">
+                                                                
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -183,16 +174,28 @@
                                                     <table class="table table-responsive invoice-table invoice-total">
                                                         <tbody>
                                                             <tr>
-                                                                <th>Sub Total :</th>
-                                                                <td>${{$factura->subtotal}}</td>
+                                                                <th>Sub Total 0%:</th>
+                                                                <td id="subtotalFactura0">$ 0.00</td>
                                                             </tr>
                                                             <tr>
-                                                                <th>IVA (12%) :</th>
-                                                                <td>${{$factura->iva}}</td>
+                                                                <th>Sub Total IVA:</th>
+                                                                <td id="subtotalFactura">$ 0.00</td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Descuento :</th>
-                                                                <td>${{$factura->descuento}}</td>
+                                                                <td id="descuentoFactura">$ 0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Propina :</th>
+                                                                <td id="propinaFactura">$ 0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>IVA (12%) :</th>
+                                                                <td id="ivaFactura">$ 0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Servicio (10%) :</th>
+                                                                <td id="servicioFactura">$ 0.00</td>
                                                             </tr>
                                                             <tr class="text-info">
                                                                 <td>
@@ -201,7 +204,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <hr />
-                                                                    <h5 class="text-primary">${{$factura->total}}</h5>
+                                                                    <h5 class="text-primary" id="totalFactura">$ 0.00</h5>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -227,6 +230,26 @@
                                             <a href="{{route('institucion.facturacion.anular',[$factura->institucion_id,$factura->id])}}" target="_blank" class="btn btn-danger m-b-10 ">Anular</a>
                                         </div>
                                     </div>
+                                    @elseif($factura->estado_id==null)
+                                    {!! Form::open(['route'=>['naturales.facturas.store',Auth::user()->institucion_id],'method'=>'POST']) !!}
+                                    <div class="row text-center">
+                                        <div class="col-sm-12 invoice-btn-group text-center">
+                                            <button type="submit" class="btn btn-primary btn-print-invoice m-b-10">Facturar</button>
+                                            <a href="#" data-toggle="modal" data-target="#modalDescuentoPropina" class="btn btn-secondary">Descuento y Propina</a>
+                                        </div>
+                                    </div>
+                                    {!! Form::hidden('cliente_id', 0) !!}
+
+                                    {!! Form::hidden('subtotal0', 0) !!}
+                                    {!! Form::hidden('subtotal', 0) !!}
+                                    {!! Form::hidden('servicio', 0) !!}
+                                    {!! Form::hidden('iva', 0) !!}
+                                    {!! Form::hidden('descuento', 0) !!}
+                                    {!! Form::hidden('propina', 0) !!}
+                                    {!! Form::hidden('total', 0) !!}
+
+                                    {!! Form::close() !!}
+                                    
                                     @endif
                                 </div>
                             </div>
@@ -264,7 +287,67 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" formaction="{{route('institucion.alumno.create',Auth::user()->institucion_id)}}">Nuevo alumno</button>
+                <button type="button" class="btn btn-primary" formaction="{{route('institucion.alumno.create',Auth::user()->institucion_id)}}">Nuevo cliente</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg" id="modalProductos" tabindex="-1" role="dialog" aria-labelledby="modalProductosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProductosLabel">Agregar items a la factura</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                 <div class="table-responsive">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Descripción:</label>
+                        {!! Form::text('descripcion', null, ["class"=>"form-control","placeholder"=>"Descripción",'id'=>'descripcion_item']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Cantidad:</label>
+                        {!! Form::text('cantidad', null, ["class"=>"form-control","placeholder"=>"Cantidad",'id'=>'cantidad_item']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Precio unitario:</label>
+                        {!! Form::text('precio_unitario', null, ["class"=>"form-control","id"=>"cedula","placeholder"=>"Precio unitario",'id'=>'precio_unitario_item']) !!}
+                    </div>                    
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Incluye IVA:</label>
+                        {!! Form::select('iva',['1'=>'SI','0'=>'NO'], 1, ["class"=>"form-control",'id'=>'iva_item']) !!}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="agregarItemsFactura" data-dismiss="modal">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg" id="modalDescuentoPropina" tabindex="-1" role="dialog" aria-labelledby="modalDescuentoPropinaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDescuentoPropinaLabel">Agregar propina y descuento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                 <div class="table-responsive">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Descuento:</label>
+                        {!! Form::text('descuento_factura', null, ["class"=>"form-control","placeholder"=>"Descuento a la factura",'id'=>'descuento_factura']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Propina:</label>
+                        {!! Form::text('propina_factura', null, ["class"=>"form-control","placeholder"=>"Propina",'id'=>'propina_factura']) !!}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="agregarDescuentoPropinaFactura" data-dismiss="modal">Agregar</button>
             </div>
         </div>
     </div>
@@ -273,6 +356,56 @@
 @push('scripts')
 <script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
 <script>
+var items=[];
+$(document).on('click','#agregarItemsFactura',function(){
+    items.push({
+        descripcion: $('#descripcion_item').val(),
+        cantidad: $('#cantidad_item').val(),
+        precio_u: $('#precio_unitario_item').val(),
+        iva: $('#iva_item').val(),
+        precio_total: parseFloat($('#cantidad_item').val()) * parseFloat($('#precio_unitario_item').val())
+    });
+    llenarItemsLista();
+    $('#descripcion_item').val('');
+    $('#cantidad_item').val('');
+    $('#precio_unitario_item').val('');
+})
+
+$(document).on('click','#agregarDescuentoPropinaFactura',function(){
+    $('input[name=descuento]').val($('#descuento_factura').val());
+    $('input[name=propina]').val($('#propina_factura').val());
+    llenarItemsLista();
+})
+
+function llenarItemsLista(){
+    var subtotal=0;
+    var subtotal0=0;
+    var iva=0;
+    var total=0;
+    $('#facturaItemsList').empty()
+    items.forEach(function(item){
+        if(item.iva=='1'){
+            iva+=(item.precio_total*0.12);
+            subtotal+=item.precio_total;
+        }else{
+            subtotal0+=item.precio_total;
+        }
+        var ivaLbl=(item.iva=='1')?'SI':'NO'
+        $('#facturaItemsList').append('<tr><td>'+item.descripcion+'</td><td>'+item.cantidad+'</td><td>'+ivaLbl+'</td><td>$ '+item.precio_u+'</td><td>$ '+item.precio_total+'</td></tr>')
+    })
+    total=subtotal+iva+subtotal0+parseFloat($('input[name=propina]').val())- parseFloat($('input[name=descuento]').val())
+    $('#subtotalFactura').html('$ '+subtotal.toFixed(2));
+    $('#subtotalFactura0').html('$ '+subtotal0.toFixed(2));
+    $('#ivaFactura').html('$ '+(iva).toFixed(2));
+    $('#totalFactura').html('$ '+(total).toFixed(2));
+    $('#propinaFactura').html('$ '+parseFloat($('input[name=propina]').val()).toFixed(2));
+    $('#descuentoFactura').html('$ '+parseFloat($('input[name=descuento]').val()).toFixed(2));
+
+    $('input[name=subtotal]').val(subtotal);
+    $('input[name=subtotal0]').val(subtotal0);
+    $('input[name=iva]').val(iva);
+    $('input[name=total]').val(total);
+}
 $(function() {
     $('#clientesData').DataTable({
         processing: true,
@@ -316,7 +449,7 @@ $(document).on('click','.seleccionarCliente',function(){
             
             $("#cliente_contacto").html((json.clientes.cliente_institucion[0].apellido!=null)?'Contacto: '+json.clientes.cliente_institucion[0].nombre+' '+json.clientes.cliente_institucion[0].apellido:'Contacto: '+json.clientes.cliente_institucion[0].nombre);
         }
-        
+        $('input[name=cliente_id]').val(json.clientes.id);
         $('#datosCliente').show();
     },'json');
 });

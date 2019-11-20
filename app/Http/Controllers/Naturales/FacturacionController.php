@@ -95,9 +95,32 @@ class FacturacionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$id)
     {
-        //
+        $institucion=Institucion::find(($request->is('api/*'))? base64_decode($id):$id);
+        $cliente = $institucion->clientes()->where('cliente_id',$request->get('cliente_id'))->first();
+        dd($cliente);
+        $data=[
+            'estado_id'=>1,
+            'fecha'=>Carbon::now()->toDateString(),
+            'subtotal'=>$request->get('subtotal'),
+            'subtotal0'=>$request->get('subtotal0'),
+            'propina'=>$request->get('propina'),
+            'descuento'=>$request->get('descuento'),
+            'iva'=>$request->get('iva'),
+            'servicio'=>$request->get('servicio'),
+            'total'=>$request->get('total'),
+            'ambiente'=>$institucion->configuracion->configuraciones['ambiente_facturacion'],
+            'institucion_id'=>Auth::user()->institucion_id,
+            'cliente_id'=>$request->get('cliente_id'),
+            'establecimiento'=>$institucion->configuracion->configuraciones['establecimiento'],
+            'puntoEmision'=>$institucion->configuracion->configuraciones['punto'],
+            'secuencia'=>str_pad($institucion->configuracion->configuraciones['secuencia'], 9, "0", STR_PAD_LEFT)
+        ];
+        return $data;
+        $nuevaSecuencia = intval($institucion->configuracion->configuraciones['secuencia'])+1;
+        $institucion->configuracion->configuraciones['secuencia']=$nuevaSecuencia;
+        $institucion->configuracion->save();
     }
 
     /**
