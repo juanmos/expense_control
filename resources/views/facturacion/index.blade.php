@@ -98,7 +98,8 @@
                                                     <tr>
                                                         <th>Fecha</th>
                                                         <th>Razón social</th>                                                        
-                                                        <th>Tipo</th>
+                                                        <th>Estado</th>
+                                                        <th>Numero</th>
                                                         <th>Total</th>                                                        
                                                         <th>Acciones</th>
                                                     </tr>
@@ -144,7 +145,8 @@ $(function() {
                 
                 { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
                 { data: 'fecha', name: 'fecha' },
-                { data: 'tipoComprobante', name: 'tipoComprobante' },
+                { data: 'estado.estado', name: 'estado.estado' },
+                { data: 'secuencia', name: 'secuencia' },
                 { data: 'total', name: 'total' },
                 
                 { "data": "id", render: function (dataField) { 
@@ -166,8 +168,8 @@ $(function() {
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
             { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
-            
-            { data: 'tipoComprobante', name: 'tipoComprobante' },
+            { data: 'estado.estado', name: 'estado.estado' },
+            { data: 'secuencia', name: 'secuencia' },
             { data: 'total', name: 'total' },
             
             { "data": "id", render: function (dataField) { 

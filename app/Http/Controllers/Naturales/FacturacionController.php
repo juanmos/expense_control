@@ -57,23 +57,23 @@ class FacturacionController extends Controller
             $dia=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
                     Carbon::now()->toDateString()
-                ])->with('cliente.cliente')->get()->sum('total');
+                ])->get()->sum('total');
             $mes=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
-                ])->with('cliente.cliente')->get()->sum('total');
+                ])->get()->sum('total');
             $ano=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->startOfYear()->toDateString(),
                     Carbon::now()->toDateString()
-                ])->with('cliente.cliente')->get()->sum('total');
+                ])->get()->sum('total');
             $facturas=$institucion->facturas()->whereBetween('fecha', [$start,$end])
-                        ->with('cliente.cliente')->orderBy('fecha', 'desc')->paginate(50);
+                        ->with(['cliente.cliente','estado','detalle'])->orderBy('fecha', 'desc')->paginate(50);
             return Crypt::encrypt(json_encode(compact('dia', 'mes', 'ano', 'facturas')), false);
             
             // return json_encode(compact('dia', 'mes', 'ano', 'facturas'));
         }
         
-        $facturas=$institucion->facturas()->whereBetween('fecha', [$start,$end])->with('cliente.cliente')->get();
+        $facturas=$institucion->facturas()->whereBetween('fecha', [$start,$end])->with(['cliente.cliente','estado'])->get();
         return Datatables::of($facturas)->make(true);
     }
 
@@ -97,11 +97,26 @@ class FacturacionController extends Controller
      */
     public function store(Request $request,$id)
     {
+        $detalles=json_decode($request->detalles);
         $institucion=Institucion::find(($request->is('api/*'))? base64_decode($id):$id);
         $cliente = $institucion->clientes()->where('cliente_id',$request->get('cliente_id'))->first();
-        dd($cliente);
+        if($cliente==null){
+            $elCliente= Cliente::find($request->get('cliente_id'));
+            $cliente = $institucion->clientes()->create([
+                'cliente_id'=>$request->get('cliente_id'),
+                'nombre'=>$elCliente->id,
+                'email'=>$request->email
+            ]);
+        }elseif($cliente->email==null){
+            $cliente->email=$request->email;
+            $cliente->save();
+        }
+        
         $data=[
             'estado_id'=>1,
+            'pago_id'=>0,
+            'datos_facturacion_id'=>0,
+            'factura_no'=>'00',
             'fecha'=>Carbon::now()->toDateString(),
             'subtotal'=>$request->get('subtotal'),
             'subtotal0'=>$request->get('subtotal0'),
@@ -112,15 +127,36 @@ class FacturacionController extends Controller
             'total'=>$request->get('total'),
             'ambiente'=>$institucion->configuracion->configuraciones['ambiente_facturacion'],
             'institucion_id'=>Auth::user()->institucion_id,
-            'cliente_id'=>$request->get('cliente_id'),
+            'cliente_id'=>$cliente->id,
             'establecimiento'=>$institucion->configuracion->configuraciones['establecimiento'],
             'puntoEmision'=>$institucion->configuracion->configuraciones['punto'],
             'secuencia'=>str_pad($institucion->configuracion->configuraciones['secuencia'], 9, "0", STR_PAD_LEFT)
         ];
-        return $data;
+        $factura=$institucion->facturas()->create($data);
+        $factura->factura_no=$factura->factura_numero;
+        $factura->save();
         $nuevaSecuencia = intval($institucion->configuracion->configuraciones['secuencia'])+1;
-        $institucion->configuracion->configuraciones['secuencia']=$nuevaSecuencia;
-        $institucion->configuracion->save();
+        $configuraciones = $institucion->configuracion->configuraciones;
+        $configuraciones['secuencia']=$nuevaSecuencia;
+        $institucion->configuracion->update([
+            'configuraciones'=>$configuraciones
+        ]);
+        foreach($detalles as $index => $detalle){
+            
+            $factura->detalle()->create([
+                'codigo'=>$index+1,
+                'descripcion'=>$detalle->descripcion,
+                'cantidad'=>$detalle->cantidad,
+                'precio_unitario'=>$detalle->precio_u,
+                'descuento'=>0,
+                'iva'=>$detalle->iva,
+                'precio'=>$detalle->precio_total
+            ]);
+        }
+        return ($request->is('api/*'))?
+                            response()->json(['creado'=>true]):
+                            redirect()->route('naturales.facturas.index',$institucion->id);
+        
     }
 
     /**
@@ -129,9 +165,10 @@ class FacturacionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($institucion_id,$id)
     {
-        //
+        $factura = Factura::find($id);
+        return view('facturacion.factura',compact('factura'));
     }
 
     /**

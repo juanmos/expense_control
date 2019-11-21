@@ -160,6 +160,7 @@
                                                                     <th>Tiene IVA</th>
                                                                     <th>Precio Unitario</th>
                                                                     <th>Precio Total</th>
+                                                                    <th>Acciones</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="facturaItemsList">
@@ -231,10 +232,10 @@
                                         </div>
                                     </div>
                                     @elseif($factura->estado_id==null)
-                                    {!! Form::open(['route'=>['naturales.facturas.store',Auth::user()->institucion_id],'method'=>'POST']) !!}
+                                    {!! Form::open(['route'=>['naturales.facturas.store',Auth::user()->institucion_id],'method'=>'POST','id'=>'formFactura']) !!}
                                     <div class="row text-center">
                                         <div class="col-sm-12 invoice-btn-group text-center">
-                                            <button type="submit" class="btn btn-primary btn-print-invoice m-b-10">Facturar</button>
+                                            <button type="button" id="envioFacturacion" class="btn btn-primary btn-print-invoice m-b-10">Facturar</button>
                                             <a href="#" data-toggle="modal" data-target="#modalDescuentoPropina" class="btn btn-secondary">Descuento y Propina</a>
                                         </div>
                                     </div>
@@ -247,6 +248,9 @@
                                     {!! Form::hidden('descuento', 0) !!}
                                     {!! Form::hidden('propina', 0) !!}
                                     {!! Form::hidden('total', 0) !!}
+                                    {!! Form::hidden('email', '') !!}
+
+                                    {!! Form::hidden('detalles', '[]') !!}
 
                                     {!! Form::close() !!}
                                     
@@ -287,7 +291,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" formaction="{{route('institucion.alumno.create',Auth::user()->institucion_id)}}">Nuevo cliente</button>
+                <a  class="btn btn-primary" href="{{route('naturales.clientes.create',Auth::user()->institucion_id)}}">Nuevo cliente</a>
             </div>
         </div>
     </div>
@@ -307,11 +311,11 @@
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Cantidad:</label>
-                        {!! Form::text('cantidad', null, ["class"=>"form-control","placeholder"=>"Cantidad",'id'=>'cantidad_item']) !!}
+                        {!! Form::number('cantidad', null, ["class"=>"form-control","placeholder"=>"Cantidad",'id'=>'cantidad_item']) !!}
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Precio unitario:</label>
-                        {!! Form::text('precio_unitario', null, ["class"=>"form-control","id"=>"cedula","placeholder"=>"Precio unitario",'id'=>'precio_unitario_item']) !!}
+                        {!! Form::number('precio_unitario', null, ["class"=>"form-control","id"=>"cedula","placeholder"=>"Precio unitario",'id'=>'precio_unitario_item', "step"=>"0.01"]) !!}
                     </div>                    
                     <div class="form-group">
                         <label for="message-text" class="col-form-label">Incluye IVA:</label>
@@ -321,7 +325,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="agregarItemsFactura" data-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-primary" id="agregarItemsFactura">Agregar</button>
             </div>
         </div>
     </div>
@@ -337,44 +341,133 @@
                  <div class="table-responsive">
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Descuento:</label>
-                        {!! Form::text('descuento_factura', null, ["class"=>"form-control","placeholder"=>"Descuento a la factura",'id'=>'descuento_factura']) !!}
+                        {!! Form::number('descuento_factura', null, ["class"=>"form-control","placeholder"=>"Descuento a la factura",'id'=>'descuento_factura', "step"=>"0.01"]) !!}
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Propina:</label>
-                        {!! Form::text('propina_factura', null, ["class"=>"form-control","placeholder"=>"Propina",'id'=>'propina_factura']) !!}
+                        {!! Form::number('propina_factura', null, ["class"=>"form-control","placeholder"=>"Propina",'id'=>'propina_factura', "step"=>"0.01"]) !!}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="agregarDescuentoPropinaFactura" data-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-primary" id="agregarDescuentoPropinaFactura">Agregar</button>
             </div>
         </div>
     </div>
 </div>
 @endsection
 @push('scripts')
+<script src='{{asset("assets/plugins/sweetalert/js/sweetalert.min.js")}}'></script>
 <script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
 <script>
 var items=[];
-$(document).on('click','#agregarItemsFactura',function(){
-    items.push({
-        descripcion: $('#descripcion_item').val(),
-        cantidad: $('#cantidad_item').val(),
-        precio_u: $('#precio_unitario_item').val(),
-        iva: $('#iva_item').val(),
-        precio_total: parseFloat($('#cantidad_item').val()) * parseFloat($('#precio_unitario_item').val())
+var _modificando=null;
+$(document).on('click','#envioFacturacion',function(){
+    if($('input[name=cliente_id').val()==0){
+        swal("Debes escoger un cliente", "Por favor busca un cliente de la lista para poder facturar!", "error");
+        return false;
+    }
+    console.log('email',$('input[name=email').val().length)
+    if($('input[name=email').val().length==0 ){
+        swal("Debes ingresar el email", "Por favor ingresa un email para poder enviar la factura al cliente", "error");
+        return false;
+    }
+    if(items.length==0){
+        swal("Debes ingresar items", "Por favor ingresa un items a tu factura", "error");
+        return false;
+    }
+    if($('input[name=total').val()<=0 ){
+        swal("Valor de la factura incorrecto", "El valor de la factura no puede ser 0 o menor a 0", "error");
+        return false;
+    }
+    swal({
+        title: "Estas seguro?",
+        text: "Una vez facturada no se podran realizar cambios a la factura, revisa que todo este correcto antes de facturar!",
+        icon: "info",
+        buttons: true,
+        dangerMode: false,
+        confirmButtonText: 'Facturar'
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            swal("Ahora procederemos a realizar la factura", {
+                icon: "success",
+            });
+            $('#formFactura').submit();
+        } else {
+            swal("Cuando estes seguro puedes volver a facturar!", {
+                icon: "warning",
+            });
+        }
     });
+})
+$(document).on('click','#agregarItemsFactura',function(){
+    if($('#descripcion_item').val().length==0){
+        swal("Debes ingresar la descripción del item", "Por favor ingresa una descripción para tu item", "error");
+        return false;
+    }
+    if($('#cantidad_item').val().length==0){
+        swal("Debes ingresar la cantidad del item", "Por favor ingresa una cantidad para tu item", "error");
+        return false;
+    }
+    if(parseInt($('#cantidad_item').val())<=0){
+        swal("La cantidad debe ser mayor a 0", "Por favor ingresa una cantidad mayor a 0 para tu item", "error");
+        return false;
+    }
+    if($('#precio_unitario_item').val().length==0){
+        swal("Debes ingresar el precio unitario del item", "Por favor ingresa el precio unitario para tu item", "error");
+        return false;
+    }
+    if(parseFloat($('#precio_unitario_item').val())<=0){
+        swal("El precio unitario debe ser mayor a 0", "Por favor verifica que el precio unitario sea mayor a 0 para tu item", "error");
+        return false;
+    }
+    if(_modificando==null){
+        items.push({
+            descripcion: $('#descripcion_item').val(),
+            cantidad: $('#cantidad_item').val(),
+            precio_u: $('#precio_unitario_item').val(),
+            iva: $('#iva_item').val(),
+            precio_total: parseFloat($('#cantidad_item').val()) * parseFloat($('#precio_unitario_item').val()),
+            index:items.length
+        });
+    }else{
+        items[_modificando].descripcion = $('descripcion_item').val();
+        items[_modificando].cantidad = $('#cantidad_item').val();
+        items[_modificando].precio_u = $('#precio_unitario_item').val();
+        items[_modificando].iva = $('#iva_item').val();
+        items[_modificando].precio_total =  parseFloat($('#cantidad_item').val()) * parseFloat($('#precio_unitario_item').val());
+    }
     llenarItemsLista();
     $('#descripcion_item').val('');
     $('#cantidad_item').val('');
     $('#precio_unitario_item').val('');
+    $('#modalProductos').modal('hide');
+    _modificando=null;
 })
 
 $(document).on('click','#agregarDescuentoPropinaFactura',function(){
-    $('input[name=descuento]').val($('#descuento_factura').val());
-    $('input[name=propina]').val($('#propina_factura').val());
+    if($('#descuento_factura').val().length>0){
+        if(parseFloat($('#descuento_factura').val())<0){
+            swal("El descuento no debe ser menor a 0", "Por favor ingresa un descuento que no sea menor a 0", "error");
+            return false;
+        }
+        $('input[name=descuento]').val($('#descuento_factura').val());
+    }else{
+        $('input[name=descuento]').val(0);
+    }
+    if($('#propina_factura').val().length>0){
+        if(parseFloat($('#propina_factura').val())<0){
+            swal("La propina no debe ser menor a 0", "Por favor ingresa una propina que no sea menor a 0", "error");
+            return false;
+        }
+        $('input[name=propina]').val($('#propina_factura').val());
+    }else{
+        $('input[name=propina]').val(0);
+    }    
     llenarItemsLista();
+    $('#modalDescuentoPropina').modal('hide');
 })
 
 function llenarItemsLista(){
@@ -383,7 +476,7 @@ function llenarItemsLista(){
     var iva=0;
     var total=0;
     $('#facturaItemsList').empty()
-    items.forEach(function(item){
+    items.forEach(function(item, index){
         if(item.iva=='1'){
             iva+=(item.precio_total*0.12);
             subtotal+=item.precio_total;
@@ -391,9 +484,10 @@ function llenarItemsLista(){
             subtotal0+=item.precio_total;
         }
         var ivaLbl=(item.iva=='1')?'SI':'NO'
-        $('#facturaItemsList').append('<tr><td>'+item.descripcion+'</td><td>'+item.cantidad+'</td><td>'+ivaLbl+'</td><td>$ '+item.precio_u+'</td><td>$ '+item.precio_total+'</td></tr>')
+        $('#facturaItemsList').append('<tr><td>'+item.descripcion+'</td><td>'+item.cantidad+'</td><td>'+ivaLbl+'</td><td>$ '+item.precio_u+'</td><td>$ '+item.precio_total+'</td><td> <button type="button" class="btn btn-icon btn-rounded btn-info modificarItem" index="'+index+'"><i class="feather icon-info"></i></button><button type="button" class="btn btn-icon btn-rounded btn-danger eliminarItem" index="'+index+'"><i class="feather icon-slash"></i></button></td></tr>')
     })
     total=subtotal+iva+subtotal0+parseFloat($('input[name=propina]').val())- parseFloat($('input[name=descuento]').val())
+
     $('#subtotalFactura').html('$ '+subtotal.toFixed(2));
     $('#subtotalFactura0').html('$ '+subtotal0.toFixed(2));
     $('#ivaFactura').html('$ '+(iva).toFixed(2));
@@ -405,7 +499,42 @@ function llenarItemsLista(){
     $('input[name=subtotal0]').val(subtotal0);
     $('input[name=iva]').val(iva);
     $('input[name=total]').val(total);
+
+    $('input[name=detalles]').val(JSON.stringify(items));
 }
+$(document).on('click','.modificarItem',function(){
+    $('#descripcion_item').val(items[$(this).attr('index')].descripcion)
+    $('#cantidad_item').val(items[$(this).attr('index')].cantidad)
+    $('#precio_unitario_item').val(items[$(this).attr('index')].precio_u)
+    $('#iva_item').val(items[$(this).attr('index')].iva)
+    $('#modalProductos').modal('show');
+    _modificando=$(this).attr('index');
+})
+$(document).on('click','.eliminarItem',function(){
+    swal({
+        title: "Estas seguro?",
+        text: "Estas seguro que deseas eliminar el item de la factura!",
+        icon: "error",
+        buttons: true,
+        dangerMode: false,
+        confirmButtonText: 'Eliminar'
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            swal("Se ha eliminado el item", {
+                icon: "success",
+            });
+            var index=parseInt($(this).attr('index'))
+            items = items.filter(el => el.index !== index);
+            llenarItemsLista()
+        } else {
+            swal("El item no se ha eliminado!", {
+                icon: "warning",
+            });
+        }
+    });
+    
+})
 $(function() {
     $('#clientesData').DataTable({
         processing: true,
@@ -432,6 +561,7 @@ $(function() {
 });
 $(document).on('click','.seleccionarCliente',function(){
     var clienteId = $(this).attr('clienteId');
+    $('input[name=email').val('');
     $.get('{{url("naturales/naturales/".$institucion_id."/clientes/id/")}}/'+clienteId,function(json){
         $("#cliente_nombre").html(json.clientes.razon_social);
         $("#cliente_ruc").html('RUC: '+json.clientes.ruc);
@@ -442,6 +572,7 @@ $(document).on('click','.seleccionarCliente',function(){
                 $('#cliente_email_div').hide();
                 $("#cliente_email").show();
                 $("#cliente_email").html('Email: '+json.clientes.cliente_institucion[0].email);
+                $('input[name=email]').val(json.clientes.cliente_institucion[0].email)
             }else{
                 $('#cliente_email_div').show();
                 $("#cliente_email").hide();
@@ -453,6 +584,9 @@ $(document).on('click','.seleccionarCliente',function(){
         $('#datosCliente').show();
     },'json');
 });
+$(document).on('change','input[name=email_contacto]',function(){
+    $('input[name=email]').val($(this).val())
+})
 </script>
 @endpush
 @push('styles')

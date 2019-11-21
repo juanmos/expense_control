@@ -11,7 +11,7 @@
                         <div class="row align-items-center">
                             <div class="col-md-12">
                                 <div class="page-header-title">
-                                    <h5 class="m-b-10">Factura {{$factura->factura_no}}</h5>
+                                    <h5 class="m-b-10">Factura {{$factura->factura_numeto}}</h5>
                                 </div>
                                 <ul class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
@@ -62,11 +62,11 @@
                                             <div class="row invoive-info">
                                                 <div class="col-md-4 col-xs-12 invoice-client-info">
                                                     <h6>Cliente :</h6>
-                                                    <h6 class="m-0">{{$factura->datosFacturacion->nombre}}</h6>
-                                                    <p class="m-0 m-t-10">{{$factura->datosFacturacion->ruc}}</p>
-                                                    <p class="m-0">{{$factura->datosFacturacion->direccion}}</p>
-                                                    <p class="m-0">{{$factura->datosFacturacion->telefono}}</p>
-                                                    <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">{{$factura->datosFacturacion->email}}</a></p>
+                                                    <h6 class="m-0">{{$factura->cliente->cliente->razon_social}}</h6>
+                                                    <p class="m-0 m-t-10">{{$factura->cliente->cliente->ruc}}</p>
+                                                    <p class="m-0">{{$factura->cliente->cliente->direccion}}</p>
+                                                    <p class="m-0">{{$factura->cliente->cliente->telefono}}</p>
+                                                    <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">{{$factura->cliente->email}}</a></p>
                                                 </div>
                                                 <div class="col-md-4 col-sm-6">
                                                     <h6>Datos de factura :</h6>
