@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Tymon\JWTAuthExceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CategoriaCompra;
 use App\Models\TipoRefrigerio;
 use App\Models\TipoTarjeta;
 use App\Models\User;
@@ -89,9 +90,10 @@ class APIAuthController extends Controller
             $ciudades = Ciudad::orderBy('ciudad')->get();
             $tipo_tarjetas = TipoTarjeta::orderBy('tipo_tarjeta')->get();
             $tipo_refrigerios = TipoRefrigerio::orderBy('tipo')->get();
+            $categorias = CategoriaCompra::orderBy('categoria')->get();
             // $vendedores = User::where('empresa_id',auth('api')->user()->empresa_id)->with(['roles'])->get();
             return Crypt::encrypt(
-                json_encode(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios')),
+                json_encode(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios','categorias')),
                 false
             );
             // return response()->json(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios'));

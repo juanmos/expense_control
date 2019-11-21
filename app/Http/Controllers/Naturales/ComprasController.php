@@ -7,6 +7,7 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use App\Models\Institucion;
 use App\Models\Compra;
+use App\Models\Cliente;
 use Carbon\Carbon;
 use Crypt;
 use Auth;
@@ -54,17 +55,17 @@ class ComprasController extends Controller
             $dia=$institucion->compras()->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
                     Carbon::now()->toDateString()
-                ])->with('cliente.cliente')->get()->sum('total');
+                ])->get()->sum('total');
             $mes=$institucion->compras()->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
-                ])->with('cliente.cliente')->get()->sum('total');
+                ])->get()->sum('total');
             $ano=$institucion->compras()->whereBetween('fecha', [
                     Carbon::now()->startOfYear()->toDateString(),
                     Carbon::now()->toDateString()
-                ])->with('cliente.cliente')->get()->sum('total');
+                ])->get()->sum('total');
             $compras=$institucion->compras()->whereBetween('fecha', [$start,$end])
-                        ->with('cliente.cliente')->orderBy('fecha', 'desc')->paginate(50);
+                        ->with(['cliente.cliente','categoria'])->orderBy('fecha', 'desc')->paginate(50);
             return Crypt::encrypt(json_encode(compact('dia', 'mes', 'ano', 'compras')), false);
             
             // return json_encode(compact('dia', 'mes', 'ano', 'compras'));
@@ -135,7 +136,15 @@ class ComprasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $compra=Compra::find(($request->is('api/*'))?base64_decode($id):$id);
+        $compra->categoria_id=$request->get('categoria_id');
+        $compra->save();
+        $cliente = Cliente::find($compra->cliente->cliente_id);
+        if($cliente != null && $cliente->categoria_id==1){
+            $cliente->categoria_id=$request->get('categoria_id');
+            $cliente->save();
+        }
+        return ($request->is('api/*'))? response()->json(['creado'=>true]):back()->with(['mensaje'=>'Categoria asignada']);
     }
 
     /**

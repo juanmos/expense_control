@@ -78,6 +78,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
         Route::post('compras', 'Naturales\ComprasController@comprasData');
         Route::get('compras/pdf/{pdf}/{id}', 'Naturales\ComprasController@pdf');
+        Route::put('compras/update/{id}','Naturales\ComprasController@update');
 
         Route::post('facturas', 'Naturales\FacturacionController@facturasData');
         Route::post('facturar/store/{id}','Naturales\FacturacionController@store');

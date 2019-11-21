@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Http\Helpers;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
 use App\Models\Cliente;
@@ -79,9 +80,9 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                                 ]);
                                 if ($resp->getStatusCode()==200) {
                                     $json=(string) $resp->getBody();
-                                    $compras= json_decode($json);
-                                    foreach ($compras as $compra) {
-                                        foreach ($compra->comprobantes as $comp) {
+                                    $comprasSRI= json_decode($json);
+                                    foreach ($comprasSRI as $compraSRI) {
+                                        foreach ($compraSRI->comprobantes as $comp) {
                                             $cliente = Cliente::where('ruc', $comp->rucEmisor)->first();
                                             if ($cliente==null) {
                                                 $cliente=Cliente::create([
@@ -126,6 +127,13 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                                                 if ($respDetalle->getStatusCode()==200) {
                                                     $json=(string) $respDetalle->getBody();
                                                     $detalle= json_decode($json);
+                                                    if($cliente->nombre_comercial==null || $cliente->nombre_comercial==''){
+                                                        $cliente->nombre_comercial=$detalle->nombreComercial;
+                                                        $cliente->save();
+                                                    }
+                                                    if($cliente->categoria_id==1){
+                                                        Helpers::clasifica($cliente);
+                                                    }
                                                     $compra= $institucion->compras()->create([
                                                         'cliente_id'=>$cliente_institucion->id,
                                                         'fecha'=>$comp->fechaEmision,
@@ -140,7 +148,8 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                                                         'totalSinImpuestos'=>$detalle->totalSinImpuestos,
                                                         'propina'=>$detalle->propina,
                                                         'totalDescuento'=>$detalle->totalDescuento,
-                                                        'impuestos'=>$detalle->impuestos
+                                                        'impuestos'=>$detalle->impuestos,
+                                                        'categoria_id'=>$cliente->categoria_id
                                                     ]);
                                                 }
                                             }

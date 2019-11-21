@@ -4,6 +4,7 @@
 <div class="pcoded-main-container">
     <div class="pcoded-wrapper">
         <div class="pcoded-content">
+            @include('includes.mensaje')
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
                 <div class="page-header">
