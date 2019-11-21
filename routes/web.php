@@ -110,9 +110,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('naturales.compras', 'Naturales\ComprasController');
         Route::get('naturales/{institucion}/compras/data/table', 'Naturales\ComprasController@comprasData')->name('naturales.compras.data');
         Route::get('naturales/{institucion}/compras/pdf/{id}', 'Naturales\ComprasController@pdf')->name('naturales.compras.pdf');
+        Route::get('compras/cliente/{id}','Naturales\ComprasController@comprasCliente')->name('naturales.compras.cliente');
         
         Route::resource('naturales.facturas','Naturales\FacturacionController');
         Route::get('naturales/{institucion}/facturas/data/table', 'Naturales\FacturacionController@facturasData')->name('naturales.facturas.data');
+        Route::get('facturas/cliente/{id}','Naturales\FacturacionController@ventasCliente')->name('naturales.facturas.cliente');
 
         Route::get('usuario/', 'Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}', 'Naturales\UsuarioController@show')->name('naturales.usuario.show');

@@ -56,12 +56,14 @@
                                                                     <span class="label label-success">AUTORIZADO</span>
                                                                 </td>
                                                             </tr>
-                                                            {{--  <tr>
-                                                                <th>Forma de pago :</th>
+                                                             <tr>
+                                                                <th>Categoria : {{$compra->categoria->categoria}}
+                                                                    <br><a href="#" data-toggle="modal" data-target="#categoriaModal" class="btn btn-secondary btn-sm">Cambiar</a>
+                                                                </th>
                                                                 <td>
-                                                                    {{($factura->pago)?$factura->pago->transaccion->forma_pago->forma_pago:''}}
+                                                                    <img class=" float-right" style="width:50px;" src="{{asset('images/categorias/'.$compra->categoria->icono.'.png')}}" alt="activity-user">
                                                                 </td>
-                                                            </tr>  --}}
+                                                            </tr> 
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -199,4 +201,52 @@
         </div>
     </div>
 </section>
+<!-- Historial de refrigerios-->
+<div class="modal fade" id="categoriaModal" tabindex="-1" role="dialog" aria-labelledby="categoriaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Historial de pagos de refrigerios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Icono</th>
+                        <th>Categoria</th>
+                        <th>Accion</th>
+                    </tr>
+                    <tbody id="categoriaModalTable">
+                        @foreach ($categorias as $categoria )
+                            <tr>
+                                <td>
+                                    <img class="float-center" style="width:50px;" src="{{asset('images/categorias/'.$categoria->icono.'.png')}}" alt="activity-user">
+                                </td>
+                                <td>
+                                    {{$categoria->categoria}}
+                                </td>
+                                <td>
+                                    {!! Form::open(['method'=>'POST','route'=>['naturales.compras.update',$compra->id,$compra->id]]) !!}
+                                    @method('PUT')
+                                    {!! Form::hidden('categoria_id', $categoria->id) !!}
+                                    <button type="submit" class="btn btn-sm btn-primary">Seleccionar</button>
+                                    
+                                    {!! Form::close() !!}
+                                    
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    
+                </table>         
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+        
+    </div>
+</div>
 @endsection

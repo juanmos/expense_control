@@ -93,7 +93,7 @@ class APIAuthController extends Controller
             $categorias = CategoriaCompra::orderBy('categoria')->get();
             // $vendedores = User::where('empresa_id',auth('api')->user()->empresa_id)->with(['roles'])->get();
             return Crypt::encrypt(
-                json_encode(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios','categorias')),
+                json_encode(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios', 'categorias')),
                 false
             );
             // return response()->json(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios'));

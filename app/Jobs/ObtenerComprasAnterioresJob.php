@@ -127,13 +127,13 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                                                 if ($respDetalle->getStatusCode()==200) {
                                                     $json=(string) $respDetalle->getBody();
                                                     $detalle= json_decode($json);
-                                                    if($cliente->nombre_comercial==null || $cliente->nombre_comercial==''){
-                                                        $cliente->nombre_comercial=$detalle->nombreComercial;
+                                                    if ($cliente->nombre_comercial==null || $cliente->nombre_comercial=='') {
+                                                        $cliente->nombre_comercial=($detalle->nombreComercial!=null)?trim($detalle->nombreComercial):trim($cliente->razon_social);
                                                         $cliente->save();
                                                     }
-                                                    if($cliente->categoria_id==1){
-                                                        Helpers::clasifica($cliente);
-                                                    }
+                                                    // if($cliente->categoria_id==1){
+                                                    //     Helpers::clasifica($cliente);
+                                                    // }
                                                     $compra= $institucion->compras()->create([
                                                         'cliente_id'=>$cliente_institucion->id,
                                                         'fecha'=>$comp->fechaEmision,

@@ -25,6 +25,7 @@ class ClienteController extends Controller
         $clientes = Cliente::whereHas('clienteInstitucion', function ($query) use ($institucion_id) {
             $query->where('institucion_id', $institucion_id);
         })->with('clienteInstitucion')->orderBy('razon_social')->paginate(50);
+        // return $clientes;
         return ($request->is('api/*'))?
                     Crypt::encrypt(json_encode(compact('clientes')), false) :
                     view('cliente.index', compact('clientes', 'institucion_id'));
@@ -51,11 +52,11 @@ class ClienteController extends Controller
                     response()->json(compact('clientes'));
     }
 
-    public function findById(Request $request,$insitucion_id,$id)
+    public function findById(Request $request, $insitucion_id, $id)
     {
-        $clientes =  Cliente::where('id',$id)->with(['clienteInstitucion'=>function($query) use($id){
-            $query->where('institucion_id',Auth::user()->institucion_id);
-            $query->where('cliente_id',$id);
+        $clientes =  Cliente::where('id', $id)->with(['clienteInstitucion'=>function ($query) use ($id) {
+            $query->where('institucion_id', Auth::user()->institucion_id);
+            $query->where('cliente_id', $id);
         }])->first();
         return ($request->is('api/*'))?
                     Crypt::encrypt(json_encode(compact('clientes')), false):

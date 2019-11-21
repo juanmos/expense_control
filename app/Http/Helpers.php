@@ -12,6 +12,18 @@ use App;
 
 class Helpers
 {
+    public static function clasifica($cliente)
+    {
+        $alimientacion=[];
+        $vivienda=[];
+        $salud=[];
+        $gasolina=['ESTACION DE SERVICIO','PRIMAX','GASOLINERA'];
+        $dirversion=[];
+        $vestimenta=[];
+        $vivienda=[];
+        $arte=[];
+    }
+
     public static function creaQR($usuario_id, $tarjeta_id)
     {
         $usuario =User::find($usuario_id);

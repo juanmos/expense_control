@@ -142,15 +142,15 @@ $(function() {
             ajax: "{!! route('naturales.compras.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
             columns: [
                 // { data: 'id', name: 'id' },
-                
-                { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
                 { data: 'fecha', name: 'fecha' },
+                { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+                
                 { data: 'tipoComprobante', name: 'tipoComprobante' },
                 { data: 'total', name: 'total' },
                 
                 { "data": "id", render: function (dataField) { 
-                    var link='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                    link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';
+                    var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                    {{-- link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; --}}
                         return link;
                     } 
                 }

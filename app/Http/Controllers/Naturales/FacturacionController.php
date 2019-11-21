@@ -22,7 +22,7 @@ class FacturacionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request,$institucion_id)
+    public function index(Request $request, $institucion_id)
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $dia=$institucion->facturas()->whereBetween('fecha', [
@@ -85,8 +85,8 @@ class FacturacionController extends Controller
     public function create($institucion_id)
     {
         $factura=new Factura;
-        $formaPago = FormaPago::whereIn('id',[1,2,3,4,5,6])->get()->pluck('forma_pago','id');
-        return view('facturacion.form',compact('factura','formaPago','institucion_id'));
+        $formaPago = FormaPago::whereIn('id', [1,2,3,4,5,6])->get()->pluck('forma_pago', 'id');
+        return view('facturacion.form', compact('factura', 'formaPago', 'institucion_id'));
     }
 
     /**
@@ -95,19 +95,19 @@ class FacturacionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$id)
+    public function store(Request $request, $id)
     {
         $detalles=json_decode($request->detalles);
         $institucion=Institucion::find(($request->is('api/*'))? base64_decode($id):$id);
-        $cliente = $institucion->clientes()->where('cliente_id',$request->get('cliente_id'))->first();
-        if($cliente==null){
+        $cliente = $institucion->clientes()->where('cliente_id', $request->get('cliente_id'))->first();
+        if ($cliente==null) {
             $elCliente= Cliente::find($request->get('cliente_id'));
             $cliente = $institucion->clientes()->create([
                 'cliente_id'=>$request->get('cliente_id'),
                 'nombre'=>$elCliente->id,
                 'email'=>$request->email
             ]);
-        }elseif($cliente->email==null){
+        } elseif ($cliente->email==null) {
             $cliente->email=$request->email;
             $cliente->save();
         }
@@ -141,8 +141,7 @@ class FacturacionController extends Controller
         $institucion->configuracion->update([
             'configuraciones'=>$configuraciones
         ]);
-        foreach($detalles as $index => $detalle){
-            
+        foreach ($detalles as $index => $detalle) {
             $factura->detalle()->create([
                 'codigo'=>$index+1,
                 'descripcion'=>$detalle->descripcion,
@@ -155,8 +154,7 @@ class FacturacionController extends Controller
         }
         return ($request->is('api/*'))?
                             response()->json(['creado'=>true]):
-                            redirect()->route('naturales.facturas.index',$institucion->id);
-        
+                            redirect()->route('naturales.facturas.index', $institucion->id);
     }
 
     /**
@@ -165,10 +163,24 @@ class FacturacionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($institucion_id,$id)
+    public function show($institucion_id, $id)
     {
         $factura = Factura::find($id);
-        return view('facturacion.factura',compact('factura'));
+        return view('facturacion.factura', compact('factura'));
+    }
+
+    public function ventasCliente(Request $request, $cliente_id)
+    {
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        if($request->is('api/*')){
+            $facturas=$institucion->facturas()->where('cliente_id', base64_decode($cliente_id))
+                            ->with(['cliente.cliente','estado','detalle'])->orderBy('fecha', 'desc')->paginate(50);
+            return Crypt::encrypt(json_encode(compact('facturas')), false);
+        }
+        
+        $facturas=$institucion->facturas()->where('cliente_id', $cliente_id)
+                            ->with(['cliente.cliente','estado','detalle'])->orderBy('fecha', 'desc')->get();
+        return Datatables::of($facturas)->make(true);
     }
 
     /**

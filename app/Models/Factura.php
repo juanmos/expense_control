@@ -21,7 +21,7 @@ class Factura extends Model
                         'secuencia'];
     public function cliente()
     {
-        return $this->belongsTo(ClienteInstitucion::class,'cliente_id');
+        return $this->belongsTo(ClienteInstitucion::class, 'cliente_id');
     }
     public function datosFacturacion()
     {

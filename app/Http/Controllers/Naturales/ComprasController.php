@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Naturales;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
+use App\Models\CategoriaCompra;
 use App\Models\Institucion;
 use App\Models\Compra;
 use App\Models\Cliente;
@@ -82,7 +83,6 @@ class ComprasController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -112,8 +112,23 @@ class ComprasController extends Controller
         if (!(count($detalle) == count($detalle, COUNT_RECURSIVE))) {
             $multiple=true;
         }
+        $categorias = CategoriaCompra::orderBy('categoria')->get();
         
-        return view('compras.show', compact('compra', 'multiple'));
+        return view('compras.show', compact('compra', 'multiple', 'categorias'));
+    }
+
+    public function comprasCliente(Request $request, $cliente_id)
+    {
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        if($request->is('api/*')){
+            $compras=$institucion->compras()->where('cliente_id', base64_decode($cliente_id))
+                            ->with(['cliente.cliente','categoria'])->orderBy('fecha', 'desc')->paginate(50);
+            // return $compras;
+            return Crypt::encrypt(json_encode(compact('compras')), false);
+        }
+        $compras=$institucion->compras()->where('cliente_id', $cliente_id)
+                            ->with(['cliente.cliente','categoria'])->orderBy('fecha', 'desc')->get();
+        return Datatables::of($compras)->make(true);
     }
 
     /**
@@ -140,7 +155,7 @@ class ComprasController extends Controller
         $compra->categoria_id=$request->get('categoria_id');
         $compra->save();
         $cliente = Cliente::find($compra->cliente->cliente_id);
-        if($cliente != null && $cliente->categoria_id==1){
+        if ($cliente != null && $cliente->categoria_id==1) {
             $cliente->categoria_id=$request->get('categoria_id');
             $cliente->save();
         }

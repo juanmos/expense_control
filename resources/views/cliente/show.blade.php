@@ -109,12 +109,50 @@
                             <div class="col-xl-8 col-md-6">
                                 <div class="card Recent-Users">
                                     <div class="card-header">
-                                        <h5>Facturas</h5>
-                                        {{-- <a href="{{route('empresa.contacto.create',$empresa->id)}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Nuevo usuario</a> --}}
+                                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="ventas-tab" data-toggle="pill" href="#ventas" role="tab" aria-controls="ventas" aria-selected="true">Ventas</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="compras-tab" data-toggle="pill" href="#compras" role="tab" aria-controls="compras" aria-selected="false">Compras</a>
+                                            </li>
+                                        </ul>
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
-                                            <div id="calendar"></div>
+                                            <div class="tab-content" id="pills-tabContent">
+                                                <div class="tab-pane fade show active" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
+                                                    <table  id="ventasTable" class="table table-hover" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Estado</th>
+                                                                <th>Numero</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="tab-pane fade" id="compras" role="tabpanel" aria-labelledby="compras-tab">
+                                                    <table  id="comprasTable" class="table table-hover" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Tipo</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -137,3 +175,82 @@
 </div>
 
 @endsection
+@push('scripts')
+<!-- Datepicker Js -->
+<script src='{{asset("assets/plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js")}}'>
+</script>
+<script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
+<script>
+$(function() {
+    $('#ventasTable').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.facturas.cliente',$cliente->id) !!}",
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'estado.estado', name: 'estado.estado' },
+            { data: 'secuencia', name: 'secuencia' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                 link+='<a href="{{ url("naturales/naturales/".$institucion_id."/facturas")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; 
+                    return link;
+                } 
+            }
+        ]
+    });
+    $('#comprasTable').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.compras.cliente',$cliente->id) !!}",
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            
+            { data: 'tipoComprobante', name: 'tipoComprobante' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
+                    return link;
+                } 
+            }
+        ]
+    });
+});
+</script>
+@endpush
+@push('styles')
+<link rel="stylesheet" href='{{asset("assets/plugins/data-tables/css/datatables.min.css")}}'>
+<!-- Datepicker css -->
+<link href='{{asset("assets/plugins/bootstrap-datetimepicker/css/prettify.css")}}' rel="stylesheet">
+<link href='{{asset("assets/plugins/bootstrap-datetimepicker/css/docs.css")}}' rel="stylesheet">
+<link href='{{asset("assets/plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css")}}' rel="stylesheet">
+<script>
+        var page = {
+            bootstrap: 3
+        };
+
+        function swap_bs() {
+            page.bootstrap = 3;
+        }
+    </script>
+    <style>
+        .datepicker>.datepicker-days {
+            display: block;
+        }
+
+        ol.linenums {
+            margin: 0 0 0 -8px;
+        }
+    </style>
+@endpush

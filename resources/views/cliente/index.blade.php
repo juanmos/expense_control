@@ -92,7 +92,7 @@ $(function() {
         columns: [
             // { data: 'id', name: 'id' },
             
-            { data: 'cliente.razon_social', name: 'cliente.razon_social' },
+            { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
             { data: 'cliente.ruc', name: 'cliente.ruc' },
             { data: 'cliente.telefono', name: 'cliente.telefono' },
             { data: 'nombre', name: 'nombre' },
