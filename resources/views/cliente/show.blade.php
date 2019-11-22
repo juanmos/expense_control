@@ -16,18 +16,20 @@
                             <div class="col-md-6 col-xl-4">
                                 <div class="card daily-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Ventas diarias</h6>
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$ 249.95</h3>
+                                        <h6 class="mb-4">Ventas/Compras ultimos 7 días</h6>
+                                        <div class="row align-items-center justify-content-center card-active">
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Ventas: $</span>{{number_format($ventas['dia'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme" role="progressbar" style="width:60%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-
-                                            <div class="col-3 text-right">
-                                                <p class="m-b-0">67%</p>
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Compras: $</span>{{number_format($compras['dia'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme2" role="progressbar" style="width:45%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="progress m-t-30" style="height: 7px;">
-                                            <div class="progress-bar progress-c-theme" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -37,17 +39,20 @@
                             <div class="col-md-6 col-xl-4">
                                 <div class="card Monthly-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Ventas mensuales</h6>
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>$ 2.942.32</h3>
+                                        <h6 class="mb-4">Ventas/Compras del més</h6>
+                                        <div class="row align-items-center justify-content-center card-active">
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Ventas: $</span>{{number_format($ventas['mes'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme" role="progressbar" style="width:60%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                            <div class="col-3 text-right">
-                                                <p class="m-b-0">36%</p>
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Compras: $</span>{{number_format($compras['mes'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme2" role="progressbar" style="width:45%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="progress m-t-30" style="height: 7px;">
-                                            <div class="progress-bar progress-c-theme2" role="progressbar" style="width: 35%;" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -57,17 +62,20 @@
                             <div class="col-md-12 col-xl-4">
                                 <div class="card yearly-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Ventas anuales</h6>
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$ 8.638.32</h3>
+                                        <h6 class="mb-4">Ventas/Compras anuales</h6>
+                                        <div class="row align-items-center justify-content-center card-active">
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Ventas: $</span>{{number_format($ventas['ano'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme" role="progressbar" style="width:60%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                            <div class="col-3 text-right">
-                                                <p class="m-b-0">80%</p>
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Compras: $</span>{{number_format($compras['ano'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme2" role="progressbar" style="width:45%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="progress m-t-30" style="height: 7px;">
-                                            <div class="progress-bar progress-c-theme" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -97,8 +105,12 @@
                                                 <i class="feather icon-zap f-30 text-c-green"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300">235</h3>
-                                                <span class="d-block text-uppercase">TOTAL FACTURAS</span>
+                                                <h3 class="f-w-300">{{$ventas['total']}}</h3>
+                                                <span class="d-block text-uppercase">TOTAL VENTAS</span>
+                                            </div>
+                                            <div class="col">
+                                                <h3 class="f-w-300">{{$compras['total']}}</h3>
+                                                <span class="d-block text-uppercase">TOTAL COMPRAS</span>
                                             </div>
                                         </div>
                                     </div>

@@ -62,20 +62,50 @@ class InstitucionController extends Controller
         $usuarios = $institucion->alumnos()->whereHas('roles', function ($query) {
             $query->whereIn('name', ['PersonaNatural']);
         })->with('roles')->get();
-        $transacciones = $institucion->transacciones()->orderBy('fecha_hora', 'desc')->paginate(50);
-        $hoy = Carbon::now()->toDateTimeString();
-        $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
-        $recargas =$institucion->transacciones()->whereBetween('fecha_hora', [$menos30,$hoy])
-                                ->where('tipo_transaccion_id', 2)->get();
-        $compras =$institucion->transacciones()->whereBetween('fecha_hora', [$menos30,$hoy])
-                                ->where('tipo_transaccion_id', 1)->get();
+        $compras=[];
+        $compras['dia']=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->subDays(7)->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $compras['mes']=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $compras['ano']=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $compras['total']=$institucion->compras()
+            ->get()->count();
+        $ventas=[];
+        $ventas['dia']=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->subDays(7)->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $ventas['mes']=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $ventas['ano']=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $ventas['total']=$institucion->facturas()
+            ->get()->count();
+
         return view('naturales.show', compact(
             'institucion',
             'alumnos',
             'id',
-            'transacciones',
+            
             'compras',
-            'recargas',
+            'ventas',
             'pest',
             'usuarios'
         ));

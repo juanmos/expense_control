@@ -40,6 +40,7 @@
                                                     <p class="m-0 m-t-10">{{$compra->cliente->cliente->ruc}}</p>
                                                     <p class="m-0">{{$compra->cliente->cliente->direccion}}</p>
                                                     <p class="m-0">{{$compra->cliente->cliente->telefono}}</p>
+                                                    <a href="{{route('naturales.clientes.show',[Auth::user()->institucion_id,$compra->cliente->cliente->id])}}" class="label theme-bg text-white f-12">Ver cliente</a> 
                                                     {{--  <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">{{$factura->datosFacturacion->email}}</a></p>  --}}
                                                 </div>
                                                 <div class="col-md-4 col-sm-6">

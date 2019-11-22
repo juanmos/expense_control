@@ -67,6 +67,7 @@
                                                     <p class="m-0">{{$factura->cliente->cliente->direccion}}</p>
                                                     <p class="m-0">{{$factura->cliente->cliente->telefono}}</p>
                                                     <p><a class="text-secondary" href="mailto:demo@gmail.com" target="_top">{{$factura->cliente->email}}</a></p>
+                                                    <a href="{{route('naturales.clientes.show',[Auth::user()->institucion_id,$factura->cliente->cliente->id])}}" class="label theme-bg text-white f-12">Ver cliente</a> 
                                                 </div>
                                                 <div class="col-md-4 col-sm-6">
                                                     <h6>Datos de factura :</h6>

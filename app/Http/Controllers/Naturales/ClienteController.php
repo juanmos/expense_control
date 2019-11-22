@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
 use App\Models\Cliente;
+use Carbon\Carbon;
 use Crypt;
 use Auth;
 
@@ -134,10 +135,49 @@ class ClienteController extends Controller
      */
     public function show(Request $request, $institucion_id, $id)
     {
+        $institucion = Institucion::find(Auth::user()->institucion_id);
         $cliente = ClienteInstitucion::find($id);
+        if(!$request->is('api/*')){
+            $compras=[];
+            $compras['dia']=$institucion->compras()->whereBetween('fecha', [
+                    Carbon::now()->subDays(7)->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->where('cliente_id', $id)
+                ->get()->sum('total');
+            $compras['mes']=$institucion->compras()->whereBetween('fecha', [
+                    Carbon::now()->firstOfMonth()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->where('cliente_id', $id)
+                ->get()->sum('total');
+            $compras['ano']=$institucion->compras()->whereBetween('fecha', [
+                    Carbon::now()->startOfYear()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->where('cliente_id', $id)
+                ->get()->sum('total');
+            $compras['total']=$institucion->compras()->where('cliente_id', $id)
+                ->get()->count();
+            $ventas=[];
+            $ventas['dia']=$institucion->facturas()->whereBetween('fecha', [
+                    Carbon::now()->subDays(7)->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->where('cliente_id', $id)
+                ->get()->sum('total');
+            $ventas['mes']=$institucion->facturas()->whereBetween('fecha', [
+                    Carbon::now()->firstOfMonth()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->where('cliente_id', $id)
+                ->get()->sum('total');
+            $ventas['ano']=$institucion->facturas()->whereBetween('fecha', [
+                    Carbon::now()->startOfYear()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->where('cliente_id', $id)
+                ->get()->sum('total');
+            $ventas['total']=$institucion->facturas()->where('cliente_id', $id)
+                ->get()->count();
+        }
         return ($request->is('api/*'))?
                             response()->json(compact('cliente')):
-                            view('cliente.show', compact('cliente', 'institucion_id'));
+                            view('cliente.show', compact('cliente', 'institucion_id','compras','ventas'));
     }
 
     /**
