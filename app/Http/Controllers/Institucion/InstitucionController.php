@@ -136,6 +136,8 @@ class InstitucionController extends Controller
     {
         $configuracion=Configuracion::find(($request->is('api/*'))? base64_decode($id):$id);
         $data=$request->except(['firma','clave','clave_sri','_method',"_token"]);
+        $configuracion->configuraciones=$data;
+        $configuracion->save();
         if ($request->has('firma') && $request->get('firma')!=null) {
             $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
         } else if(array_key_exists('firma',$configuracion->configuraciones)){
@@ -152,7 +154,7 @@ class InstitucionController extends Controller
                         base64_decode($request->get('clave_sri')) :
                         $request->get('clave_sri')
             );
-            ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id));
+            ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id))->delay(1);;
         } else  if(array_key_exists('clave_sri',$configuracion->configuraciones)){
             $data['clave_sri']=$configuracion->configuraciones['clave_sri'];
         }
