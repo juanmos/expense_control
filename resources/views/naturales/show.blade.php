@@ -278,9 +278,18 @@
                                             </div>
                                             <div class="card-block px-0 py-3">
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover">
-                                                        <tbody>
-                                                            
+                                                    <table  id="ventasTable" class="table table-hover" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Estado</th>
+                                                                <th>Numero</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -290,13 +299,21 @@
                                     <div class="tab-pane fade {{seleccionado('T',$pest)}}" id="compras" role="tabpanel" aria-labelledby="compras-tab">
                                         <div class="card Recent-Users">
                                             <div class="card-header">
-                                                <h5>Ultimas Ventas </h5>
+                                                <h5>Ultimas Compras </h5>
                                             </div>
                                             <div class="card-block px-0 py-3">
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover">
-                                                        <tbody>
-                                                            
+                                                    <table  id="comprasTable" class="table table-hover" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Tipo</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -756,7 +773,52 @@
 </div>
 @endsection
 @push('scripts')
+<script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
 <script type="text/javascript">
+    $('#ventasTable').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.facturas.data',$institucion->id) !!}?start_date={{$start}}&end_date={{$end}}",
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'estado.estado', name: 'estado.estado' },
+            { data: 'secuencia', name: 'secuencia' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                 link+='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; 
+                    return link;
+                } 
+            }
+        ]
+    });
+    $('#comprasTable').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.compras.data',$institucion->id) !!}?start_date={{$start}}&end_date={{$end}}",
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            
+            { data: 'tipoComprobante', name: 'tipoComprobante' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
+                    return link;
+                } 
+            }
+        ]
+    });
     $(document).ready(function() {
         var chartDatac = [{
             "Year": "Jan",
@@ -885,4 +947,7 @@
         });
     });
 </script>
+@endpush
+@push('styles')
+<link rel="stylesheet" href='{{asset("assets/plugins/data-tables/css/datatables.min.css")}}'>
 @endpush

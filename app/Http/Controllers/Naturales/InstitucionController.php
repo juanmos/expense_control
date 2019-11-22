@@ -98,12 +98,14 @@ class InstitucionController extends Controller
             ->get()->sum('total');
         $ventas['total']=$institucion->facturas()
             ->get()->count();
-
+        $start=Carbon::now()->firstOfMonth()->format('d-m-Y');
+        $end=Carbon::now()->format('d-m-Y');
         return view('naturales.show', compact(
             'institucion',
             'alumnos',
             'id',
-            
+            'start',
+            'end',
             'compras',
             'ventas',
             'pest',
