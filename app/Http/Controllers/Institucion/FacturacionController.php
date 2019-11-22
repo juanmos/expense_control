@@ -45,15 +45,19 @@ class FacturacionController extends Controller
     public function store(Request $request)
     {
         $data=$request->except(['_token','pago_id','datos_factura_id']);
-        $datos_factura_id = ($request->is('api/*'))? base64_decode($request->get('datos_factura_id')):$request->get('datos_factura_id');
-        if($datos_factura_id==0){
+        $datos_factura_id = ($request->is('api/*'))?
+                    base64_decode($request->get('datos_factura_id')):
+                    $request->get('datos_factura_id');
+        if ($datos_factura_id==0) {
             $datosFacturacion = DatosFacturacion::create($data);
-        }else{
+        } else {
             $datosFacturacion = DatosFacturacion::find($datos_factura_id);
         }
         
-        $configuracion = Configuracion::where('institucion_id',Auth::user()->institucion_id)->first();
-        $secuencia = $configuracion->configuraciones['establecimiento'].'-'.$configuracion->configuraciones['punto'].'-'.str_pad($configuracion->configuraciones['secuencia'], 9, "0", STR_PAD_LEFT);
+        $configuracion = Configuracion::where('institucion_id', Auth::user()->institucion_id)->first();
+        $secuencia = $configuracion->configuraciones['establecimiento'].'-'.
+                        $configuracion->configuraciones['punto'].'-'.
+                        str_pad($configuracion->configuraciones['secuencia'], 9, "0", STR_PAD_LEFT);
         $nuevaSecuencia = intval($configuracion->configuraciones['secuencia'])+1;
         $configuraciones = $configuracion->configuraciones;
         $configuraciones['secuencia']=$nuevaSecuencia;
@@ -81,7 +85,7 @@ class FacturacionController extends Controller
             'precio_unitario'=>$pago->transaccion->valor,
             'descuento'=>0,
             'iva'=>($pago->transaccion->valor * 0.12),
-            'precio'=>$pago->transaccion->valor 
+            'precio'=>$pago->transaccion->valor
         ]);
         $configuracion->save();
         return ($request->is('api/*'))? response()->json(['creada'=>true]): back()->with(['mensaje'=>'Factura creada']);
@@ -93,10 +97,10 @@ class FacturacionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($insittucion_id,$id)
+    public function show($insittucion_id, $id)
     {
         $factura = Factura::find($id);
-        return view('facturacion.factura',compact('factura'));
+        return view('facturacion.factura', compact('factura'));
     }
 
     /**
@@ -133,24 +137,24 @@ class FacturacionController extends Controller
         //
     }
 
-    public function pdf($institucion,$id)
+    public function pdf($institucion, $id)
     {
         $factura = Factura::find($id);
         return response()->file(storage_path('app/'.$factura->pdf));
     }
 
-    public function xml($institucion,$id)
+    public function xml($institucion, $id)
     {
         $factura = Factura::find($id);
         return response()->download(storage_path('app/'.$factura->xml));
     }
 
-    public function email($institucion,$id)
+    public function email($institucion, $id)
     {
         //
     }
 
-    public function anular($institucion,$id)
+    public function anular($institucion, $id)
     {
         //
     }

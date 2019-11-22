@@ -51,14 +51,23 @@
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.show')?'active':''}}">
                     <a href="{{route('naturales.show',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Inicio</span></a>
                 </li>
-                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.alumnos')?'active':''}}">
-                    <a href="{{route('institucion.alumnos',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Ventas</span></a>
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.facturas.index')?'active':''}}">
+                    <a href="{{route('naturales.facturas.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-credit-card"></i></span><span class="pcoded-mtext">Ventas</span></a>
                 </li>
-                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.refrigerio.index')?'active':''}}">
-                    <a href="{{route('institucion.refrigerio.index')}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-food"></i></span><span class="pcoded-mtext">Compras</span></a>
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.compras.index')?'active':''}}">
+                    <a href="{{route('naturales.compras.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-cart-outline"></i></span><span class="pcoded-mtext">Compras</span></a>
                 </li>
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.clientes.index')?'active':''}}">
                     <a href="{{route('naturales.clientes.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-office-building"></i></span><span class="pcoded-mtext">Clientes</span></a>
+                </li>
+                <li data-username="" class="nav-item pcoded-hasmenu {{( Route::currentRouteName()=='naturales.producto.index' || Route::currentRouteName()=='naturales.servicio.index')?'active pcoded-trigger':''}}">
+                    <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-barcode"></i></span><span class="pcoded-mtext">Productos y Servicios</span></a>
+                    <ul class="pcoded-submenu">                        
+                        
+                        <li class="{{(Route::currentRouteName()=='naturales.producto.index')?'active':''}}"><a href="{{route('naturales.producto.index',Auth::user()->institucion_id)}}" class="">Productos</a></li>
+                        <li class="{{(Route::currentRouteName()=='naturales.servicio.index')?'active':''}}"><a href="{{route('naturales.servicio.index',Auth::user()->institucion_id)}}" class="">Sevicios</a></li>
+                        <li class="{{(Route::currentRouteName()=='naturales.categoria.index')?'active':''}}"><a href="{{route('naturales.categoria.index','producto')}}" class="">Categorias</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Administración</label>

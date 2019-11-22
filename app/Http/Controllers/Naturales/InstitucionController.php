@@ -20,7 +20,7 @@ class InstitucionController extends Controller
 {
     public function index()
     {
-        return redirect()->route('institucion.show',Auth::user()->institucion_id);
+        return redirect()->route('institucion.show', Auth::user()->institucion_id);
     }
 
     /**
@@ -50,24 +50,67 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id,$pest='E')
+    public function show($id, $pest = 'E')
     {
-        if($pest==null)$pest='E';
+        if ($pest==null) {
+            $pest='E';
+        }
         $institucion = Institucion::find($id);
-        $alumnos = $institucion->alumnos()->whereHas('roles',function($query){
-            $query->where('name','Alumno');
+        $alumnos = $institucion->alumnos()->whereHas('roles', function ($query) {
+            $query->where('name', 'Alumno');
         })->with('roles')->get();
-        $usuarios = $institucion->alumnos()->whereHas('roles',function($query){
-            $query->whereIn('name',['PersonaNatural']);
+        $usuarios = $institucion->alumnos()->whereHas('roles', function ($query) {
+            $query->whereIn('name', ['PersonaNatural']);
         })->with('roles')->get();
-        $transacciones = $institucion->transacciones()->orderBy('fecha_hora','desc')->paginate(50);
-        $hoy = Carbon::now()->toDateTimeString();
-        $menos30 =Carbon::now()->subDays(30)->toDateString().' 00:00:00';
-        $recargas =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
-                                ->where('tipo_transaccion_id',2)->get();
-        $compras =$institucion->transacciones()->whereBetween('fecha_hora',[$menos30,$hoy])
-                                ->where('tipo_transaccion_id',1)->get();
-        return view('naturales.show',compact('institucion','alumnos','id','transacciones','compras','recargas','pest','usuarios'));
+        $compras=[];
+        $compras['dia']=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->subDays(7)->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $compras['mes']=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $compras['ano']=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $compras['total']=$institucion->compras()
+            ->get()->count();
+        $ventas=[];
+        $ventas['dia']=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->subDays(7)->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $ventas['mes']=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $ventas['ano']=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $ventas['total']=$institucion->facturas()
+            ->get()->count();
+        $start=Carbon::now()->firstOfMonth()->format('d-m-Y');
+        $end=Carbon::now()->format('d-m-Y');
+        return view('naturales.show', compact(
+            'institucion',
+            'alumnos',
+            'id',
+            'start',
+            'end',
+            'compras',
+            'ventas',
+            'pest',
+            'usuarios'
+        ));
     }
 
     /**
@@ -104,31 +147,14 @@ class InstitucionController extends Controller
         //
     }
 
-    public function configuracion(){
+    public function configuracion()
+    {
         $institucion =Institucion::find(Auth::user()->institucion_id);
-        $configuracion = Configuracion::where('institucion_id',Auth::user()->institucion_id)->first();
-        if($configuracion==null){
+        $configuracion = Configuracion::where('institucion_id', Auth::user()->institucion_id)->first();
+        if ($configuracion==null) {
             $configuracion = Configuracion::create(['institucion_id'=>Auth::user()->institucion_id]);
         }
         
-        return view('institucion.configuracion',compact('configuracion','institucion'));
-    }
-
-    public function configuracionUpdate(Request $request,$id){
-        $configuracion=Configuracion::find($id);
-        $data=$request->except(['firma','clave','_method',"_token"]);
-        if($request->has('firma') ){
-            $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
-        }else{
-            $data['firma']=$configuracion->configuraciones['firma'];
-        }
-        if($request->has('clave') && $request->get('clave')!=null){
-            $data['clave']=Crypt::encrypt($request->get('clave'));
-        }else{
-            $data['clave']=$configuracion->configuraciones['clave'];
-        }
-        $configuracion->configuraciones=$data;
-        $configuracion->save();
-        return back()->with('mensaje','Configuraciones guardadas con exito');
+        return view('institucion.configuracion', compact('configuracion', 'institucion'));
     }
 }

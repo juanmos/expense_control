@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Institucion;
 use App\Models\Cliente;
 
 class ClienteInstitucion extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable=['institucion_id','cliente_id','nombre','apellido','telefono','email','email_facturacion'];
 
     
@@ -25,5 +28,4 @@ class ClienteInstitucion extends Model
     {
         return "{$this->nombre} {$this->apellido}";
     }
-    
 }

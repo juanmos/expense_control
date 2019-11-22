@@ -14,5 +14,4 @@ class TipoInstitucion extends Model
     {
         return $this->hasMany(Institucion::class, 'tipo_institucion_id');
     }
-    
 }

@@ -33,8 +33,8 @@ class TarjetaController extends Controller
     public function create($id)
     {
         $tarjeta=null;
-        $tipos=TipoTarjeta::get()->pluck('tipo_tarjeta','id');
-        return view('tarjeta.form',compact('tarjeta','tipos','id'));
+        $tipos=TipoTarjeta::get()->pluck('tipo_tarjeta', 'id');
+        return view('tarjeta.form', compact('tarjeta', 'tipos', 'id'));
     }
 
     /**
@@ -43,11 +43,11 @@ class TarjetaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$id)
+    public function store(Request $request, $id)
     {
-        if($request->is('api/*')){
+        if ($request->is('api/*')) {
             $user = User::find(base64_decode($id));
-        }else{
+        } else {
             $user = User::find($id);
         }
         
@@ -58,9 +58,11 @@ class TarjetaController extends Controller
             'fecha_vencimiento'=>Carbon::now()->addDays(270)->toDateTimeString(),
             'usuario_crea_id'=>Auth::user()->id
         ]);
-        $tarjeta->codigo=Helpers::creaQR($user->id,$tarjeta->id);
+        $tarjeta->codigo=Helpers::creaQR($user->id, $tarjeta->id);
         $tarjeta->save();
-        if($request->is('api/*')) return Crypt::encrypt(json_encode(compact('tarjeta')),false); 
+        if ($request->is('api/*')) {
+            return Crypt::encrypt(json_encode(compact('tarjeta')), false);
+        }
         return back();
     }
 
@@ -100,15 +102,17 @@ class TarjetaController extends Controller
 
     public function perdida(Request $request, $id)
     {
-        if($request->is('api/*')){
-            $tarjeta = Tarjeta::find(base64_decode($id)); 
-        }else{
+        if ($request->is('api/*')) {
+            $tarjeta = Tarjeta::find(base64_decode($id));
+        } else {
             $tarjeta = Tarjeta::find($request->get('tarjeta_id'));
-        }        
+        }
         $tarjeta->fecha_perdida=Carbon::parse($request->get('fecha_perdida'))->toDateString();
         $tarjeta->perdida=1;
         $tarjeta->save();
-        if($request->is('api/*')) return response()->json(["perdida"=>true]);
+        if ($request->is('api/*')) {
+            return response()->json(["perdida"=>true]);
+        }
         return back();
     }
 
@@ -118,17 +122,23 @@ class TarjetaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         $tarjeta = Tarjeta::find($request->get('tarjeta_id'));
         $tarjeta->delete();
         return back();
     }
 
-    public function imagen($id){
-        $tarjeta = Tarjeta::find(base64_decode($id)); 
-        if($tarjeta==null) response()->json(['error'=>'No hay tarjeta'],400);
-        return response(QrCode::format('png')->size(600)->generate($tarjeta->codigo), 200, ['Content-Type' => 'image/png']);
+    public function imagen($id)
+    {
+        $tarjeta = Tarjeta::find(base64_decode($id));
+        if ($tarjeta==null) {
+            response()->json(['error'=>'No hay tarjeta'], 400);
+        }
+        return response(
+            QrCode::format('png')->size(600)->generate($tarjeta->codigo),
+            200,
+            ['Content-Type' => 'image/png']
+        );
     }
-
 }

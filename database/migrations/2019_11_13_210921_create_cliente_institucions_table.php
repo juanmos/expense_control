@@ -18,8 +18,8 @@ class CreateClienteInstitucionsTable extends Migration
             $table->integer('institucion_id');
             $table->integer('cliente_id');
             $table->string('nombre');
-            $table->string('apellido');
-            $table->string('telefono');
+            $table->string('apellido')->nullable();
+            $table->string('telefono')->nullable();
             $table->string('email')->nullable();
             $table->string('email_facturacion')->nullable();
             $table->timestamps();

@@ -22,18 +22,20 @@
                             <div class="col-md-6 col-xl-4">
                                 <div class="card daily-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Ventas diarias</h6>
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$ 249.95</h3>
+                                        <h6 class="mb-4">Ventas/Compras ultimos 7 días</h6>
+                                        <div class="row align-items-center justify-content-center card-active">
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Ventas: $</span>{{number_format($ventas['dia'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme" role="progressbar" style="width:60%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-
-                                            <div class="col-3 text-right">
-                                                <p class="m-b-0">67%</p>
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Compras: $</span>{{number_format($compras['dia'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme2" role="progressbar" style="width:45%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="progress m-t-30" style="height: 7px;">
-                                            <div class="progress-bar progress-c-theme" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -43,17 +45,20 @@
                             <div class="col-md-6 col-xl-4">
                                 <div class="card Monthly-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Ventas mensuales</h6>
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>$ 2.942.32</h3>
+                                        <h6 class="mb-4">Ventas/Compras del més</h6>
+                                        <div class="row align-items-center justify-content-center card-active">
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Ventas: $</span>{{number_format($ventas['mes'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme" role="progressbar" style="width:60%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                            <div class="col-3 text-right">
-                                                <p class="m-b-0">36%</p>
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Compras: $</span>{{number_format($compras['mes'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme2" role="progressbar" style="width:45%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="progress m-t-30" style="height: 7px;">
-                                            <div class="progress-bar progress-c-theme2" role="progressbar" style="width: 35%;" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -63,17 +68,20 @@
                             <div class="col-md-12 col-xl-4">
                                 <div class="card yearly-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Ventas anuales</h6>
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$ 8.638.32</h3>
+                                        <h6 class="mb-4">Ventas/Compras anuales</h6>
+                                        <div class="row align-items-center justify-content-center card-active">
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Ventas: $</span>{{number_format($ventas['ano'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme" role="progressbar" style="width:60%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                            <div class="col-3 text-right">
-                                                <p class="m-b-0">80%</p>
+                                            <div class="col-6">
+                                                <h6 class="text-center m-b-10"><span class="text-muted m-r-5">Compras: $</span>{{number_format($compras['ano'],2)}}</h6>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-c-theme2" role="progressbar" style="width:45%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="progress m-t-30" style="height: 7px;">
-                                            <div class="progress-bar progress-c-theme" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +97,7 @@
                                                 <sub class="text-muted f-14">{{$institucion->direccion}}</sub><br>
                                                 <sub class="text-muted f-14">{{$institucion->telefono}}</sub><br>
                                                 <sub class="text-muted f-14">{{$institucion->email}}</sub>
-                                                <sub class="text-muted f-14">{{$institucion->tipo_institucion->tipo}}</sub>
+                                                <sub class="text-muted f-14">{{$institucion->tipoInstitucion->tipo}}</sub>
                                             </div>
                                             {{-- <div class="col-auto">
                                                 <label class="label theme-bg2 text-white f-14 f-w-400 float-right">34%</label>
@@ -104,27 +112,16 @@
                                         <i class="far fa-building text-c-purple f-50"></i>
                                     </div>
                                 </div>
-                                {{-- <div class="card">
-                                    <div class="card-block border-bottom">
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-auto">
-                                                <i class="feather icon-users f-30 text-c-purple"></i>
-                                            </div>
-                                            <div class="col">
-                                                <h3 class="f-w-300">{{$alumnos->count()}}</h3>
-                                                <span class="d-inline-block text-uppercase">TOTAL DE ALUMNOS</span>
-                                                <a  class="label theme-bg text-white f-12 float-right" href="{{route('institucion.alumnos',$id)}}">Ver</a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="card">
+                                    
                                     <div class="card-block border-bottom">
                                         <div class="row d-flex align-items-center">
                                             <div class="col-auto">
                                                 <i class="feather icon-trending-up f-30 text-c-green"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300 text-c-green" >$ {{$recargas->sum('valor')}}</h3>
-                                                <span class="d-block text-uppercase">#{{$recargas->count()}} RECARGAS DEL ULTIMO MES</span>
+                                                <h3 class="f-w-300 text-c-green" >{{$ventas['total']}}</h3>
+                                                <span class="d-block text-uppercase">VENTAS TOTALES</span>
                                             </div>
                                         </div>
                                     </div>
@@ -134,12 +131,12 @@
                                                 <i class="feather icon-trending-down f-30 text-c-red"></i>
                                             </div>
                                             <div class="col">
-                                                <h3 class="f-w-300 text-c-red">$ {{$compras->sum('valor')}}</h3>
-                                                <span class="d-block text-uppercase">#{{$compras->count()}} COMPRAS DEL ULTIMO MES</span>
+                                                <h3 class="f-w-300 text-c-red">{{$compras['total']}}</h3>
+                                                <span class="d-block text-uppercase">COMPRAS TOTALES</span>
                                             </div>
                                         </div>
                                     </div>
-                                </div> --}}
+                                </div>
                             </div>
                             <!-- [ statistics year chart ] end -->
                             <?php function seleccionado($val,$pes){
@@ -154,10 +151,10 @@
                                         <a class="nav-link {{seleccionado('E',$pest)}}" id="estadisticas-tab" data-toggle="tab" href="#estadisticas" role="tab" aria-controls="estadisticas" aria-selected="false">Estadisticas</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{seleccionado('T',$pest)}}" id="transacciones-tab" data-toggle="tab" href="#transacciones" role="tab" aria-controls="transacciones" aria-selected="true">Ventas</a>
+                                        <a class="nav-link {{seleccionado('V',$pest)}}" id="ventas-tab" data-toggle="tab" href="#ventas" role="tab" aria-controls="ventas" aria-selected="true">Ventas</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{seleccionado('T',$pest)}}" id="transacciones-tab" data-toggle="tab" href="#transacciones" role="tab" aria-controls="transacciones" aria-selected="true">Compras</a>
+                                        <a class="nav-link {{seleccionado('C',$pest)}}" id="compras-tab" data-toggle="tab" href="#compras" role="tab" aria-controls="compras" aria-selected="true">Compras</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link {{seleccionado('U',$pest)}}" id="usuarios-tab" data-toggle="tab" href="#usuarios" role="tab" aria-controls="usuarios" aria-selected="false">Usuarios</a>
@@ -274,43 +271,51 @@
                                         
 
                                     </div>
-                                    <div class="tab-pane fade {{seleccionado('T',$pest)}}" id="transacciones" role="tabpanel" aria-labelledby="transacciones-tab">
+                                    <div class="tab-pane fade {{seleccionado('T',$pest)}}" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
                                         <div class="card Recent-Users">
                                             <div class="card-header">
-                                                <h5>Ultimas transacciones </h5>
+                                                <h5>Ultimas Ventas </h5>
                                             </div>
                                             <div class="card-block px-0 py-3">
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover">
-                                                        <tbody>
-                                                            @forelse ($transacciones as $transaccion )
-                                                                
-                                                            
-                                                            <tr class="unread">
-                                                                <td><img class="rounded-circle" style="width:40px;" src="{{Storage::url($transaccion->usuario->foto)}}" alt="activity-user"></td>
-                                                                <td>
-                                                                    <a href="{{route('institucion.alumno.show',[$id,$transaccion->usuario->id])}} " ><h6 class="mb-1">{{$transaccion->usuario->full_name}} </h6></a>
-                                                                    <p class="m-0">{{$transaccion->usuario->telefono}}</p>
-                                                                </td>
-                                                                <td>
-                                                                    <h6 class="text-muted">
-                                                                        <i class="feather f-24  {{($transaccion->tipo_transaccion->operacion=='+')?'text-c-green icon-trending-up' :'text-c-red icon-trending-down' }} f-10 m-r-15"></i>
-                                                                        $ {{number_format($transaccion->valor,2)}}
-                                                                    </h6>
-                                                                    <p class="m-0">{{$transaccion->tipo_transaccion->tipo}} {{$transaccion->forma_pago->forma_pago}}</p>
-                                                                </td>
-                                                                <td>
-                                                                    <p class="m-0">{{date('d-m-Y',strtotime($transaccion->fecha_hora))}}</p>
-                                                                    <p class="m-0">{{date('H:i',strtotime($transaccion->fecha_hora))}}</p>
-                                                                </td>
+                                                    <table  id="ventasTable" class="table table-hover" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Estado</th>
+                                                                <th>Numero</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
                                                             </tr>
-                                                            @empty
-                                                            <p>No hay usuarios</p>
-                                                            
-                                                            @endforelse
+                                                        </thead>
+                                                        <tbody id="entrydata">
                                                         </tbody>
                                                     </table>
-                                                    {{$transacciones->links()}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade {{seleccionado('T',$pest)}}" id="compras" role="tabpanel" aria-labelledby="compras-tab">
+                                        <div class="card Recent-Users">
+                                            <div class="card-header">
+                                                <h5>Ultimas Compras </h5>
+                                            </div>
+                                            <div class="card-block px-0 py-3">
+                                                <div class="table-responsive">
+                                                    <table  id="comprasTable" class="table table-hover" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Tipo</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -768,7 +773,52 @@
 </div>
 @endsection
 @push('scripts')
+<script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
 <script type="text/javascript">
+    $('#ventasTable').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.facturas.data',$institucion->id) !!}?start_date={{$start}}&end_date={{$end}}",
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'estado.estado', name: 'estado.estado' },
+            { data: 'secuencia', name: 'secuencia' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                 link+='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; 
+                    return link;
+                } 
+            }
+        ]
+    });
+    $('#comprasTable').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.compras.data',$institucion->id) !!}?start_date={{$start}}&end_date={{$end}}",
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            
+            { data: 'tipoComprobante', name: 'tipoComprobante' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
+                    return link;
+                } 
+            }
+        ]
+    });
     $(document).ready(function() {
         var chartDatac = [{
             "Year": "Jan",
@@ -897,4 +947,7 @@
         });
     });
 </script>
+@endpush
+@push('styles')
+<link rel="stylesheet" href='{{asset("assets/plugins/data-tables/css/datatables.min.css")}}'>
 @endpush

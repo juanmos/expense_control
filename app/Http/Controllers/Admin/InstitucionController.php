@@ -18,9 +18,10 @@ use Auth;
 
 class InstitucionController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $instituciones = Institucion::orderBy('nombre')->paginate(50);
-        return view('institucion.index',compact('instituciones'));
+        return view('institucion.index', compact('instituciones'));
     }
 
     /**
@@ -31,11 +32,11 @@ class InstitucionController extends Controller
     public function create()
     {
         $institucion = null;
-        $paises = Pais::orderBy('pais')->get()->pluck('pais','id');
-        $ciudad = Ciudad::orderBy('ciudad')->get()->pluck('ciudad','id');
-        $estado = EstadoInstitucion::get()->pluck('estado','id');
-        $tipos=TipoInstitucion::get()->pluck('tipo','id');
-        return view('institucion.form',compact('institucion','ciudad','estado','paises','tipos'));
+        $paises = Pais::orderBy('pais')->get()->pluck('pais', 'id');
+        $ciudad = Ciudad::orderBy('ciudad')->get()->pluck('ciudad', 'id');
+        $estado = EstadoInstitucion::get()->pluck('estado', 'id');
+        $tipos=TipoInstitucion::get()->pluck('tipo', 'id');
+        return view('institucion.form', compact('institucion', 'ciudad', 'estado', 'paises', 'tipos'));
     }
 
     /**
@@ -51,13 +52,13 @@ class InstitucionController extends Controller
         return redirect()->route('admin.institucion.index');
     }
 
-    public function show($id,$pest='E'){
+    public function show($id, $pest = 'E')
+    {
         $institucion = Institucion::find($id);
-        if($institucion->tipo_institucion_id==1){
-            return redirect()->route('institucion.show',[$id,$pest]);
-        }
-        else if($institucion->tipo_institucion_id==2){
-            return redirect()->route('naturales.show',[$id,$pest]);
+        if ($institucion->tipo_institucion_id==1) {
+            return redirect()->route('institucion.show', [$id,$pest]);
+        } elseif ($institucion->tipo_institucion_id==2) {
+            return redirect()->route('naturales.show', [$id,$pest]);
         }
     }
 }

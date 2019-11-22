@@ -13,8 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('login',['as'=>'login','uses'=>'APIAuthController@login']);
-Route::post('usuario','APIAuthController@nuevoUsuario')->name('usuario.nuevo');
+Route::post('login', ['as'=>'login','uses'=>'APIAuthController@login']);
+Route::post('usuario', 'APIAuthController@nuevoUsuario')->name('usuario.nuevo');
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/usuario', 'APIAuthController@me');//Obtener los datos del usuario en sesion
@@ -25,55 +25,71 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     
 
     
-    Route::group(['prefix' => 'institucion'], function() {
-        Route::get('alumnos/{id}','Institucion\AlumnoController@alumnosData')->name('institucion.alumnos');
-        Route::get('alumno/datos_facturacion/{id}','Institucion\AlumnoController@datos_facturacion');
-        Route::post('alumno/store','Institucion\AlumnoController@store');
-        Route::put('alumno/update/{id}','Institucion\AlumnoController@update');
+    Route::group(['prefix' => 'institucion'], function () {
+        Route::get('alumnos/{id}', 'Institucion\AlumnoController@alumnosData')->name('institucion.alumnos');
+        Route::get('alumno/datos_facturacion/{id}', 'Institucion\AlumnoController@datosFacturacion');
+        Route::post('alumno/store', 'Institucion\AlumnoController@store');
+        Route::put('alumno/update/{id}', 'Institucion\AlumnoController@update');
 
-        Route::get('refrigerio','Institucion\RefrigerioController@refrigeriosData')->name('institucion.refrigerio.data');
+        Route::get('refrigerio', 'Institucion\RefrigerioController@refrigeriosData')->name('institucion.refrigerio.data');
 
 
-        Route::get('alumno/transacciones/{id}','Institucion\AlumnoController@transacciones');
+        Route::get('alumno/transacciones/{id}', 'Institucion\AlumnoController@transacciones');
         
-        Route::get('alumno/refrigerios/{id}','Institucion\RefrigerioController@refrigerios');
-        Route::post('alumno/refrigerio/store','Institucion\RefrigerioController@store');
-        Route::put('alumno/refrigerio/update/{id}','Institucion\RefrigerioController@update');
-        Route::delete('alumno/refrigerio/destroy/{id}','Institucion\RefrigerioController@destroy');
-        Route::get('alumno/refrigerios/historial/{id}','Institucion\RefrigerioController@historialPagos');
-        Route::post('/pagar/refrigerio','Transacciones\PaymentController@refrigerio');
-        Route::post('facturar/refrigerio','Institucion\FacturacionController@store');
+        Route::get('alumno/refrigerios/{id}', 'Institucion\RefrigerioController@refrigerios');
+        Route::post('alumno/refrigerio/store', 'Institucion\RefrigerioController@store');
+        Route::put('alumno/refrigerio/update/{id}', 'Institucion\RefrigerioController@update');
+        Route::delete('alumno/refrigerio/destroy/{id}', 'Institucion\RefrigerioController@destroy');
+        Route::get('alumno/refrigerios/historial/{id}', 'Institucion\RefrigerioController@historialPagos');
+        Route::post('/pagar/refrigerio', 'Transacciones\PaymentController@refrigerio');
+        Route::post('facturar/refrigerio', 'Institucion\FacturacionController@store');
 
-        Route::get('alumno/imagen/{id}','Institucion\AlumnoController@imagen');
+        Route::get('alumno/imagen/{id}', 'Institucion\AlumnoController@imagen');
         
-        Route::get('alumno/tarjetas/{id}','Institucion\AlumnoController@tarjetas');
-        Route::get('alumno/tarjeta/{id}','Institucion\TarjetaController@imagen');
-        Route::put('alumno/tarjeta/perdida/{id}','Institucion\TarjetaController@perdida');
-        Route::post('alumno/tarjeta/store/{id}','Institucion\TarjetaController@store');
+        Route::get('alumno/tarjetas/{id}', 'Institucion\AlumnoController@tarjetas');
+        Route::get('alumno/tarjeta/{id}', 'Institucion\TarjetaController@imagen');
+        Route::put('alumno/tarjeta/perdida/{id}', 'Institucion\TarjetaController@perdida');
+        Route::post('alumno/tarjeta/store/{id}', 'Institucion\TarjetaController@store');
 
-        Route::post('menu/{institucion_id}/{id}','Institucion\MenuController@menus');
-        Route::post('menu/{institucion_id}','Institucion\MenuController@store');
-        Route::put('menu/{institucion_id}/{id}','Institucion\MenuController@update');
+        Route::post('menu/{institucion_id}/{id}', 'Institucion\MenuController@menus');
+        Route::post('menu/{institucion_id}', 'Institucion\MenuController@store');
+        Route::put('menu/{institucion_id}/{id}', 'Institucion\MenuController@update');
     });
     
     
     
     
-    Route::group(['prefix' => 'payment'], function() {
-        Route::post('alumno/saldo/{completo?}','Transacciones\PaymentController@saldo');
-        Route::post('valida/tarjeta','Transacciones\PaymentController@validaTarjeta');
-        Route::post('cobrar','Transacciones\PaymentController@cobrar');
-        Route::post('recargar','Transacciones\PaymentController@recargar');
-        Route::get('forma_pago','Transacciones\PaymentController@forma_pago');
-        Route::get('transacciones','Transacciones\PaymentController@transacciones');
-        Route::get('transacciones/hoy','Transacciones\PaymentController@transacciones_hoy');
+    Route::group(['prefix' => 'payment'], function () {
+        Route::post('alumno/saldo/{completo?}', 'Transacciones\PaymentController@saldo');
+        Route::post('valida/tarjeta', 'Transacciones\PaymentController@validaTarjeta');
+        Route::post('cobrar', 'Transacciones\PaymentController@cobrar');
+        Route::post('recargar', 'Transacciones\PaymentController@recargar');
+        Route::get('forma_pago', 'Transacciones\PaymentController@forma_pago');
+        Route::get('transacciones', 'Transacciones\PaymentController@transacciones');
+        Route::get('transacciones/hoy', 'Transacciones\PaymentController@transaccionesHoy');
     });
 
-    Route::group(['prefix' => 'naturales'], function() {
-        Route::get('clientes/','Naturales\ClienteController@index');
-        Route::post('cliente/by/cedula','Naturales\ClienteController@findCedula');
-        Route::post('clientes/store','Naturales\ClienteController@store');
+    Route::group(['prefix' => 'naturales'], function () {
+        Route::get('clientes/', 'Naturales\ClienteController@index');
+        Route::post('cliente/by/cedula', 'Naturales\ClienteController@findCedula');
+        Route::post('cliente/buscar', 'Naturales\ClienteController@buscar');
+        Route::post('clientes/store', 'Naturales\ClienteController@store');
+        Route::put('clientes/update/{id}', 'Naturales\ClienteController@update');
+
+        Route::post('compras', 'Naturales\ComprasController@comprasData');
+        Route::get('compras/pdf/{pdf}/{id}', 'Naturales\ComprasController@pdf');
+        Route::put('compras/update/{id}','Naturales\ComprasController@update');
+        Route::get('compras/cliente/{id}','Naturales\ComprasController@comprasCliente');
+
+        Route::post('facturas', 'Naturales\FacturacionController@facturasData');
+        Route::post('facturar/store/{id}','Naturales\FacturacionController@store');
+        Route::get('facturas/cliente/{id}','Naturales\FacturacionController@ventasCliente');
+
+        Route::get('categorias/{tipo}', 'Naturales\CategoriaController@categoriaData');
+        Route::post('categorias/store/{tipo}', 'Naturales\CategoriaController@store');
+        Route::put('categorias/update/{tipo}/{id}', 'Naturales\CategoriaController@update');
+        Route::delete('categorias/destroy/{tipo}/{id}', 'Naturales\CategoriaController@destroy');
+
+        Route::put('configuracion/sri/{id}', 'Institucion\InstitucionController@configuracionUpdate');
     });
-    
-    
 });
