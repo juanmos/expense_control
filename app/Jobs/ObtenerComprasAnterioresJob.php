@@ -149,7 +149,7 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                                                         'propina'=>$detalle->propina,
                                                         'totalDescuento'=>$detalle->totalDescuento,
                                                         'impuestos'=>$detalle->impuestos,
-                                                        'categoria_id'=>$cliente->categoria_id
+                                                        'categoria_id'=>($cliente->categoria_id!=null)?$cliente->categoria_id:1
                                                     ]);
                                                 }
                                             }
