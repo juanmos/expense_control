@@ -44,7 +44,7 @@
                                                         <td>{{$institucion->estado->estado}}</td>
                                                         <td>{{$institucion->telefono}}</td>
                                                         <td>{{$institucion->ciudad->ciudad}}</td>
-                                                        <td>{{$institucion->tipo_institucion->tipo}}</td>
+                                                        <td>{{$institucion->tipoInstitucion->tipo}}</td>
                                                         <td>
                                                             {{-- <a href="{{ route('afiche.pdf',$afiche->id) }}" class="label theme-bg2 text-white f-12">Descargar</a> --}}
                                                             
