@@ -61,8 +61,10 @@ class DetalleComprasSriCommand extends Command
                 print_r("SOAP Fault: (faultcode: {$respAut->faultcode}, faultstring: {$respAut->faultstring})");
             }
             // print_r($respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->estado);
-            if ($respAut->RespuestaAutorizacionComprobante->numeroComprobantes>0 &&
-                $respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->estado=='AUTORIZADO') {
+            if (
+                $respAut->RespuestaAutorizacionComprobante->numeroComprobantes>0 &&
+                $respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->estado=='AUTORIZADO'
+            ) {
                 $comprobante=$respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->comprobante;
                 $xml = simplexml_load_string($comprobante, "SimpleXMLElement", LIBXML_NOCDATA);
                 $json = json_encode($xml);
@@ -127,6 +129,9 @@ class DetalleComprasSriCommand extends Command
                 Storage::put($ride, $response);
                 curl_close($handler);
                 $compra->pdf=$ride;
+                $compra->save();
+            }else{
+                $compra->sincronizado=2;
                 $compra->save();
             }
             $bar->advance();
