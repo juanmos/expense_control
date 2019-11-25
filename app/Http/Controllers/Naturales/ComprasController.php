@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Naturales;
 
+use App\Jobs\ObtenerComprasAnterioresJob;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;

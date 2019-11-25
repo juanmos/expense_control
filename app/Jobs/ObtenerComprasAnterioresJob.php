@@ -13,6 +13,7 @@ use App\Models\Institucion;
 use App\Models\Cliente;
 use App\Models\Compra;
 use Carbon\Carbon;
+use Artisan;
 use Crypt;
 
 class ObtenerComprasAnterioresJob implements ShouldQueue
