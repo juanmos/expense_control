@@ -178,4 +178,9 @@ class ComprasController extends Controller
         $factura = Compra::find($id);
         return response()->file(storage_path('app/'.$factura->pdf));
     }
+
+    public function actualziarSRI(){
+        ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id))->delay(1);;
+        return response()->json(['obteniendo'=>true]);
+    }
 }
