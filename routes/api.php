@@ -80,7 +80,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('compras/pdf/{pdf}/{id}', 'Naturales\ComprasController@pdf');
         Route::put('compras/update/{id}','Naturales\ComprasController@update');
         Route::get('compras/cliente/{id}','Naturales\ComprasController@comprasCliente');
-        Route::get('comrpas/actualizar/sri','Naturales\ComprasController@actualziarSRI');
+        Route::get('compras/actualizar/sri','Naturales\ComprasController@actualziarSRI');
 
         Route::post('facturas', 'Naturales\FacturacionController@facturasData');
         Route::post('facturar/store/{id}','Naturales\FacturacionController@store');

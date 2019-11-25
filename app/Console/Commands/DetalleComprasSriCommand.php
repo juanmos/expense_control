@@ -50,6 +50,10 @@ class DetalleComprasSriCommand extends Command
                 'cache_wsdl' => WSDL_CACHE_NONE
             ];
         $compras =Compra::where('sincronizado', 0)->get();
+        $bar = $this->output->createProgressBar($compras->count());
+        $bar->start();
+
+
         foreach ($compras as $compra) {
             $autorizacion = new SoapClient($urlAutorizacion, $options);
             $respAut = $autorizacion->autorizacionComprobante(['claveAccesoComprobante'=>$compra->claveAcceso]);
@@ -69,7 +73,7 @@ class DetalleComprasSriCommand extends Command
                 $cliente->save();
                 $compra->detalles=$array['detalles'];
                 $compra->sincronizado=1;
-                print_r($array);
+                // print_r($array);
                 $iva=array_reduce($array['infoFactura']['totalConImpuestos'], function ($carry, $item) {
                     if (count($item) == count($item, COUNT_RECURSIVE)) {
                         $carry += $item['valor'];
@@ -125,6 +129,8 @@ class DetalleComprasSriCommand extends Command
                 $compra->pdf=$ride;
                 $compra->save();
             }
+            $bar->advance();
         }
+        $bar->finish();
     }
 }

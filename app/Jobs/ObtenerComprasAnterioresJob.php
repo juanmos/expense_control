@@ -162,5 +162,6 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                 }
             }
         }
+        Artisan::call('sri:detalle-compras');
     }
 }
