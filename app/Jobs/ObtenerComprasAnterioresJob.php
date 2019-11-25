@@ -50,7 +50,7 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
         $clave = (
                 array_key_exists('clave_sri', $institucion->configuracion->configuraciones) &&
                 $institucion->configuracion->configuraciones['clave_sri']
-            )?Crypt::decrypt($institucion->configuracion->configuraciones['clave_sri']):null;
+            )?Crypt::decryptString($institucion->configuracion->configuraciones['clave_sri']):null;
         if ($ruc!=null && $clave!=null) {
             $client = new \GuzzleHttp\Client();
             $res = $client->request('POST', $sri_web.'v2.0/secured', [

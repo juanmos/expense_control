@@ -56,7 +56,7 @@ class ObtenerComprasSri extends Command
             $clave = (
                     array_key_exists('clave_sri', $institucion->configuracion->configuraciones) &&
                     $institucion->configuracion->configuraciones['clave_sri']
-                    )?Crypt::decrypt($institucion->configuracion->configuraciones['clave_sri']):null;
+                    )?Crypt::decryptString($institucion->configuracion->configuraciones['clave_sri']):null;
             if ($ruc!=null && $clave!=null) {
                 $client = new \GuzzleHttp\Client();
                 $res = $client->request('POST', $sri_web.'v2.0/secured', [
@@ -82,9 +82,9 @@ class ObtenerComprasSri extends Command
                         ]);
                         if ($resp->getStatusCode()==200) {
                             $json=(string) $resp->getBody();
-                            $compras= json_decode($json);
-                            foreach ($compras as $compra) {
-                                foreach ($compra->comprobantes as $comprobante) {
+                            $comprasSRI= json_decode($json);
+                            foreach ($comprasSRI as $compraSRI) {
+                                foreach ($compraSRI->comprobantes as $comprobante) {
                                     $cliente = Cliente::where('ruc', $comprobante->rucEmisor)->first();
                                     if ($cliente==null) {
                                         $cliente=Cliente::create([
@@ -123,6 +123,10 @@ class ObtenerComprasSri extends Command
                                         if ($respDetalle->getStatusCode()==200) {
                                             $json=(string) $respDetalle->getBody();
                                             $detalle= json_decode($json);
+                                            if ($cliente->nombre_comercial==null || $cliente->nombre_comercial=='') {
+                                                $cliente->nombre_comercial=($detalle->nombreComercial!=null)?trim($detalle->nombreComercial):trim($cliente->razon_social);
+                                                $cliente->save();
+                                            }
                                             $compra= $institucion->compras()->create([
                                                 'cliente_id'=>$cliente_institucion->id,
                                                 'fecha'=>$comprobante->fechaEmision,
@@ -137,7 +141,8 @@ class ObtenerComprasSri extends Command
                                                 'totalSinImpuestos'=>$detalle->totalSinImpuestos,
                                                 'propina'=>$detalle->propina,
                                                 'totalDescuento'=>$detalle->totalDescuento,
-                                                'impuestos'=>$detalle->impuestos
+                                                'impuestos'=>$detalle->impuestos,
+                                                'categoria_id'=>($cliente->categoria_id!=null)?$cliente->categoria_id:1
                                             ]);
                                         }
                                     }
