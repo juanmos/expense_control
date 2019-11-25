@@ -149,7 +149,7 @@ class InstitucionController extends Controller
             $data['clave']=$configuracion->configuraciones['clave'];
         }
         if ($request->has('clave_sri') && $request->get('clave_sri')!=null) {
-            $data['clave_sri']=Crypt::encrypt(
+            $data['clave_sri']=Crypt::encryptString(
                 ($request->is('api/*'))?
                         base64_decode($request->get('clave_sri')) :
                         $request->get('clave_sri')

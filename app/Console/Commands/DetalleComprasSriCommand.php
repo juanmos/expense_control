@@ -99,7 +99,7 @@ class DetalleComprasSriCommand extends Command
                         "items" => $array['detalles'],
                         "subtotal"=>$array['infoFactura']['totalSinImpuestos'],
                         "iva"=>$iva,
-                        "propina"=>$array['infoFactura']['propina'],
+                        "propina"=>array_key_exists('propina', $array['infoFactura']),
                         "total"=>$array['infoFactura']['importeTotal'],
                         // "imagen"=>$urlImg
                     ),
