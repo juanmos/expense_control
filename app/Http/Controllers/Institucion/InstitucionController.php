@@ -136,18 +136,25 @@ class InstitucionController extends Controller
     {
         $configuracion=Configuracion::find(($request->is('api/*'))? base64_decode($id):$id);
         $data=$request->except(['firma','clave','clave_sri','_method',"_token"]);
-        $configuracion->configuraciones=$data;
-        $configuracion->save();
-        if ($request->has('firma') && $request->get('firma')!=null) {
-            $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
-        } else if(array_key_exists('firma',$configuracion->configuraciones)){
-            $data['firma']=$configuracion->configuraciones['firma'];
+        if($configuracion->configuraciones==null){
+            $configuracion->configuraciones=$data;
+            $configuracion->save();
         }
-        if ($request->has('clave') && $request->get('clave')!=null) {
-            $data['clave']=Crypt::encrypt($request->get('clave'));
-        } else if(array_key_exists('clave',$configuracion->configuraciones)) {
-            $data['clave']=$configuracion->configuraciones['clave'];
+        
+        // dd(array_key_exists('clave',$configuracion->configuraciones));
+        if(!$request->is('api/*')){
+            if ($request->has('firma')) {
+                $data['firma']=$request->file('firma')->store('public/firmas/'.$id);
+            } else if(array_key_exists('firma',$configuracion->configuraciones)){
+                $data['firma']=$configuracion->configuraciones['firma'];
+            }
+            if ($request->has('clave') && $request->get('clave')!=null) {
+                $data['clave']=Crypt::encrypt($request->get('clave'));
+            } else if(array_key_exists('clave',$configuracion->configuraciones)) {
+                $data['clave']=$configuracion->configuraciones['clave'];
+            }
         }
+        
         if ($request->has('clave_sri') && $request->get('clave_sri')!=null) {
             $data['clave_sri']=Crypt::encryptString(
                 ($request->is('api/*'))?

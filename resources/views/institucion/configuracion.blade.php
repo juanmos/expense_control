@@ -99,7 +99,7 @@
                                                                 {!! Form::file('firma',["class"=>"form-control"]) !!}
                                                             </div>
                                                             <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Clave</label>
+                                                                <label for="exampleInputPassword1">Clave {!!($configuracion->configuraciones!=null && array_key_exists('clave',$configuracion->configuraciones))?($configuracion->configuraciones['clave'])?'<span class="label text-c-green">Clave guardada</span>':'' : ''!!}</label>
                                                                 
                                                                 {!! Form::password('clave',["class"=>"form-control"]) !!}
                                                             </div>
@@ -119,7 +119,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Clave SRI para obtener compras</label>
+                                                                <label for="exampleInputPassword1">Clave SRI para obtener compras {!!($configuracion->configuraciones!=null && array_key_exists('clave_sri',$configuracion->configuraciones))?($configuracion->configuraciones['clave_sri'])?'<span class="label text-c-green">Clave del SRI guardada</span>':'' : ''!!}</label>
                                                                 {!! Form::password('clave_sri',["class"=>"form-control"]) !!}
                                                             </div>
                                                         </div>
