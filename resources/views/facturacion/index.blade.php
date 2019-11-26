@@ -6,7 +6,7 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
-
+                @if($institucion->configuracion->configuraciones!=null && array_key_exists('firma',$institucion->configuracion->configuraciones))
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">
@@ -117,6 +117,31 @@
                         <!-- [ Main Content ] end -->
                     </div>
                 </div>
+                @else
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <!-- [ Main Content ] start -->
+                        <div class="row">
+                            <div class="col-xl-12 col-md-12">
+                                <div class="card Recent-Users">
+                                    <div class="card-header row">
+                                        <div class="col-md-10">
+                                            <h5 class="">No tienes tu firma electronica cargada</h5>
+                                        </div> 
+                                        <div class="col-md-1">
+                                            <a href="{{route('naturales.configuracion.edit')}}" id="filter" class="btn btn-sm btn-primary">Cargar firma</a>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="card-block px-0 py-3">
+                                        <p>Sigue los pasos para obtener tu firma electrónica</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
