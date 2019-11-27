@@ -124,11 +124,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/usuario/{id}/update/', 'Naturales\UsuarioController@update')->name('naturales.usuario.update');
         Route::delete('usuario/{id}', 'Naturales\UsuarioController@destroy')->name('naturales.usuario.destroy');
 
-        Route::get('mail', function () {
-            $factura = App\Models\Factura::find(2);
-
-            return (new App\Notifications\EnviarFacturaNotification($factura));
-                        // ->toMail($factura->institucion);
-        });
+  
     });
 });
