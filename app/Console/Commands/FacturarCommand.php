@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Console\Command;
+use App\Notifications\EnviarFacturaNotification;
 use App\Models\Factura;
 use App\Http\Helpers;
 use Carbon\Carbon;
@@ -292,29 +293,12 @@ class FacturarCommand extends Command
                     $factura['autorizacion']=$respAut->RespuestaAutorizacionComprobante
                                     ->autorizaciones->autorizacion->numeroAutorizacion;
                     $factura['estado_id']=2;
-                    $factura->save();
-                    // if (!filter_var($u->email, FILTER_VALIDATE_EMAIL) === false) {
-                    //     Session::put('facturaEmail',(Config::get('constants.AMBIENTE')==1)?'juan.moscoso@primme.tech':$u->email);
-
-                    //     $info['nombre'] = $u->nombre;
-                    //     $info['apellido'] = $u->apellido;
-                    //     $info['fecha'] = $factura->fecha;
-                    //     $info['total'] = $factura->total;
-                    //     $info['pdf_factura'] = $ride;
-                    //     $info['xml_factura'] = $xmlAut;
-
-                    //     try{
-                            
-                    //         Mail::to(Session::get('facturaEmail'))
-                    //             ->send(new MailsFacturacion($info));
-
-                    //     }catch(Exception $e){
-                    //         print_r("Error email");
-                    //         $factura->estado_id=5;
-                    //         $factura->save();
-                    //     }
+                    
+                    if (!filter_var($factura->cliente->email, FILTER_VALIDATE_EMAIL) === false) {
                         
-                    // }
+                        $factura->cliente->notify(new EnviarFacturaNotification($factura));
+                    }
+                    $factura->save();
                 } else {
                     Storage::delete($docFirmado);
                     Storage::delete($documento);
@@ -322,21 +306,6 @@ class FacturarCommand extends Command
                     $factura->save();
                 }
             }
-            // Slack::to('#facturacion')
-            //         ->send(
-            //             'Nueva factura # '.$factura->facturaNo.
-            //             ' id '.$factura->id.
-            //             ' de '.$u->nombre." ".$u->apellido.
-            //             '. Estado de factura: '.$factura->estado_id
-            //         );
-
-            // $task['title'] = 'Nueva factura';
-            // $task['facturaNo'] = $factura->facturaNo;
-            // $task['id'] = $factura->id;
-            // $task['nombre'] = $u->nombre;
-            // $task['apellido'] = $u->apellido;
-            // $task['estado_id'] = $factura->estado_id;
-            // Notification::send(Doctor::first(), new SlackFacturacion($task));
         }
     }
 }
