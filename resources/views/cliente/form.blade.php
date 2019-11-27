@@ -60,16 +60,20 @@
                                                 <label id="ruc-error" style="display:none"></label>
                                             </div>
                                             <div class="form-group col-md-6 ">
-                                                <label for="exampleInputEmail1">Nombre *</label>
+                                                <label for="exampleInputEmail1">Nombre persona de contacto *</label>
                                                 <input type="text" value="@if($cliente!=null){{$cliente->nombre}}@else{{old('nombre')}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Nombre de cliente">
                                             </div>
                                             <div class="form-group col-md-6 ">
-                                                <label for="exampleInputEmail1">Apellido *</label>
-                                                <input type="text" value="@if($cliente!=null){{$cliente->apellido}}@else{{old('apellido')}}@endif" name="apellido" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Apellido de cliente">
+                                                <label for="exampleInputEmail1">Apellido persona de contacto</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->apellido}}@else{{old('apellido')}}@endif" name="apellido" class="form-control" aria-describedby="emailHelp" placeholder="Apellido de cliente">
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Razón Social *</label>
                                                 <input type="text" value="@if($cliente!=null){{$cliente->cliente->razon_social}}@else{{old('razon_social')}}@endif" name="razon_social" required="required" class="form-control" id="exampleInputPassword1" placeholder="Razón social">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="exampleInputPassword1">Nombre comercial *</label>
+                                                <input type="text" value="@if($cliente!=null){{$cliente->cliente->nombre_comercial}}@else{{old('nombre_comercial')}}@endif" name="nombre_comercial" required="required" class="form-control" id="exampleInputPassword1" placeholder="Nombre comercial">
                                             </div>
                                             <div class="form-group col-md-6 ">
                                                 <label for="exampleInputPassword1">Email</label>

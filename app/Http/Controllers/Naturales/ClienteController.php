@@ -210,6 +210,24 @@ class ClienteController extends Controller
         }
         $cliente->update($data);
         $cliente = ClienteInstitucion::where('id', $cliente->id)->with('cliente')->first();
+
+        $clienteGeneral = Cliente::find($cliente->cliente_id);
+        if($clienteGeneral!=null && $clienteGeneral->direccion==null){
+            $clienteGeneral->direccion=$request->get('direccion');
+            $clienteGeneral->save();
+        }
+        if($clienteGeneral!=null && $clienteGeneral->nombre_comercial==null){
+            $clienteGeneral->nombre_comercial=$request->get('nombre_comercial');
+            $clienteGeneral->save();
+        }
+        if($clienteGeneral!=null && $clienteGeneral->razon_social==null){
+            $clienteGeneral->razon_social=$request->get('razon_social');
+            $clienteGeneral->save();
+        }
+        if($clienteGeneral!=null && $clienteGeneral->telefono==null){
+            $clienteGeneral->telefono=$request->get('telefono');
+            $clienteGeneral->save();
+        }
         return ($request->is('api/*'))?
                         Crypt::encrypt(json_encode(compact('cliente')), false) :
                         redirect()->route('naturales.clientes.show', [$institucion_id, $id]);
