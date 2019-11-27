@@ -229,15 +229,17 @@ class FacturarCommand extends Command
                 if ($respAut->RespuestaAutorizacionComprobante->autorizaciones->autorizacion->estado=='AUTORIZADO') {
                     $detallesArray=[];
                     foreach ($factura->detalle as $detalle) {
-                        $detallesArray['detalle']= array(
+                        // $this->line($detalle);
+                        $detallesArray[]= ['detalle'=>array(
                             "codigoPrincipal"=>$detalle->codigo,
                             "descripcion"=>$detalle->descripcion,
                             "cantidad"=>$detalle->cantidad,
                             "precioUnitario"=>$detalle->precio_unitario,
                             "descuento"=>'0.00',
                             "precioTotalSinImpuesto"=>$detalle->precio
-                        );
+                        )];
                     }
+                    
                     $json=array(
                         "template"=>array("shortid" => "NJTN-fPUm"),
                         "data"=>array(
@@ -264,7 +266,7 @@ class FacturarCommand extends Command
                         "options"=>array('timeout'=>60000)
                         
                     );
-                                            
+                    // dd($json);                    
                     $url = "https://facturas.doctopro.com/api/report";
                     
                     /*Convierte el array en el formato adecuado para cURL*/
