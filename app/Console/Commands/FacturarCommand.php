@@ -24,7 +24,7 @@ class FacturarCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'facturar';
+    protected $signature = 'sri:facturar';
 
     /**
      * The console command description.
