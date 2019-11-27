@@ -30,7 +30,7 @@ class FacturarCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Facturacion del SRI';
 
     /**
      * Create a new command instance.
@@ -50,8 +50,8 @@ class FacturarCommand extends Command
     public function handle()
     {
  
-        $facturas = Factura::whereIn('estado_id', [1,7])
-                    ->with(['institucion.configuracion','datosFacturacion','detalle'])
+        $facturas = Factura::whereIn('estado_id', [1,6,7])
+                    ->with(['institucion.configuracion','cliente.cliente','detalle'])
                     ->get();
         foreach ($facturas as $factura) {
             $urlEnvio='https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
@@ -68,15 +68,16 @@ class FacturarCommand extends Command
                                     ->first()
                                     ->configuraciones;
             $clave=Carbon::now()->format("dmY").
-                        '01'.
-                        $configuraciones['ruc'].
-                        $factura->ambiente.
-                        str_replace('-', '', $factura->factura_no).rand(10000000, 99999999).
-                        '1';
+                    '01'.
+                    $configuraciones['ruc'].
+                    $factura->ambiente.
+                    str_replace('-', '', $factura->factura_numero).rand(10000000, 99999999).
+                    '1';
             $modulo = Helpers::modulo($clave);
             $clave.=$modulo;
-            $tipoDoc=Helpers::obtieneTipoDoc($factura->datos_facturacion->ruc);
-            $nombre=($tipoDoc!='07')?$factura->datos_facturacion->nombre:'Consumidor Final';
+            
+            $tipoDoc=Helpers::obtieneTipoDoc($factura->cliente->ruc);
+            $nombre=($tipoDoc!='07')?$factura->cliente->cliente->razon_social:'Consumidor Final';
             $nombreFinal=str_ireplace(' ', '', Helpers::normaliza($nombre));
             $nombreFinal=str_ireplace('/', '', $nombreFinal);
             $file=$factura->institucion_id.'/'. Carbon::now()->format('Ymd').'-';
@@ -85,20 +86,15 @@ class FacturarCommand extends Command
             $ride='pdf/'.$file.preg_replace('/\s+/', '', $nombreFinal).'.pdf';
             $xmlAut='xml/'.$file.preg_replace('/\s+/', '', $nombreFinal).'_aut.xml';
 
-            $secuencia=explode('-', $factura->factura_no);
+            // $secuencia=explode('-', $factura->factura_no);
             if ($factura->estado_id==1) {
                 $factura->clave=$clave;
                 $detalles='';
                 foreach ($factura->detalle as $detalle) {
-                    $valor=strval(number_format($detalle->iva, 2));
-                    $detalles.='<detalle>
-                        <codigoPrincipal>'.$detalle->codigo.'</codigoPrincipal>
-                        <descripcion>'.$detalle->descripcion.'</descripcion>
-                        <cantidad>'.$detalle->cantidad.'</cantidad>
-                        <precioUnitario>'.$detalle->precio_unitario.'</precioUnitario>
-                        <descuento>0.00</descuento>
-                        <precioTotalSinImpuesto>'.$detalle->precio.'</precioTotalSinImpuesto>
-                        <impuestos>
+                    $hayIva = intval($detalle->iva);
+                    if($hayIva==1){
+                        $valor=strval(number_format($detalle->precio*0.12, 2));
+                        $impuestos='<impuestos>
                             <impuesto>
                             <codigo>2</codigo>
                             <codigoPorcentaje>2</codigoPorcentaje>
@@ -106,8 +102,29 @@ class FacturarCommand extends Command
                             <baseImponible>'.$detalle->precio.'</baseImponible>
                             <valor>'.$valor.'</valor>
                             </impuesto>
-                        </impuestos>
-                        </detalle>';
+                        </impuestos>';
+                    }else{
+                        $valor=0;
+                        $impuestos='<impuestos>
+                            <impuesto>
+                            <codigo>2</codigo>
+                            <codigoPorcentaje>0</codigoPorcentaje>
+                            <tarifa>0.00</tarifa>
+                            <baseImponible>'.$detalle->precio.'</baseImponible>
+                            <valor>'.$valor.'</valor>
+                            </impuesto>
+                        </impuestos>';
+                    }
+                    
+                    $detalles.='<detalle>
+                        <codigoPrincipal>'.$detalle->codigo.'</codigoPrincipal>
+                        <descripcion>'.$detalle->descripcion.'</descripcion>
+                        <cantidad>'.$detalle->cantidad.'</cantidad>
+                        <precioUnitario>'.$detalle->precio_unitario.'</precioUnitario>
+                        <descuento>0.00</descuento>
+                        <precioTotalSinImpuesto>'.$detalle->precio.'</precioTotalSinImpuesto>';
+                    $detalles.=$impuestos;
+                    $detalles.='</detalle>';
                 }
                 $xml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
                     <factura id="comprobante" version="1.0.0">
@@ -119,9 +136,9 @@ class FacturarCommand extends Command
                         <ruc>'.$configuraciones['ruc'].'</ruc>
                         <claveAcceso>'.$factura->clave.'</claveAcceso>
                         <codDoc>01</codDoc>
-                        <estab>'.$secuencia[0].'</estab>
-                        <ptoEmi>'.$secuencia[1].'</ptoEmi>
-                        <secuencial>'.$secuencia[2].'</secuencial>
+                        <estab>'.$factura->establecimiento.'</estab>
+                        <ptoEmi>'.$factura->puntoEmision.'</ptoEmi>
+                        <secuencial>'.$factura->secuencia.'</secuencial>
                         <dirMatriz>'.$configuraciones['direccion_facturacion'].'</dirMatriz>
                     </infoTributaria>
                     <infoFactura>
@@ -130,10 +147,10 @@ class FacturarCommand extends Command
                         <obligadoContabilidad>'.$configuraciones['contabilidad'].'</obligadoContabilidad>
                         <tipoIdentificacionComprador>'.$tipoDoc.'</tipoIdentificacionComprador>
                         <razonSocialComprador>'.$nombre.'</razonSocialComprador>
-                        <identificacionComprador>'.$factura->datos_facturacion->ruc.'</identificacionComprador>
-                        <direccionComprador>'.$factura->datos_facturacion->direccion.'</direccionComprador>
+                        <identificacionComprador>'.$factura->cliente->cliente->ruc.'</identificacionComprador>
+                        <direccionComprador>'.$factura->cliente->cliente->direccion.'</direccionComprador>
                         <totalSinImpuestos>'.$factura->subtotal.'</totalSinImpuestos>
-                        <totalDescuento>0.00</totalDescuento>
+                        <totalDescuento>'.$factura->descuento.'</totalDescuento>
                         <totalConImpuestos>
                         <totalImpuesto>
                             <codigo>2</codigo>
@@ -142,7 +159,7 @@ class FacturarCommand extends Command
                             <valor>'.$factura->iva.'</valor>
                         </totalImpuesto>
                         </totalConImpuestos>
-                        <propina>0.00</propina>
+                        <propina>'.$factura->propina.'</propina>
                         <importeTotal>'.$factura->total.'</importeTotal>
                         <moneda>DOLAR</moneda>
                         <pagos>
@@ -156,23 +173,28 @@ class FacturarCommand extends Command
                     </infoFactura>
                     <detalles>'.$detalles.'</detalles>
                     <infoAdicional>
-                        <campoAdicional nombre="email">'.$factura->datos_facturacion->email.'</campoAdicional>
+                        <campoAdicional nombre="email">'.$factura->cliente->email.'</campoAdicional>
                     </infoAdicional>
                     </factura>';
-                    
                     
                 $claveFirma =Crypt::decrypt($configuraciones['clave']);
                 
                 Storage::put($documento, $xml);
-                exec('/usr/bin/java -jar sri.jar '.
+                $fimado=exec('/usr/bin/java -jar sri.jar '.
                             storage_path('app/').
-                            $configuraciones['firma'].' '.
-                            $claveFirma.' '.
+                            $configuraciones['firma'].' "'.
+                            $claveFirma.'" '.
                             storage_path('app/'.$documento).' '.
-                            storage_path('app/').' '.
-                            $docFirmado);
-                Storage::delete($documento);
-                $factura->estado_id=6;
+                            storage_path('app').' '.
+                            $docFirmado
+                    );
+                if(strpos($fimado, "Firma guardada") !==false){
+                    Storage::delete($documento);
+                    $factura->estado_id=6;
+                }else{
+                    $factura->estado_id=9;
+                }
+                
                 $factura->save();
             }
             $options = [
@@ -219,7 +241,7 @@ class FacturarCommand extends Command
                     $json=array(
                         "template"=>array("shortid" => "NJTN-fPUm"),
                         "data"=>array(
-                            "facturaNo"=> $factura->factura_no,
+                            "facturaNo"=> $factura->factura_numero,
                             "autorizacion"=>$factura->clave,
                             "clave"=>$factura->clave,
                             "razonSocial"=>$configuraciones['razon_social'],
@@ -231,11 +253,11 @@ class FacturarCommand extends Command
                             "ambiente"=>($factura->ambiente==1)?'Pruebas':'Produccion',
                             "emision"=>"NORMAL",
                             "comprador"=> $nombre,
-                            "ruc"=> $factura->datos_facturacion->ruc,
+                            "ruc"=> $factura->cliente->cliente->ruc,
                             "items" => $detallesArray,
                             "subtotal"=>$factura->subtotal,
                             "iva"=>$factura->iva,
-                            "propina"=>"0.00",
+                            "propina"=>$factura->propina,
                             "total"=>$factura->total,
                             "imagen"=>$urlImg
                         ),

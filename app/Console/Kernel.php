@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
 
             $schedule->command('sri:detalle-compras')->twiceDaily(2, 14);
 
-            // $schedule->command('facturar:autorizar') 
+            $schedule->command('facturar:autorizar')->everyTenMinutes();
         }
     }
 

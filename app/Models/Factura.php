@@ -46,6 +46,6 @@ class Factura extends Model
 
     public function getFacturaNumeroAttribute()
     {
-        return "{$this->establecimiento}-{$this->puntoEmision}-{$this->secuencial}";
+        return "{$this->establecimiento}-{$this->puntoEmision}-{$this->secuencia}";
     }
 }

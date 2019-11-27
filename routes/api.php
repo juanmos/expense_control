@@ -92,5 +92,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::delete('categorias/destroy/{tipo}/{id}', 'Naturales\CategoriaController@destroy');
 
         Route::put('configuracion/sri/{id}', 'Institucion\InstitucionController@configuracionUpdate');
+
+        Route::put('perfil/editar/{id}','Naturales\UsuarioController@update');
     });
 });
