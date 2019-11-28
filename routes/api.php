@@ -71,6 +71,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::group(['prefix' => 'naturales'], function () {
         Route::get('dashboard','Naturales\InstitucionController@dashboard');
+        Route::get('dashboard/grafico/ventas-compras','Naturales\InstitucionController@graficoComprasVentas');
 
         Route::get('clientes/', 'Naturales\ClienteController@index');
         Route::post('cliente/by/cedula', 'Naturales\ClienteController@findCedula');

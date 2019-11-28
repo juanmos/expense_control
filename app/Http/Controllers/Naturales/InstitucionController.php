@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Crypt;
 use Hash;
 use Auth;
+use DB;
 
 class InstitucionController extends Controller
 {
@@ -166,17 +167,39 @@ class InstitucionController extends Controller
                 Carbon::now()->toDateString()
             ])
             ->get()->sum('total');
-        $compras['grafico']=0;
+        
         $ventas=[];
         $ventas['mes']=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])
             ->get()->sum('total');
+        
         return Crypt::encrypt(json_encode(compact('compras', 'ventas')), false);
-        return response()->json( compact(
-            'compras',
-            'ventas'
-        ));
+        // return response()->json( compact(
+        //     'compras',
+        //     'ventas'
+        // ));
+    }
+
+    public function graficoComprasVentas(){
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $comprasGrafico=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->subMonths(9)->toDateString(),
+                Carbon::now()->toDateString()
+            ])->orderBy('mes_ano')
+            ->groupBy('mes_ano')
+            ->select(DB::raw('COUNT(*) AS totalCompras,DATE_FORMAT(fecha, "%Y-%m") AS mes_ano,SUM(total) as compras'))->get();
+        $ventasGrafico=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->subMonths(9)->toDateString(),
+                Carbon::now()->toDateString()
+            ])->orderBy('mes_ano')
+            ->groupBy('mes_ano')
+            ->select(DB::raw('COUNT(*) AS totalVentas,DATE_FORMAT(fecha, "%Y-%m") AS mes_ano,SUM(total) as ventas'))->get();
+        $grafico= $comprasGrafico->mergeRecursive($ventasGrafico)->groupBy('mes_ano');
+        return Crypt::encrypt(json_encode(compact('grafico')), false);
+        // return response()->json( compact(
+        //     'grafico'
+        // ));
     }
 }
