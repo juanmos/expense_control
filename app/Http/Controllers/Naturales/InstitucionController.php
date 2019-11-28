@@ -157,4 +157,26 @@ class InstitucionController extends Controller
         
         return view('institucion.configuracion', compact('configuracion', 'institucion'));
     }
+
+    public function dashboard(){
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $compras=[];
+        $compras['mes']=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $compras['grafico']=0;
+        $ventas=[];
+        $ventas['mes']=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        return Crypt::encrypt(json_encode(compact('compras', 'ventas')), false);
+        return response()->json( compact(
+            'compras',
+            'ventas'
+        ));
+    }
 }
