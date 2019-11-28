@@ -202,4 +202,20 @@ class InstitucionController extends Controller
         //     'grafico'
         // ));
     }
+
+    public function graficoGastos(){
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $compras=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->orderBy('categoria_id')
+            ->groupBy('categoria_id')
+            ->with('categoria')
+            ->select(DB::raw('COUNT(*) AS totalCompras,categoria_id,SUM(total) as compras'))->get();
+        
+        return Crypt::encrypt(json_encode(compact('compras')), false);
+        // return response()->json( compact(
+        //     'compras'
+        // ));
+    }
 }
