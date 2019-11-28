@@ -85,7 +85,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('facturas', 'Naturales\FacturacionController@facturasData');
         Route::post('facturar/store/{id}','Naturales\FacturacionController@store');
         Route::get('facturas/cliente/{id}','Naturales\FacturacionController@ventasCliente');
-        Route::get('factura/pdf/{pdf}/{factura_id}', 'Institucion\FacturacionController@pdf')->name('institucion.facturacion.pdf');
+        Route::get('factura/pdf/{pdf}/{factura_id}', 'Institucion\FacturacionController@pdf');
+        Route::put('factura/anular/{id}/{factura_id}', 'Institucion\FacturacionController@anular');
 
         Route::get('categorias/{tipo}', 'Naturales\CategoriaController@categoriaData');
         Route::post('categorias/store/{tipo}', 'Naturales\CategoriaController@store');

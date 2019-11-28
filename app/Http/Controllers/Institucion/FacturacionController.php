@@ -156,6 +156,9 @@ class FacturacionController extends Controller
 
     public function anular($institucion, $id)
     {
-        //
+        $factura = Factura::find($id);
+        $factura->estado_id=8;
+        $factura->save();
+        return back();
     }
 }

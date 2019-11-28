@@ -78,7 +78,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('{id}/factura/pdf/{factura_id}', 'Institucion\FacturacionController@pdf')->name('institucion.facturacion.pdf');
         Route::get('{id}/factura/xml/{factura_id}', 'Institucion\FacturacionController@xml')->name('institucion.facturacion.xml');
         Route::get('{id}/factura/email/{factura_id}', 'Institucion\FacturacionController@email')->name('institucion.facturacion.email');
-        Route::get('{id}/factura/anular/{factura_id}', 'Institucion\FacturacionController@anular')->name('institucion.facturacion.anular');
+        Route::put('{id}/factura/anular/{factura_id}', 'Institucion\FacturacionController@anular')->name('institucion.facturacion.anular');
 
         Route::post('/pagar/refrigerio', 'Transacciones\PaymentController@refrigerio')->name('institucion.refrigerio.pagar');
 

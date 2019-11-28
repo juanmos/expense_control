@@ -191,9 +191,13 @@
                                             <a href="{{route('institucion.facturacion.pdf',[$factura->institucion_id,$factura->id])}}" target="_blank" class="btn btn-primary btn-print-invoice m-b-10">Ver PDF</a>
                                             <a href="{{route('institucion.facturacion.xml',[$factura->institucion_id,$factura->id])}}" target="_blank" class="btn btn-secondary m-b-10 ">Ver XML</a>
                                             <a href="{{route('institucion.facturacion.email',[$factura->institucion_id,$factura->id])}}" target="_blank" class="btn btn-secondary m-b-10 ">Enviar por mail</a>
-                                            <a href="{{route('institucion.facturacion.anular',[$factura->institucion_id,$factura->id])}}" target="_blank" class="btn btn-danger m-b-10 ">Anular</a>
+                                            <a href="#" id="botonAnular" class="btn btn-danger m-b-10 ">Anular</a>
                                         </div>
                                     </div>
+                                    {!! Form::open(['route'=>['institucion.facturacion.anular',$factura->institucion_id,$factura->id],'method'=>'POST','id'=>'anularFacturaForm']) !!}
+                                    @method('PUT')                                    
+                                    {!! Form::close() !!}
+                                    
                                     @endif
                                 </div>
                             </div>
@@ -207,3 +211,30 @@
     </div>
 </section>
 @endsection
+@push('scripts')
+<script src='{{asset("assets/plugins/sweetalert/js/sweetalert.min.js")}}'></script>
+<script>
+$(document).on('click','#botonAnular',function(){
+    swal({
+        title: "Anular factura?",
+        text: "Estas seguro que deseas anular la factura! Recuerda que primero debe ser ANULADA en el SRI.",
+        icon: "error",
+        buttons: true,
+        dangerMode: false,
+        confirmButtonText: 'Anular'
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            swal("Se ha anulado tu factura", {
+                icon: "success",
+            });
+            $('#anularFacturaForm').submit();
+        } else {
+            swal("Tu factura NO se ha anulado!", {
+                icon: "warning",
+            });
+        }
+    });
+})
+</script>
+@endpush
