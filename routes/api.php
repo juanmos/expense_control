@@ -73,6 +73,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('dashboard','Naturales\InstitucionController@dashboard');
         Route::get('dashboard/grafico/ventas-compras','Naturales\InstitucionController@graficoComprasVentas');
         Route::get('dashboard/grafico/gastos','Naturales\InstitucionController@graficoGastos');
+        Route::get('dashboard/grafico/top/ventas','Naturales\InstitucionController@topVentas');
+        Route::get('dashboard/grafico/top/compras','Naturales\InstitucionController@topCompras');
 
         Route::get('clientes/', 'Naturales\ClienteController@index');
         Route::post('cliente/by/cedula', 'Naturales\ClienteController@findCedula');

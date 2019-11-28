@@ -218,4 +218,27 @@ class InstitucionController extends Controller
         //     'compras'
         // ));
     }
+
+    public function topVentas(){
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $ventas=$institucion->facturas()
+            ->orderBy('total','desc')
+            ->groupBy('cliente_id')
+            ->with('cliente.cliente')
+            ->select(DB::raw('COUNT(*) AS totalCompras,cliente_id,SUM(total) as total'))
+            ->limit(10)->get();
+        // return $ventas;
+        return Crypt::encrypt(json_encode(compact('ventas')), false);
+    }
+    public function topCompras(){
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $compras=$institucion->compras()
+            ->orderBy('total','desc')
+            ->groupBy('cliente_id')
+            ->with('cliente.cliente')
+            ->select(DB::raw('COUNT(*) AS totalCompras,cliente_id,SUM(total) as total'))
+            ->limit(10)->get();
+        
+        return Crypt::encrypt(json_encode(compact('compras')), false);
+    }
 }
