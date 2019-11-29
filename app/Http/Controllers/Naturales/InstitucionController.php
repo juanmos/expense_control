@@ -21,7 +21,7 @@ class InstitucionController extends Controller
 {
     public function index()
     {
-        return redirect()->route('institucion.show', Auth::user()->institucion_id);
+        return redirect()->route('naturales.show', Auth::user()->institucion_id);
     }
 
     /**
