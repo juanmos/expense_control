@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "aws/aws-sdk-php": "^3.127",
         "coreproc/laravel-notification-channel-fcm": "^1.5",
         "fideloper/proxy": "^4.0",
         "laravel-notification-channels/apn": "^0.5.0",
@@ -28,6 +29,7 @@
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
+        "nunomaduro/larastan": "^0.4.3",
         "phpunit/phpunit": "^8.0",
         "squizlabs/php_codesniffer": "^3.5"
     },
