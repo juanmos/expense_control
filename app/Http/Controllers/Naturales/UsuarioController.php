@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Naturales;
 
+use App\Notifications\UsuarioRegistradoNotification;
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
@@ -46,6 +47,7 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
+        $institucion = Institucion::find(Auth::user()->institucion_id);
         $data=$request->except(['foto','password']);
         $email = User::where('email', $data['email'])->withTrashed()->get();
         if ($email->count()>0) {
@@ -64,6 +66,7 @@ class UsuarioController extends Controller
             $usuario->save();
         }
         $usuario->syncRoles($request->get('role'));
+        $usuario->notify(new UsuarioRegistradoNotification($institucion));
         return redirect()->route('naturales.show', [$request->get('institucion_id'),'U']);
     }
 

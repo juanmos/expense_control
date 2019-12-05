@@ -11,13 +11,23 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index')->middleware('auth');
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 // Route::get('carga','Bares\PaymentController@carga');
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
+
+    Route::get('register/institucion','HomeController@register')->name('register.institucion');
+    Route::post('register/institucion','HomeController@registerInstitucion')->name('register.institucion');
+
+    Route::get('mail', function () {
+        $user = App\Models\User::find(102);
+
+        return (new App\Notifications\UsuarioRegistradoNotification($user->institucion))
+                    ->toMail($user);
+    });
 
     Route::group(['prefix' => 'admin'], function () {
         Route::get('institucion', 'Admin\InstitucionController@index')->name('admin.institucion.index');
@@ -124,6 +134,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/usuario/{id}/update/', 'Naturales\UsuarioController@update')->name('naturales.usuario.update');
         Route::delete('usuario/{id}', 'Naturales\UsuarioController@destroy')->name('naturales.usuario.destroy');
 
-  
+        
     });
 });

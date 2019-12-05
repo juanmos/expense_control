@@ -91,12 +91,11 @@ class APIAuthController extends Controller
             $tipo_tarjetas = TipoTarjeta::orderBy('tipo_tarjeta')->get();
             $tipo_refrigerios = TipoRefrigerio::orderBy('tipo')->get();
             $categorias = CategoriaCompra::orderBy('categoria')->get();
-            // $vendedores = User::where('empresa_id',auth('api')->user()->empresa_id)->with(['roles'])->get();
             return Crypt::encrypt(
                 json_encode(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios', 'categorias')),
                 false
             );
-            // return response()->json(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios'));
+            return response()->json(compact('user', 'roles', 'ciudades', 'tipo_tarjetas', 'tipo_refrigerios','categorias'));
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json(['token_absent'], $e->getStatusCode());
         }

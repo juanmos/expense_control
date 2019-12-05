@@ -16,12 +16,15 @@ use Illuminate\Http\Request;
 Route::post('login', ['as'=>'login','uses'=>'APIAuthController@login']);
 Route::post('usuario', 'APIAuthController@nuevoUsuario')->name('usuario.nuevo');
 
+Route::post('password/email','Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('register','Auth\RegisterController@register');
+
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/usuario', 'APIAuthController@me');//Obtener los datos del usuario en sesion
     Route::delete('usuario/{plataforma}', 'APIAuthController@logout');//Cerrar sesion del usuario actual
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
 
-    
+    Route::post('register/institucion','HomeController@registerInstitucion');
     
 
     

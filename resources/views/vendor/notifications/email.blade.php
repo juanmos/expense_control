@@ -44,6 +44,8 @@
 {{ $salutation }}
 @else
 @lang('Saludos'),<br>
+<img width="200" src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('images/logo.png')))}}">
+
 {{ config('app.name') }}
 @endif
 
@@ -51,8 +53,8 @@
 @isset($actionText)
 @slot('subcopy')
 @lang(
-    "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
-    'into your web browser: [:actionURL](:actionURL)',
+    "Si tienes problemas abriendo el link \":actionText\", por favor copia y pega la siguiente dirección en tu navegador\n".
+    '[:actionURL](:actionURL)',
     [
         'actionText' => $actionText,
         'actionURL' => $actionUrl,
