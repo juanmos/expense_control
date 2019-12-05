@@ -89,6 +89,7 @@
                                                 <sub class="text-muted f-14">{{$institucion->direccion}}</sub><br>
                                                 <sub class="text-muted f-14">{{$institucion->telefono}}</sub><br>
                                                 <sub class="text-muted f-14">{{$institucion->email}}</sub>
+                                                <sub class="text-muted f-14">{{$institucion->tipoInstitucion->tipo}}</sub>
                                             </div>
                                             {{-- <div class="col-auto">
                                                 <label class="label theme-bg2 text-white f-14 f-w-400 float-right">34%</label>

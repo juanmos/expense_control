@@ -26,8 +26,8 @@
                 </div>
             </div>
             <button class="btn btn-primary shadow-2 mb-4" type="submit">Iniciar sesión</button>
-            <p class="mb-2 text-muted">Olvidaste tu contraseña? <a href="auth-reset-password.html">Resetear</a></p>
-            <p class="mb-0 text-muted">No tieens una cuenta? <a href="auth-signup.html">Registrarme</a></p>
+            <p class="mb-2 text-muted">Olvidaste tu contraseña? <a href="{{route('password.request')}}">Resetear</a></p>
+            <p class="mb-0 text-muted">No tieens una cuenta? <a href="{{route('register')}}">Registrarme</a></p>
             {{ csrf_field() }}
             </form>
             

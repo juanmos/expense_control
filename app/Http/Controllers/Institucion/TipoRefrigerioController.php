@@ -17,8 +17,8 @@ class TipoRefrigerioController extends Controller
      */
     public function index()
     {
-        $tipos = TipoRefrigerio::where('institucion_id',Auth::user()->institucion_id)->get();
-        return view('tipo_refrigerio.index',compact('tipos'));
+        $tipos = TipoRefrigerio::where('institucion_id', Auth::user()->institucion_id)->get();
+        return view('tipo_refrigerio.index', compact('tipos'));
     }
 
     /**
@@ -29,7 +29,7 @@ class TipoRefrigerioController extends Controller
     public function create()
     {
         $tipo=null;
-        return view('tipo_refrigerio.form',compact('tipo'));
+        return view('tipo_refrigerio.form', compact('tipo'));
     }
 
     /**
@@ -65,7 +65,7 @@ class TipoRefrigerioController extends Controller
     public function edit($id)
     {
         $tipo=TipoRefrigerio::find($id);
-        return view('tipo_refrigerio.form',compact('tipo'));
+        return view('tipo_refrigerio.form', compact('tipo'));
     }
 
     /**

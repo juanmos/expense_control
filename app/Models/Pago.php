@@ -19,7 +19,8 @@ class Pago extends Model
     {
         return $this->belongsTo(Refrigerio::class, 'refrigerio_id');
     }
-    public function factura(){
-        return $this->hasOne(Factura::class,'pago_id');
+    public function factura()
+    {
+        return $this->hasOne(Factura::class, 'pago_id');
     }
 }

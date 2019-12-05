@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <!-- [ breadcrumb ] end -->
-                <form action="{{($institucion!=null)?route('institucion.update',$institucion->id):route('institucion.store')}}" method="POST">
+                <form action="{{($institucion!=null)?route('institucion.update',$institucion->id):route('admin.institucion.store')}}" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <input type="hidden" name="_method" value="{{($institucion!=null)?'PUT':'POST'}}"/>
                 <div class="main-body">
@@ -45,25 +45,28 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
-                                            
+                                            <div class="form-group col-md-12">
+                                                <label for="exampleInputPassword1">Tipo de institución</label>
+                                                {!! Form::select('tipo_institucion_id', $tipos, ($institucion!=null)?$institucion->tipo_institucion_id:1,["class"=>"form-control"]) !!}
+                                            </div>
                                             <div class="form-group col-md-6 ">
-                                                <label for="exampleInputEmail1">Institución*</label>
-                                                <input type="text" value="@if($institucion!=null){{$institucion->nombre}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Institución">
+                                                <label for="exampleInputEmail1">* Institución / Nombre</label>
+                                                <input type="text" value="@if($institucion!=null){{$institucion->nombre}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Institución o Nombre">
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">SIGLAS</label>
-                                                <input type="text" value="@if($institucion!=null){{$institucion->siglas}}@endif" name="siglas" class="form-control" id="exampleInputPassword1" placeholder="Siglas">
+                                                <label for="exampleInputPassword1">SIGLAS / Nombre comercial</label>
+                                                <input type="text" value="@if($institucion!=null){{$institucion->siglas}}@endif" name="siglas" class="form-control" id="exampleInputPassword1" placeholder="Siglas o Nombre comercial">
                                             </div>
                                             
                                             <div class="form-group col-md-12 ">
                                                 <label for="exampleInputPassword1">Dirección</label>
                                                 <input type="text" value="@if($institucion!=null){{$institucion->direccion}}@endif" name="direccion" class="form-control" id="exampleInputPassword1" placeholder="Dirección">
                                             </div>
-                                            <div class="form-group col-md-6">
+                                            {{-- <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">Ciudad</label>
-                                                {{-- <input type="text" value="@if($institucion!=null){{$institucion->activo}}@endif" name="activo" class="form-control" id="exampleInputPassword1" placeholder="Activo"> --}}
+                                                
                                                 {!! Form::select('ciudad_id', $ciudad, ($institucion!=null)?$institucion->ciudad_id : 1 ,["class"=>"form-control"]) !!}
-                                            </div>
+                                            </div> --}}
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">RUC</label>
                                                 <input type="text" value="@if($institucion!=null){{$institucion->ruc}}@endif" name="ruc" class="form-control" id="exampleInputPassword1" placeholder="RUC">

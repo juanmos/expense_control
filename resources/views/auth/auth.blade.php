@@ -16,19 +16,19 @@
     <meta name="author" content="CodedThemes"/>
 
     <!-- Favicon icon -->
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="{{asset('assets/images/favicon.ico')}}" type="image/x-icon">
     <!-- fontawesome icon -->
-    <link rel="stylesheet" href="assets/fonts/fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="{{asset('assets/fonts/fontawesome/css/fontawesome-all.min.css')}}">
     <!-- animation css -->
-    <link rel="stylesheet" href="assets/plugins/animation/css/animate.min.css">
+    <link rel="stylesheet" href="{{asset('assets/plugins/animation/css/animate.min.css')}}">
     <!-- vendor css -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
 
 </head>
 
 <body>
     <div class="auth-wrapper">
-        <div class="auth-content">
+        <div class="auth-content" @if(Request()->is('password/reset/*'))style="width:590px"@endif>
             <div class="auth-bg">
                 <span class="r"></span>
                 <span class="r s"></span>
@@ -40,8 +40,8 @@
     </div>
 
     <!-- Required Js -->
-<script src="assets/js/vendor-all.min.js"></script>
-<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="{{asset('assets/js/vendor-all.min.js')}}"></script>
+<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
 
 </body>
 </html>

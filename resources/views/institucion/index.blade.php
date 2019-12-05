@@ -18,8 +18,8 @@
                             <div class="col-xl-12 col-md-12">
                                 <div class="card Recent-Users">
                                     <div class="card-header">
-                                        <h5>Instituciones</h5>
-                                        <a class="btn btn-primary float-right" href="{{route('institucion.create')}}"><span class="pcoded-micon"><i class="feather icon-plus-circle"></i></span><span class="pcoded-mtext">Crear institución</span></a>
+                                        <h5>Instituciones / Empresas</h5>
+                                        <a class="btn btn-primary float-right" href="{{route('admin.institucion.create')}}"><span class="pcoded-micon"><i class="feather icon-plus-circle"></i></span><span class="pcoded-mtext">Crear institución</span></a>
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
@@ -32,6 +32,7 @@
                                                         <th>Estado</th>
                                                         <th>Telefono</th>
                                                         <th>Ciudad</th>
+                                                        <th>Tipo</th>
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
@@ -42,13 +43,14 @@
                                                         <td>{{$institucion->nombre}}</td>
                                                         <td>{{$institucion->estado->estado}}</td>
                                                         <td>{{$institucion->telefono}}</td>
-                                                        <td>{{$institucion->ciudad->ciudad}}</td>
+                                                        <td>{{($institucion->ciudad_id>0)?$institucion->ciudad->ciudad:'Sin ciudad'}}</td>
+                                                        <td>{{$institucion->tipoInstitucion->tipo}}</td>
                                                         <td>
                                                             {{-- <a href="{{ route('afiche.pdf',$afiche->id) }}" class="label theme-bg2 text-white f-12">Descargar</a> --}}
                                                             
-                                                            <a href="{{ route('institucion.show',$institucion->id) }}" class="label theme-bg2 text-white f-12">Ver</a>
-                                                            <a href="{{ route('institucion.alumnos',$institucion->id) }}" class="label theme-bg2 text-white f-12">Alumnos</a>
-                                                            <a href="{{ route('institucion.show',$institucion->id) }}" class="label theme-bg2 text-white f-12">Usuarios</a>
+                                                            <a href="{{ route('admin.institucion.show',$institucion->id) }}" class="label theme-bg2 text-white f-12">Ver</a>
+                                                            {{-- <a href="{{ route('institucion.alumnos',$institucion->id) }}" class="label theme-bg2 text-white f-12">Alumnos</a> --}}
+                                                            <a href="{{ route('admin.institucion.show',[$institucion->id,'U']) }}" class="label theme-bg2 text-white f-12">Usuarios</a>
                                                             <a href="{{ route('institucion.edit',$institucion->id) }}" class="label theme-bg text-white f-12">Editar</a>
                                                             
                                                             

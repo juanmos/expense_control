@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +14,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\CodificarQRCommand::class
+        \App\Console\Commands\CodificarQRCommand::class,
+        \App\Console\Commands\DetalleComprasSriCommand::class,
+        \App\Console\Commands\FacturarCommand::class,
+        \App\Console\Commands\ObtenerComprasSri::class
     ];
 
     /**
@@ -26,6 +30,13 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        if(App::environment()=='production'){
+            $schedule->command('sri:compras')->twiceDaily(1, 13);
+
+            $schedule->command('sri:detalle-compras')->twiceDaily(2, 14);
+
+            $schedule->command('sri:facturar')->everyTenMinutes();
+        }
     }
 
     /**

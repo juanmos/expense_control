@@ -146,6 +146,7 @@ $(document).ready(function() {
     $('#alumnosData').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 50,
         ajax: "{!! route('institucion.alumnos.data',Auth::user()->institucion_id) !!}",
         columns: [
             { data: 'apellido', name: 'apellido' },

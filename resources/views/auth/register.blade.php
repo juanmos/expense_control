@@ -8,12 +8,15 @@
             <div class="mb-4">
                 <i class="feather icon-user-plus auth-icon"></i>
             </div>
-            <h3 class="mb-4">Registrarse</h3>
+            <h3 class="mb-4">Crear una nueva cuenta</h3>
             <div class="input-group mb-3">
                 <input type="text" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" placeholder="Nombre" name="nombre" value="{{ old('nombre') }}" required autofocus>
             </div>
             <div class="input-group mb-3">
                 <input type="text" class="form-control{{ $errors->has('apellido') ? ' is-invalid' : '' }}" placeholder="Apellido" name="apellido" value="{{ old('apellido') }}" required autofocus>
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control{{ $errors->has('telefono') ? ' is-invalid' : '' }}" placeholder="Teléfono" name="telefono" value="{{ old('telefono') }}" required autofocus>
             </div>
             <div class="input-group mb-3">
                 <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email" name="email" value="{{ old('email') }}" required>
