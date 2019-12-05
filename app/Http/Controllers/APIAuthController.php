@@ -157,9 +157,9 @@ class APIAuthController extends Controller
                 return response()->json(['user_not_found'], 404);
             }
             if ($request->get('tipo')=='2') {
-                $data['tokenAND']=$request->get('dispositivo');
+                $data['token_and']=$request->get('dispositivo');
             } else {
-                $data['tokenIOS']=$request->get('dispositivo');
+                $data['token_ios']=$request->get('dispositivo');
             }
             $user->update($data);
             return response()->json(['tokenSaved'=>true]);
