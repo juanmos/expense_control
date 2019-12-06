@@ -51,10 +51,10 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id, $pest = 'E')
+    public function show($id, $pest = 'V')
     {
         if ($pest==null) {
-            $pest='E';
+            $pest='V';
         }
         $institucion = Institucion::find($id);
         $alumnos = $institucion->alumnos()->whereHas('roles', function ($query) {

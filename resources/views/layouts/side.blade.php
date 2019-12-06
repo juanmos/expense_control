@@ -5,7 +5,7 @@
                 {{-- <div class="b-bg">
                     <i class="feather icon-trending-up"></i>
                 </div> --}}
-                <span class="b-title"><img src="{{asset('assets/images/logo.png')}}" style="max-width:74%"/></span>
+                <span class="b-title"><img src="{{asset('images/logo.png')}}" style="max-width:60%"/></span>
             </a>
             <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
         </div>

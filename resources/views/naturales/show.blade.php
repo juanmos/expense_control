@@ -147,9 +147,9 @@
                             
                             <div class="col-xl-8 col-md-6">
                                 <ul class="nav nav-pills" id="myTab" role="tablist">
-                                    <li class="nav-item">
+                                    {{--  <li class="nav-item">
                                         <a class="nav-link {{seleccionado('E',$pest)}}" id="estadisticas-tab" data-toggle="tab" href="#estadisticas" role="tab" aria-controls="estadisticas" aria-selected="false">Estadisticas</a>
-                                    </li>
+                                    </li>  --}}
                                     <li class="nav-item">
                                         <a class="nav-link {{seleccionado('V',$pest)}}" id="ventas-tab" data-toggle="tab" href="#ventas" role="tab" aria-controls="ventas" aria-selected="true">Ventas</a>
                                     </li>
@@ -161,7 +161,7 @@
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade {{seleccionado('E',$pest)}}" id="estadisticas" role="tabpanel" aria-labelledby="estadisticas-tab">
+                                    {{--  <div class="tab-pane fade {{seleccionado('E',$pest)}}" id="estadisticas" role="tabpanel" aria-labelledby="estadisticas-tab">
                                         <div class="row">
                                             <div class="col-xl-6 col-md6">
                                                 <div class="card theme-bg">
@@ -270,8 +270,8 @@
                                         </div>
                                         
 
-                                    </div>
-                                    <div class="tab-pane fade {{seleccionado('T',$pest)}}" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
+                                    </div>  --}}
+                                    <div class="tab-pane fade {{seleccionado('V',$pest)}}" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
                                         <div class="card Recent-Users">
                                             <div class="card-header">
                                                 <h5>Ultimas Ventas </h5>
@@ -296,7 +296,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade {{seleccionado('T',$pest)}}" id="compras" role="tabpanel" aria-labelledby="compras-tab">
+                                    <div class="tab-pane fade {{seleccionado('C',$pest)}}" id="compras" role="tabpanel" aria-labelledby="compras-tab">
                                         <div class="card Recent-Users">
                                             <div class="card-header">
                                                 <h5>Ultimas Compras </h5>
