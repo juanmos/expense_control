@@ -153,7 +153,7 @@
         </div>
         <img src="{{asset('web/img/about_shape.png')}}" alt="" class="about_shape_1">
         <img src="{{asset('web/img/animate_icon/Shape-1.png')}}" alt="" class="feature_icon_1">
-        <img src="{{asset('web/img/animate_icon/shape.png')}}" alt="" class="feature_icon_4">
+        <img src="{{asset('web/img/animate_icon/Shape.png')}}" alt="" class="feature_icon_4">
     </section>
     <!-- about_us part end-->
     
@@ -200,7 +200,7 @@
         <img src="{{asset('web/img/animate_icon/Shape-14.png')}}" alt="" class="feature_icon_1">
         <img src="{{asset('web/img/animate_icon/Shape-10.png')}}" alt="" class="feature_icon_2">
         <img src="{{asset('web/img/animate_icon/Shape.png')}}" alt="" class="feature_icon_3">
-        <img src="{{asset('web/img/animate_icon/shape-13.png')}}" alt="" class="feature_icon_4">
+        <img src="{{asset('web/img/animate_icon/Shape-13.png')}}" alt="" class="feature_icon_4">
     </section>
     <!-- use sasu part end-->
 
@@ -258,7 +258,7 @@
         </div>
         <img src="{{asset('web/img/left_sharp.png')}}" alt="" class="left_shape_1">
         <img src="{{asset('web/img/animate_icon/Shape-1.png')}}" alt="" class="feature_icon_1">
-        <img src="{{asset('web/img/animate_icon/shape.png')}}" alt="" class="feature_icon_4">
+        <img src="{{asset('web/img/animate_icon/Shape.png')}}" alt="" class="feature_icon_4">
     </section>
     <!-- pricing part end-->
 
