@@ -94,7 +94,7 @@
         <img src="{{asset('web/img/animate_icon/Shape-1.png')}}" alt="" class="feature_icon_1">
         <img src="{{asset('web/img/animate_icon/Shape-14.png')}}" alt="" class="feature_icon_2">
         <img src="{{asset('web/img/animate_icon/Shape.png')}}" alt="" class="feature_icon_3">
-        <img src="{{asset('web/img/animate_icon/shape-3.png')}}" alt="" class="feature_icon_4">
+        <img src="{{asset('web/img/animate_icon/Shape-3.png')}}" alt="" class="feature_icon_4">
     </section>
     <!-- upcoming_event part start-->
 
@@ -146,7 +146,7 @@
 						<p>Usa nuestra aplicación móvil para poder facturar desde cualquier lugar, en cualquier momento.
 							<br>Descargala ahora mismo</p>
                         <a href="https://apps.apple.com/us/app/factu/id1450193094?l=es&ls=1"><img width="150" src="{{asset('images/apple.png')}}"/></a>
-                        <a href="#"><img width="150" src="{{asset('images/google.png')}}"/></a>
+                        <a href="https://play.google.com/store/apps/details?id=app.factu.naturales"><img width="150" src="{{asset('images/google.png')}}"/></a>
                     </div>
                 </div>
             </div>
