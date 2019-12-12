@@ -108,5 +108,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
         Route::post('documentos/{tipo}','Naturales\DocumentoFisicoController@index');
         Route::post('documentos/{tipo}/store','Naturales\DocumentoFisicoController@store');
+        Route::delete('documento/eliminar/compra/{documento}','Naturales\DocumentoFisicoController@destroy');
     });
 });

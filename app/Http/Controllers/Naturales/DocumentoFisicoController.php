@@ -131,8 +131,10 @@ class DocumentoFisicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, DocumentoFisico $documento)
     {
-        //
+        $documento->delete();
+        return ($request->is('api/*'))?response()->json(['eliminado'=>true]):back();
+
     }
 }

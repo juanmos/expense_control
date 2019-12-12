@@ -101,7 +101,6 @@ class DocumentoFisicoControllerTest extends TestCase
 
     public function test_crear_documentos()
     {
-        // $this->withoutExceptionHandling();
         $this->actingAs(User::first(),'api');
         Storage::fake('public/documentos/1/compra/');
 
@@ -115,14 +114,13 @@ class DocumentoFisicoControllerTest extends TestCase
         $documento =DocumentoFisico::first();
         $this->assertCount(1,DocumentoFisico::all());
         $response->assertJsonStructure(['creado']);
-        // Storage::disk('public/documentos/1/compra')->assertExists($file->hashName());
     }
 
 
     /** @test */
     public function test_obtener_compras_fisicas_mes()
     {
-        $this->withoutExceptionHandling();
+        
         $this->actingAs(User::first(),'api');
         $response=$this->post('api/naturales/documentos/compra',[],$this->headers);
         
@@ -136,7 +134,24 @@ class DocumentoFisicoControllerTest extends TestCase
         // $response->assertJsonStructure(['documentos','ano','mes','dia']);
     }
     
+    public function test_eliminar_documentos()
+    {
+        $this->actingAs(User::first(),'api');
+        Storage::fake('public/documentos/1/compra/');
+        $file = UploadedFile::fake()->image('avatar.jpg');
+        $this->post('api/naturales/documentos/compra/store',[
+            'documento'=>'compra',
+            'foto' => $file,
+            'fecha'=>now()->format('d-m-Y')
+        ],$this->headers);
 
+        $documento =DocumentoFisico::first();
+        
+        $response=$this->delete('api/naturales/documento/eliminar/compra/'.$documento->id,[],$this->headers);
+        $response->assertJsonStructure(['eliminado']);
+
+        $this->assertCount(0,DocumentoFisico::all());
+    }
     
     
 }
