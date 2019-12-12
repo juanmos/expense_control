@@ -17,6 +17,8 @@ class DocumentoFisico extends Model
         'ruc',
         'subtotal',
         'iva',
+        'propina',
+        'servicio',
         'total',
         'categoria_id',
         'cliente_id'

@@ -22,6 +22,8 @@ class CreateDocumentoFisicosTable extends Migration
             $table->string('ruc',20)->nullable();
             $table->decimal('subtotal',10,2)->default(0);
             $table->decimal('iva',10,2)->default(0);
+            $table->decimal('propina',10,2)->default(0);
+            $table->decimal('servicio',10,2)->default(0);
             $table->decimal('total',10,2)->default(0);
             $table->integer('categoria_id')->default(1);
             $table->integer('cliente_id')->default(0);
