@@ -12,6 +12,7 @@ class DocumentoFisico extends Model
     protected $fillable=[
         'institucion_id',
         'documento',
+        'fecha',
         'foto',
         'cliente',
         'ruc',

@@ -17,6 +17,7 @@ class CreateDocumentoFisicosTable extends Migration
             $table->bigIncrements('id');
             $table->integer('institucion_id');
             $table->enum('documento',['factura','compra','retencion'])->default('compra');
+            $table->date('fecha')->nullable();
             $table->string('foto')->nullable();
             $table->string('cliente')->nullable();
             $table->string('ruc',20)->nullable();
