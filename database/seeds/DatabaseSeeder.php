@@ -20,8 +20,9 @@ class DatabaseSeeder extends Seeder
         // $this->call(TipoTarjetaSeeder::class);
         
         // $this->call(UsuarioSeeder::class);
-        $this->call(RolePersonaNaturalSeeder::class);
-        $this->call(TipoInstitucionSeeder::class);
-        $this->call(CategoriaComprasSeeder::class);
+        // $this->call(RolePersonaNaturalSeeder::class);
+        // $this->call(TipoInstitucionSeeder::class);
+        // $this->call(CategoriaComprasSeeder::class);
+        $this->call(TipoPagoSeeder::class);
     }
 }

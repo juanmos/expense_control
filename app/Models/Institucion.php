@@ -12,6 +12,8 @@ use App\Models\EstadoInstitucion;
 use App\Models\Transaccion;
 use App\Models\Configuracion;
 use App\Models\MenuRefrigerio;
+use App\Models\DocumentoFisico;
+use App\Models\TipoPlan;
 use App\Models\Factura;
 use App\Models\Ciudad;
 use App\Models\Compra;
@@ -22,8 +24,11 @@ class Institucion extends Model
     use SoftDeletes;
     use Notifiable;
     
-    protected $fillable=['nombre','siglas','direccion','telefono','celular','ruc','email','web','facebook',
-                            'twitter','instagram','estado_id','ciudad_id','latitud','longitud','tipo_institucion_id'];
+    protected $fillable=[
+        'nombre','siglas','direccion','telefono','celular','ruc','email','web','facebook',
+        'twitter','instagram','estado_id','ciudad_id','latitud','longitud','tipo_institucion_id',
+        'tipo_plan_id'
+    ];
 
     public function ciudad()
     {
@@ -78,5 +83,15 @@ class Institucion extends Model
     public function facturas()
     {
         return $this->hasMany(Factura::class, 'institucion_id');
+    }
+
+    public function tipoPlan()
+    {
+        return $this->belongsTo(TipoPlan::class,'tipo_plan_id');
+    }
+
+    public function documentos()
+    {
+        return $this->hasMany(DocumentoFisico::class,'institucion_id');
     }
 }

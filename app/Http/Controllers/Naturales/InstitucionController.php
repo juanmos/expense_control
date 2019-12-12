@@ -120,9 +120,13 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Institucion $naturale)
     {
-        //
+        $institucion=$naturale;
+        $paises = Pais::orderBy('pais')->get()->pluck('pais', 'id');
+        $ciudad = Ciudad::orderBy('ciudad')->get()->pluck('ciudad', 'id');
+        $estado = EstadoInstitucion::get()->pluck('estado', 'id');
+        return view('naturales.form',compact('institucion','paises','ciudad','estado'));
     }
 
     /**
@@ -132,9 +136,13 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Institucion  $naturale)
     {
-        //
+        $request->validate([
+            'nombre'=>'required'
+        ]);
+        $naturale->update($request->all());
+        return redirect()->route('naturales.show',$naturale->id);
     }
 
     /**
@@ -146,17 +154,6 @@ class InstitucionController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function configuracion()
-    {
-        $institucion =Institucion::find(Auth::user()->institucion_id);
-        $configuracion = Configuracion::where('institucion_id', Auth::user()->institucion_id)->first();
-        if ($configuracion==null) {
-            $configuracion = Configuracion::create(['institucion_id'=>Auth::user()->institucion_id]);
-        }
-        
-        return view('institucion.configuracion', compact('configuracion', 'institucion'));
     }
 
     public function dashboard(){

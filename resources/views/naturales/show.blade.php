@@ -106,7 +106,7 @@
                                         <h6 class="text-muted mt-4 mb-0">
                                             @if(Auth::user()->hasRole('PersonaNatural'))
                                             <a href="{{route('naturales.edit',$institucion->id)}}" class="label theme-bg text-white f-12">Editar</a> 
-                                            <a href="{{route('naturales.configuracion.edit')}}" class="label theme-bg2 text-white f-12">Configuraciones</a>
+                                            <a href="{{route('institucion.configuracion.edit')}}" class="label theme-bg2 text-white f-12">Configuraciones</a>
                                             @endif
                                         </h6>
                                         <i class="far fa-building text-c-purple f-50"></i>
@@ -147,6 +147,7 @@
                             
                             <div class="col-xl-8 col-md-6">
                                 <ul class="nav nav-pills" id="myTab" role="tablist">
+                                    @if(!Auth::user()->hasRole('SuperAdministrador'))
                                     {{--  <li class="nav-item">
                                         <a class="nav-link {{seleccionado('E',$pest)}}" id="estadisticas-tab" data-toggle="tab" href="#estadisticas" role="tab" aria-controls="estadisticas" aria-selected="false">Estadisticas</a>
                                     </li>  --}}
@@ -156,11 +157,13 @@
                                     <li class="nav-item">
                                         <a class="nav-link {{seleccionado('C',$pest)}}" id="compras-tab" data-toggle="tab" href="#compras" role="tab" aria-controls="compras" aria-selected="true">Compras</a>
                                     </li>
+                                    @endif
                                     <li class="nav-item">
                                         <a class="nav-link {{seleccionado('U',$pest)}}" id="usuarios-tab" data-toggle="tab" href="#usuarios" role="tab" aria-controls="usuarios" aria-selected="false">Usuarios</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
+                                    @if(!Auth::user()->hasRole('SuperAdministrador'))
                                     {{--  <div class="tab-pane fade {{seleccionado('E',$pest)}}" id="estadisticas" role="tabpanel" aria-labelledby="estadisticas-tab">
                                         <div class="row">
                                             <div class="col-xl-6 col-md6">
@@ -320,6 +323,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                     <div class="tab-pane fade {{seleccionado('U',$pest)}}" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
                                         <a href="{{route('naturales.usuario.crear',[$id])}}" class="btn btn-primary float-right f-12">Crear</a>
                                         <table class="table table-hover">
@@ -775,6 +779,7 @@
 @push('scripts')
 <script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
 <script type="text/javascript">
+    @if(!Auth::user()->hasRole('SuperAdministrador'))
     $('#ventasTable').DataTable({
         processing: true,
         serverSide: true,
@@ -819,6 +824,7 @@
             }
         ]
     });
+    @endif
     $(document).ready(function() {
         var chartDatac = [{
             "Year": "Jan",

@@ -21,6 +21,9 @@
                 <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item {{(Route::currentRouteName()=='admin.institucion.index')?'active':''}}">
                     <a href="{{route('admin.institucion.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Instituciones</span></a>
                 </li>
+                <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item {{(Route::currentRouteName()=='ayuda.index')?'active':''}}">
+                    <a href="{{route('ayuda.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Ayudas</span></a>
+                </li>
                 @endif
                 @if(Auth::user()->hasRole('Institucion'))
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='institucion.show')?'active':''}}">
