@@ -105,5 +105,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::put('configuracion/sri/{id}', 'Institucion\InstitucionController@configuracionUpdate');
 
         Route::put('perfil/editar/{id}','Naturales\UsuarioController@update');
+
+        Route::post('documentos/{tipo}','Naturales\DocumentoFisicoController@index');
+        Route::post('documentos/{tipo}/store','Naturales\DocumentoFisicoController@store');
     });
 });
