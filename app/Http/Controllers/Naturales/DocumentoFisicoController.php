@@ -120,9 +120,12 @@ class DocumentoFisicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, DocumentoFisico $documento)
     {
-        //
+        
+        $documento->categoria_id=$request->get('categoria_id');
+        $documento->save();
+        return ($request->is('api/*'))?response()->json(['actualizado'=>true]):back();
     }
 
     /**

@@ -31,26 +31,6 @@ class DocumentoFisicoControllerTest extends TestCase
         $this->headers['Authorization'] = 'Bearer ' . $token;
     }
     
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-     
-    /** @test */
-    public function test_will_log_a_user_in()
-    {
-        $this->actingAs(User::first(),'api');
-        $response = $this->post('api/login', [
-            'email'    => 'test@email.com',
-            'password' => '123456'
-        ]);
-
-        $response->assertJsonStructure([
-            'token',
-            'token_type'
-        ]);
-    }
     /** @test */
     public function test_api_only_auth_users()
     {
@@ -152,6 +132,30 @@ class DocumentoFisicoControllerTest extends TestCase
 
         $this->assertCount(0,DocumentoFisico::all());
     }
+
+    /** @test */
+    public function test_cambiar_categoria_compra()
+    {
+        $this->actingAs(User::first(),'api');
+        Storage::fake('public/documentos/1/compra/');
+        $file = UploadedFile::fake()->image('avatar.jpg');
+        $this->post('api/naturales/documentos/compra/store',[
+            'documento'=>'compra',
+            'foto' => $file,
+            'fecha'=>now()->format('d-m-Y'),
+            'categoria_id'=>1
+        ],$this->headers);
+
+        $documento =DocumentoFisico::first();
+        $this->assertCount(1, DocumentoFisico::all());
+        
+        $response =$this->put('api/naturales/documentos/update/'. $documento->id,[
+            'categoria_id'=>2
+        ],$this->headers);
+        $response->assertJsonStructure(['actualizado']);
+        $this->assertEquals("2", $documento->fresh()->categoria_id);
+    }
+    
     
     
 }
