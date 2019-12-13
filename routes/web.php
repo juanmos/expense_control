@@ -108,8 +108,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'naturales'], function () {
         Route::resource('naturales', 'Naturales\InstitucionController');
         Route::get('/persona/{id}/{pest?}', 'Naturales\InstitucionController@show')->name('naturales.show');
-        Route::get('configuracion/editar', 'Naturales\InstitucionController@configuracion')->name('naturales.configuracion.edit');
-        Route::put('configuracion/update/{id}', 'Naturales\InstitucionController@configuracionUpdate')->name('naturales.configuracion.update');
+        Route::get('configuracion/editar', 'Institucion\InstitucionController@configuracion')->name('naturales.configuracion.edit');
+        Route::put('configuracion/update/{id}', 'Institucion\InstitucionController@configuracionUpdate')->name('naturales.configuracion.update');
 
         Route::resource('naturales.clientes', 'Naturales\ClienteController');
         Route::get('naturales/{institucion?}/cliente/data', 'Naturales\ClienteController@clientesData')->name('naturales.clientes.data');

@@ -11,12 +11,12 @@ use App\Http\Helpers;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
 use App\Models\Cliente;
-use App\Models\Retencion;
+use App\Models\Compra;
 use Carbon\Carbon;
 use Artisan;
 use Crypt;
 
-class ObtenerRetencionesMesJob implements ShouldQueue
+class ObtenerComprasMesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $datos;
@@ -47,7 +47,7 @@ class ObtenerRetencionesMesJob implements ShouldQueue
                 'Authorization'      => $this->datos['token']
             ],
             'query' => [
-                'tipoComprobante' => '6',
+                'tipoComprobante' => '1',
                 'anio'=>$this->datos['ano'],
                 'mes'=>$this->datos['mes']
             ]
@@ -73,14 +73,14 @@ class ObtenerRetencionesMesJob implements ShouldQueue
                             'nombre'=>$comp->razonSocialEmisor
                         ]);
                     }
-                    $retencion = Retencion::where('institucion_id', $institucion->id)
+                    $compra = Compra::where('institucion_id', $institucion->id)
                             ->where('cliente_id', $cliente_institucion->id)
                             ->where(
                                 'codigoComprobanteRecibido',
                                 $comp->codigoComprobanteRecibido
                             )
-                            ->first();
-                    if ($retencion==null) {
+                            ->where('tipoComprobante', $comp->tipoComprobante)->first();
+                    if ($compra==null) {
                         $respDetalle = $client->request(
                             'GET',
                             $sri_web.'v2.0/comprobantes/detalle',
@@ -101,8 +101,14 @@ class ObtenerRetencionesMesJob implements ShouldQueue
                         if ($respDetalle->getStatusCode()==200) {
                             $json=(string) $respDetalle->getBody();
                             $detalle= json_decode($json);
-          
-                            $retencion= $institucion->retenciones()->create([
+                            if ($cliente->nombre_comercial==null || $cliente->nombre_comercial=='') {
+                                $cliente->nombre_comercial=($detalle->nombreComercial!=null)?trim($detalle->nombreComercial):trim($cliente->razon_social);
+                                $cliente->save();
+                            }
+                            // if($cliente->categoria_id==1){
+                            //     Helpers::clasifica($cliente);
+                            // }
+                            $compra= $institucion->compras()->create([
                                 'cliente_id'=>$cliente_institucion->id,
                                 'fecha'=>$comp->fechaEmision,
                                 'establecimiento'=>$comp->establecimiento,
@@ -112,7 +118,12 @@ class ObtenerRetencionesMesJob implements ShouldQueue
                                 'codigoTipoDocumento'=>$comp->codigoTipoDocumento,
                                 'codigoComprobanteRecibido'=>$comp->codigoComprobanteRecibido,
                                 'claveAcceso'=>$detalle->claveAcceso,
-                                'impuestos'=>$detalle->impuestos
+                                'total'=>$detalle->importeTotal,
+                                'totalSinImpuestos'=>$detalle->totalSinImpuestos,
+                                'propina'=>$detalle->propina,
+                                'totalDescuento'=>$detalle->totalDescuento,
+                                'impuestos'=>$detalle->impuestos,
+                                'categoria_id'=>($cliente->categoria_id!=null)?$cliente->categoria_id:1
                             ]);
                         }
                     }
