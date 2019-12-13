@@ -22,7 +22,9 @@ class DocumentoFisico extends Model
         'servicio',
         'total',
         'categoria_id',
-        'cliente_id'
+        'cliente_id',
+        'ret_renta',
+        'ret_iva'
     ];
 
     public function institucion()
