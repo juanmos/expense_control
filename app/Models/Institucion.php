@@ -17,6 +17,7 @@ use App\Models\TipoPlan;
 use App\Models\Factura;
 use App\Models\Ciudad;
 use App\Models\Compra;
+use App\Models\Retencion;
 use App\Models\User;
 
 class Institucion extends Model
@@ -78,6 +79,11 @@ class Institucion extends Model
     public function compras()
     {
         return $this->hasMany(Compra::class, 'institucion_id');
+    }
+
+    public function retenciones()
+    {
+        return $this->hasMany(Retencion::class, 'institucion_id');
     }
 
     public function facturas()

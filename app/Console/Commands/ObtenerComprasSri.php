@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Jobs\ObtenerRetencionesMesJob;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
 use App\Models\Cliente;
@@ -48,6 +49,8 @@ class ObtenerComprasSri extends Command
         $sri_web='https://srienlinea.sri.gob.ec/movil-servicios/api/';
         $instituciones = Institucion::with('configuracion')->get();
         $hoy = Carbon::now();
+        $bar = $this->output->createProgressBar($instituciones->count());
+        $bar->start();
         foreach ($instituciones as $institucion) {
             $ruc = (
                     array_key_exists('ruc', $institucion->configuracion->configuraciones) &&
@@ -80,6 +83,12 @@ class ObtenerComprasSri extends Command
                                 'anio'=>$hoy->format('Y'),
                                 'mes'=>$hoy->format('m')]
                         ]);
+                        ObtenerRetencionesMesJob::dispatch([
+                            'token'=>$token,
+                            'ano'=>$hoy->format('Y'),
+                            'mes'=>'11',//$hoy->format('m'),
+                            'institucion_id'=>$institucion->id
+                        ])->delay(1);;
                         if ($resp->getStatusCode()==200) {
                             $json=(string) $resp->getBody();
                             $comprasSRI= json_decode($json);
@@ -152,6 +161,8 @@ class ObtenerComprasSri extends Command
                     }
                 }
             }
+            $bar->advance();
         }
+        $bar->finish();
     }
 }
