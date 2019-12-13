@@ -85,6 +85,7 @@ class ComprasController extends Controller
      */
     public function create()
     {
+        abort(404);
     }
 
     /**
@@ -95,7 +96,7 @@ class ComprasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        abort(404);
     }
 
     /**
