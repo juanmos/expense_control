@@ -12,6 +12,7 @@ use App\Models\EstadoInstitucion;
 use App\Models\Configuracion;
 use App\Models\TipoInstitucion;
 use App\Jobs\ObtenerComprasAnterioresJob;
+use App\Jobs\ObtenerRetencionesJob;
 use Carbon\Carbon;
 use Crypt;
 use Hash;
@@ -162,6 +163,7 @@ class InstitucionController extends Controller
                         $request->get('clave_sri')
             );
             ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id))->delay(1);;
+            ObtenerRetencionesJob::dispatch(Institucion::find(Auth::user()->institucion_id))->delay(1);
         } else  if(array_key_exists('clave_sri',$configuracion->configuraciones)){
             $data['clave_sri']=$configuracion->configuraciones['clave_sri'];
         }
