@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::post('login', ['as'=>'login','uses'=>'APIAuthController@login']);
-Route::post('usuario', 'APIAuthController@nuevoUsuario')->name('usuario.nuevo');
+// Route::post('usuario', 'APIAuthController@nuevoUsuario')->name('usuario.nuevo');
 
 Route::post('password/email','Auth\ForgotPasswordController@sendResetLinkEmail');
 Route::post('register','Auth\RegisterController@register');
@@ -97,6 +97,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('factura/pdf/{pdf}/{factura_id}', 'Institucion\FacturacionController@pdf');
         Route::put('factura/anular/{id}/{factura_id}', 'Institucion\FacturacionController@anular');
 
+        Route::post('retenciones', 'Naturales\RetencionController@retencionesData');
+
         Route::get('categorias/{tipo}', 'Naturales\CategoriaController@categoriaData');
         Route::post('categorias/store/{tipo}', 'Naturales\CategoriaController@store');
         Route::put('categorias/update/{tipo}/{id}', 'Naturales\CategoriaController@update');
@@ -108,6 +110,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
         Route::post('documentos/{tipo}','Naturales\DocumentoFisicoController@index');
         Route::post('documentos/{tipo}/store','Naturales\DocumentoFisicoController@store');
+        Route::put('documentos/update/{documento}','Naturales\DocumentoFisicoController@update');
         Route::delete('documento/eliminar/compra/{documento}','Naturales\DocumentoFisicoController@destroy');
     });
 });
