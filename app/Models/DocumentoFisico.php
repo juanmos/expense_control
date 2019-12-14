@@ -17,7 +17,7 @@ class DocumentoFisico extends Model
         'documento',
         'fecha',
         'foto',
-        'cliente',
+        'cliente_nombre',
         'ruc',
         'subtotal',
         'iva',

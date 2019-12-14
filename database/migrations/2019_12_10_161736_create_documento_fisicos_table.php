@@ -19,7 +19,7 @@ class CreateDocumentoFisicosTable extends Migration
             $table->enum('documento',['factura','compra','retencion'])->default('compra');
             $table->date('fecha')->nullable();
             $table->string('foto')->nullable();
-            $table->string('cliente')->nullable();
+            $table->string('cliente_nombre')->nullable();
             $table->string('ruc',20)->nullable();
             $table->decimal('subtotal',10,2)->default(0);
             $table->decimal('iva',10,2)->default(0);
