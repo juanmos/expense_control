@@ -33,6 +33,7 @@
                                                         <th>Telefono</th>
                                                         <th>Ciudad</th>
                                                         <th>Tipo</th>
+                                                        <th>Plan</th>
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
@@ -45,15 +46,11 @@
                                                         <td>{{$institucion->telefono}}</td>
                                                         <td>{{($institucion->ciudad_id>0)?$institucion->ciudad->ciudad:'Sin ciudad'}}</td>
                                                         <td>{{$institucion->tipoInstitucion->tipo}}</td>
-                                                        <td>
-                                                            {{-- <a href="{{ route('afiche.pdf',$afiche->id) }}" class="label theme-bg2 text-white f-12">Descargar</a> --}}
-                                                            
+                                                        <td>{{$institucion->tipoPlan->tipo}}</td>
+                                                        <td>                                                            
                                                             <a href="{{ route('admin.institucion.show',$institucion->id) }}" class="label theme-bg2 text-white f-12">Ver</a>
-                                                            {{-- <a href="{{ route('institucion.alumnos',$institucion->id) }}" class="label theme-bg2 text-white f-12">Alumnos</a> --}}
                                                             <a href="{{ route('admin.institucion.show',[$institucion->id,'U']) }}" class="label theme-bg2 text-white f-12">Usuarios</a>
-                                                            <a href="{{ route('institucion.edit',$institucion->id) }}" class="label theme-bg text-white f-12">Editar</a>
-                                                            
-                                                            
+                                                            <a href="{{ route('admin.institucion.edit',$institucion->id) }}" class="label theme-bg text-white f-12">Editar</a>                                                            
                                                         </td>
                                                     </tr>
                                                     

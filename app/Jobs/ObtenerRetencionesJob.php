@@ -7,17 +7,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Jobs\ObtenerComprasMesJob;
+use App\Jobs\ObtenerRetencionesMesJob;
 use App\Http\Helpers;
-use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
-use App\Models\Cliente;
-use App\Models\Compra;
 use Carbon\Carbon;
-use Artisan;
 use Crypt;
 
-class ObtenerComprasAnterioresJob implements ShouldQueue
+class ObtenerRetencionesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $institucion ;
@@ -38,11 +34,9 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
      */
     public function handle()
     {
-        $anos=['2020','2019','2018'];
+        $anos=['2020','2019'];
         $meses=[1,2,3,4,5,6,7,8,9,10,11,12];
         $sri_web='https://srienlinea.sri.gob.ec/movil-servicios/api/';
-        // $instituciones = Institucion::with('configuracion')->get();
-        // dd($this->institucion);
         $institucion=$this->institucion;
         $ruc = (
                 array_key_exists('ruc', $institucion->configuracion->configuraciones) &&
@@ -69,7 +63,7 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                         foreach ($meses as $mes) {
                             $fecha = Carbon::parse($ano.'-'.$mes.'-01');
                             if ($hoy->diffInDays($fecha, false) <=0) {
-                                ObtenerComprasMesJob::dispatch([
+                                ObtenerRetencionesMesJob::dispatch([
                                     'token'=>$token,
                                     'ano'=>$ano,
                                     'mes'=>$mes,
@@ -81,6 +75,5 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                 }
             }
         }
-        Artisan::call('sri:detalle-compras');
     }
 }

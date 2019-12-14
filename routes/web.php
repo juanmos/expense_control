@@ -15,9 +15,12 @@ Route::get('/','PublicController@index');
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
+
+
 // Route::get('carga','Bares\PaymentController@carga');
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::resource('ayuda','AyudaController');
 
     Route::get('register/institucion','HomeController@register')->name('register.institucion');
     Route::post('register/institucion','HomeController@registerInstitucion')->name('register.institucion');
@@ -33,7 +36,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('institucion', 'Admin\InstitucionController@index')->name('admin.institucion.index');
         Route::get('institucion/create', 'Admin\InstitucionController@create')->name('admin.institucion.create');
         Route::post('institucion/store', 'Admin\InstitucionController@store')->name('admin.institucion.store');
-        Route::get('institucion/{id}/{pest?}', 'Admin\InstitucionController@show')->name('admin.institucion.show');
+        Route::get('institucion/show/{id}/{pest?}', 'Admin\InstitucionController@show')->name('admin.institucion.show');
+        Route::get('institucion/{institucion}/edit', 'Admin\InstitucionController@edit')->name('admin.institucion.edit');
+        Route::put('institucion/{institucion}/update','Admin\InstitucionController@update')->name('admin.institucion.update');
     });
 
     
@@ -41,6 +46,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('institucion', 'Institucion\InstitucionController');
         Route::resource('institucion.facturacion', 'Institucion\FacturacionController');
         Route::resource('institucion.menus', 'Institucion\MenuController');
+        
         Route::get('/institucion/{id}/{pest?}', 'Institucion\InstitucionController@show')->name('institucion.show');
         Route::get('/{id}/alumnos', 'Institucion\AlumnoController@index')->name('institucion.alumnos');
         Route::get('/{id}/alumnos/data', 'Institucion\AlumnoController@alumnosData')->name('institucion.alumnos.data');
@@ -102,8 +108,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'naturales'], function () {
         Route::resource('naturales', 'Naturales\InstitucionController');
         Route::get('/persona/{id}/{pest?}', 'Naturales\InstitucionController@show')->name('naturales.show');
-        Route::get('configuracion/editar', 'Naturales\InstitucionController@configuracion')->name('naturales.configuracion.edit');
-        Route::put('configuracion/update/{id}', 'Naturales\InstitucionController@configuracionUpdate')->name('naturales.configuracion.update');
+        Route::get('configuracion/editar', 'Institucion\InstitucionController@configuracion')->name('naturales.configuracion.edit');
+        Route::put('configuracion/update/{id}', 'Institucion\InstitucionController@configuracionUpdate')->name('naturales.configuracion.update');
 
         Route::resource('naturales.clientes', 'Naturales\ClienteController');
         Route::get('naturales/{institucion?}/cliente/data', 'Naturales\ClienteController@clientesData')->name('naturales.clientes.data');

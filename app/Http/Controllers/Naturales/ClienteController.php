@@ -44,8 +44,11 @@ class ClienteController extends Controller
 
     public function findCedula(Request $request)
     {
+        $request->validate([
+            'ruc'=>'required'
+        ]);
         $clientes =  Cliente::where('ruc', 'like', ($request->is('api/*'))?
-                                                        base64_decode($request->get('ruc')):
+                                                        base64_decode($request->get('ruc')).'%':
                                                         $request->get('ruc').'%')
                                                     ->get();
         return ($request->is('api/*'))?

@@ -11,29 +11,25 @@
                         <div class="row align-items-center">
                             <div class="col-md-12">
                                 <div class="page-header-title">
-                                    @if($institucion!=null)
-                                    <h5 class="m-b-10">Editar institucion</h5>
-                                    @else
-                                    <h5 class="m-b-10">Nueva institucion</h5>
-                                    @endif
+                                    
+                                    <h5 class="m-b-10">Editar institución</h5>
+                                    
                                 </div>
                                 <ul class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{route('home')}}"><i class="feather icon-home"></i></a></li>
                                     <li class="breadcrumb-item"><a href="{{route('institucion.index')}}">Institución</a></li>
-                                    @if($institucion!=null)
+                                    
                                     <li class="breadcrumb-item"><a href="javascript:">Editar</a></li>
-                                    @else
-                                    <li class="breadcrumb-item"><a href="javascript:">Nueva</a></li>
-                                    @endif
+                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- [ breadcrumb ] end -->
-                <form action="{{($institucion!=null)?route('admin.institucion.update',$institucion->id):route('admin.institucion.store')}}" method="POST">
+                <form action="{{route('naturales.update',$institucion->id)}}" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                    <input type="hidden" name="_method" value="{{($institucion!=null)?'PUT':'POST'}}"/>
+                    <input type="hidden" name="_method" value="PUT"/>
                 <div class="main-body">
                     <div class="page-wrapper">
                         <!-- [ Main Content ] start -->
@@ -45,14 +41,6 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Tipo de institución</label>
-                                                {!! Form::select('tipo_institucion_id', $tipos, ($institucion!=null)?$institucion->tipo_institucion_id:1,["class"=>"form-control"]) !!}
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Tipo de plan</label>
-                                                {!! Form::select('tipo_plan_id', $tipoPlan, ($institucion!=null)?$institucion->tipo_plan_id:1,["class"=>"form-control"]) !!}
-                                            </div>
                                             <div class="form-group col-md-6 ">
                                                 <label for="exampleInputEmail1">* Institución / Nombre</label>
                                                 <input type="text" value="@if($institucion!=null){{$institucion->nombre}}@endif" name="nombre" class="form-control" required="required" aria-describedby="emailHelp" placeholder="Institución o Nombre">
@@ -66,11 +54,6 @@
                                                 <label for="exampleInputPassword1">Dirección</label>
                                                 <input type="text" value="@if($institucion!=null){{$institucion->direccion}}@endif" name="direccion" class="form-control" id="exampleInputPassword1" placeholder="Dirección">
                                             </div>
-                                            {{-- <div class="form-group col-md-6">
-                                                <label for="exampleInputPassword1">Ciudad</label>
-                                                
-                                                {!! Form::select('ciudad_id', $ciudad, ($institucion!=null)?$institucion->ciudad_id : 1 ,["class"=>"form-control"]) !!}
-                                            </div> --}}
                                             <div class="form-group col-md-6">
                                                 <label for="exampleInputPassword1">RUC</label>
                                                 <input type="text" value="@if($institucion!=null){{$institucion->ruc}}@endif" name="ruc" class="form-control" id="exampleInputPassword1" placeholder="RUC">

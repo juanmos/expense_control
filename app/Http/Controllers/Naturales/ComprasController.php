@@ -11,6 +11,7 @@ use App\Models\Institucion;
 use App\Models\Compra;
 use App\Models\Cliente;
 use Carbon\Carbon;
+use Artisan;
 use Crypt;
 use Auth;
 
@@ -84,6 +85,7 @@ class ComprasController extends Controller
      */
     public function create()
     {
+        abort(404);
     }
 
     /**
@@ -94,7 +96,7 @@ class ComprasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -181,7 +183,8 @@ class ComprasController extends Controller
     }
 
     public function actualziarSRI(){
-        ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id))->delay(1);;
+        // ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id))->delay(1);;
+        Artisan::queue('sri:compras');
         return response()->json(['obteniendo'=>true]);
     }
 }

@@ -8,9 +8,11 @@ use App\Models\Institucion;
 use App\Models\Transaccion;
 use App\Models\Pais;
 use App\Models\Ciudad;
+use App\Models\CategoriaCompra;
 use App\Models\EstadoInstitucion;
 use App\Models\Configuracion;
 use App\Models\TipoInstitucion;
+use App\Models\DocumentoFisico;
 use Carbon\Carbon;
 use Crypt;
 use Hash;
@@ -120,9 +122,13 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Institucion $naturale)
     {
-        //
+        $institucion=$naturale;
+        $paises = Pais::orderBy('pais')->get()->pluck('pais', 'id');
+        $ciudad = Ciudad::orderBy('ciudad')->get()->pluck('ciudad', 'id');
+        $estado = EstadoInstitucion::get()->pluck('estado', 'id');
+        return view('naturales.form',compact('institucion','paises','ciudad','estado'));
     }
 
     /**
@@ -132,9 +138,13 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Institucion  $naturale)
     {
-        //
+        $request->validate([
+            'nombre'=>'required'
+        ]);
+        $naturale->update($request->all());
+        return redirect()->route('naturales.show',$naturale->id);
     }
 
     /**
@@ -148,32 +158,35 @@ class InstitucionController extends Controller
         //
     }
 
-    public function configuracion()
-    {
-        $institucion =Institucion::find(Auth::user()->institucion_id);
-        $configuracion = Configuracion::where('institucion_id', Auth::user()->institucion_id)->first();
-        if ($configuracion==null) {
-            $configuracion = Configuracion::create(['institucion_id'=>Auth::user()->institucion_id]);
-        }
-        
-        return view('institucion.configuracion', compact('configuracion', 'institucion'));
-    }
-
     public function dashboard(){
         $institucion = Institucion::find(Auth::user()->institucion_id);
-        $compras=[];
-        $compras['mes']=$institucion->compras()->whereBetween('fecha', [
+        $fisicasCompras=$institucion->documentos()
+                ->where('documento','compra')
+                ->whereBetween('fecha', [
+                    Carbon::now()->firstOfMonth()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->get()->sum('total');
+        $fisicasVentas=$institucion->documentos()
+                ->where('documento','factura')
+                ->whereBetween('fecha', [
+                    Carbon::now()->firstOfMonth()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])->get()->sum('total');
+        $electronicaCompras=$institucion->compras()->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])
             ->get()->sum('total');
+        $electronicaVentas=$institucion->facturas()->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])
+            ->get()->sum('total');
+        $compras=[];
+        $compras['mes']=$electronicaCompras+$fisicasCompras;
         
         $ventas=[];
-        $ventas['mes']=$institucion->facturas()->whereBetween('fecha', [
-                Carbon::now()->firstOfMonth()->toDateString(),
-                Carbon::now()->toDateString()
-            ])
-            ->get()->sum('total');
+        $ventas['mes']=$electronicaVentas+$fisicasVentas;
         
         return Crypt::encrypt(json_encode(compact('compras', 'ventas')), false);
         // return response()->json( compact(
@@ -184,23 +197,42 @@ class InstitucionController extends Controller
 
     public function graficoComprasVentas(){
         $institucion = Institucion::find(Auth::user()->institucion_id);
-        $comprasGrafico=$institucion->compras()->whereBetween('fecha', [
-                Carbon::now()->subMonths(9)->toDateString(),
-                Carbon::now()->toDateString()
-            ])->orderBy('mes_ano')
-            ->groupBy('mes_ano')
-            ->select(DB::raw('COUNT(*) AS totalCompras,DATE_FORMAT(fecha, "%Y-%m") AS mes_ano,SUM(total) as compras'))->get();
-        $ventasGrafico=$institucion->facturas()->whereBetween('fecha', [
-                Carbon::now()->subMonths(9)->toDateString(),
-                Carbon::now()->toDateString()
-            ])->orderBy('mes_ano')
-            ->groupBy('mes_ano')
-            ->select(DB::raw('COUNT(*) AS totalVentas,DATE_FORMAT(fecha, "%Y-%m") AS mes_ano,SUM(total) as ventas'))->get();
-        $grafico= $comprasGrafico->mergeRecursive($ventasGrafico)->groupBy('mes_ano');
+        $grafico=[];
+        for($i=0;$i<6;$i++){
+            $fisicasCompras=$institucion->documentos()
+                ->where('documento','compra')
+                ->whereBetween('fecha', [
+                    Carbon::now()->subMonths($i)->firstOfMonth()->toDateString(),
+                    Carbon::now()->subMonths($i)->endOfMonth()->toDateString()
+                ])->get()->sum('total');
+            $fisicasVentas=$institucion->documentos()
+                ->where('documento','factura')
+                ->whereBetween('fecha', [
+                    Carbon::now()->subMonths($i)->firstOfMonth()->toDateString(),
+                    Carbon::now()->subMonths($i)->endOfMonth()->toDateString()
+                ])->get()->sum('total');
+            $electronicaCompras=$institucion->compras()
+                ->whereBetween('fecha', [
+                    Carbon::now()->subMonths($i)->firstOfMonth()->toDateString(),
+                    Carbon::now()->subMonths($i)->endOfMonth()->toDateString()
+                ])
+                ->get()->sum('total');
+            $electronicaVentas=$institucion->facturas()
+                ->whereBetween('fecha', [
+                    Carbon::now()->subMonths($i)->firstOfMonth()->toDateString(),
+                    Carbon::now()->subMonths($i)->endOfMonth()->toDateString()
+                ])
+                ->get()->sum('total');
+            $grafico[]=[
+                'fecha'=>now()->subMonths($i)->format('Y-m'),
+                'ventas'=>number_format($electronicaVentas+$fisicasVentas,2,'.',''),
+                'compras'=>number_format($electronicaCompras+$fisicasCompras,2,'.','')
+            ];
+        }        
         return Crypt::encrypt(json_encode(compact('grafico')), false);
-        // return response()->json( compact(
-        //     'grafico'
-        // ));
+    //     return response()->json( compact(
+    //         'grafico'
+    //     ));
     }
 
     public function graficoGastos(){
@@ -212,6 +244,62 @@ class InstitucionController extends Controller
             ->groupBy('categoria_id')
             ->with('categoria')
             ->select(DB::raw('COUNT(*) AS totalCompras,categoria_id,SUM(total) as compras'))->get();
+        $comprasFisicas=$institucion->documentos()
+            ->where('documento','compra')
+            ->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->orderBy('categoria_id')
+            ->groupBy('categoria_id')
+            ->with('categoria')
+            ->select(DB::raw('COUNT(*) AS totalCompras,categoria_id,SUM(total) as compras'))->get();
+        
+        $comprasJunto=$compras->concat($comprasFisicas)->mapToGroups(function ($item, $key) {
+            return [$item->categoria->categoria => $item];
+        });
+        $compras=[];
+        foreach($comprasJunto as $key=>$compra){
+            $compras[]=[
+                'totales'=>number_format($compra->sum('compras'),2,'.',''),
+                'categoria'=>$key
+            ];
+        }
+        
+        return Crypt::encrypt(json_encode(compact('compras')), false);
+        // return response()->json( compact(
+        //     'compras'
+        // ));
+    }
+
+    public function graficoGastosAnual(){
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $compras=$institucion->compras()->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->orderBy('categoria_id')
+            ->groupBy('categoria_id')
+            ->with('categoria')
+            ->select(DB::raw('COUNT(*) AS totalCompras,categoria_id,SUM(total) as compras'))->get();
+        $comprasFisicas=$institucion->documentos()
+            ->where('documento','compra')
+            ->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->orderBy('categoria_id')
+            ->groupBy('categoria_id')
+            ->with('categoria')
+            ->select(DB::raw('COUNT(*) AS totalCompras,categoria_id,SUM(total) as compras'))->get();
+        
+        $comprasJunto=$compras->concat($comprasFisicas)->mapToGroups(function ($item, $key) {
+            return [$item->categoria->categoria => $item];
+        });
+        $compras=[];
+        foreach($comprasJunto as $key=>$compra){
+            $compras[]=[
+                'totales'=>number_format($compra->sum('compras'),2,'.',''),
+                'categoria'=>$key
+            ];
+        }
         
         return Crypt::encrypt(json_encode(compact('compras')), false);
         // return response()->json( compact(

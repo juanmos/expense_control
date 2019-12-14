@@ -21,6 +21,7 @@
         "predis/predis": "^1.1",
         "simplesoftwareio/simple-qrcode": "^2.0",
         "spatie/laravel-permission": "^3.0",
+        "te7a-houdini/laravel-trix": "^1.1",
         "tymon/jwt-auth": "1.0.0-rc.5",
         "yajra/laravel-datatables-oracle": "^9.7"
     },
