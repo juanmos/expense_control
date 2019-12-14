@@ -16,6 +16,7 @@ class DocumentosRetencionesValores extends Migration
         Schema::table('documento_fisicos', function (Blueprint $table) {
             $table->decimal('ret_renta',10,2)->default(0)->after('total');
             $table->decimal('ret_iva',10,2)->default(0)->after('ret_renta');
+            $table->softDeletesTz();
         });
     }
 
@@ -29,6 +30,7 @@ class DocumentosRetencionesValores extends Migration
         Schema::table('documento_fisicos', function (Blueprint $table) {
             $table->dropColumn('ret_renta');
             $table->dropColumn('ret_iva');
+            $table->dropSoftDeletesTz();
         });
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Institucion;
 use App\Models\CategoriaCompra;
@@ -9,6 +10,8 @@ use App\Models\Cliente;
 
 class DocumentoFisico extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable=[
         'institucion_id',
         'documento',
