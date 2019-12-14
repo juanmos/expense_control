@@ -36,7 +36,7 @@ class ClienteImport implements ToModel, WithProgressBar, WithChunkReading, WithB
     public function getCsvSettings(): array
     {
         return [
-            // 'input_encoding' => 'ISO-8859-1',
+            'input_encoding' => 'ISO-8859-1',
             'delimiter'=>"\t",
             'enclosure'=> '"',
         ];
