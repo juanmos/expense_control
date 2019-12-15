@@ -25,10 +25,11 @@ class ClienteImport implements ToModel, WithProgressBar, WithChunkReading, WithB
         if(Cliente::where('ruc',$row['numero_ruc'])->first()!=null){
             return null;
         }
+        $razon=(strlen($row['razon_social'])<190)?$row['razon_social']:substr($row['razon_social'],0,190);
         return new Cliente([
             'ruc'=>$row['numero_ruc'],
-            'razon_social'=>(strlen($row['razon_social'])<190)?$row['razon_social']:substr($row['razon_social'],0,190),
-            'nombre_comercial'=>(strlen($row['nombre_comercial'])<190)?$row['nombre_comercial']:substr($row['nombre_comercial'],0,190),
+            'razon_social'=>$razon,
+            'nombre_comercial'=>($row['nombre_comercial']!=null)?(strlen($row['nombre_comercial'])<190)?$row['nombre_comercial']:substr($row['nombre_comercial'],0,190):$razon,
             'direccion'=>$row['calle'].' '.$row['numero'].' '.$row['interseccion']
         ]);
     }
