@@ -27,8 +27,8 @@ class ClienteImport implements ToModel, WithProgressBar, WithChunkReading, WithB
         }
         return new Cliente([
             'ruc'=>$row['numero_ruc'],
-            'razon_social'=>$row['razon_social'],
-            'nombre_comercial'=>$row['nombre_comercial'],
+            'razon_social'=>(strlen($row['razon_social'])<190)?$row['razon_social']:substr($row['razon_social'],0,190),
+            'nombre_comercial'=>(strlen($row['nombre_comercial'])<190)?$row['nombre_comercial']:substr($row['nombre_comercial'],0,190),
             'direccion'=>$row['calle'].' '.$row['numero'].' '.$row['interseccion']
         ]);
     }
