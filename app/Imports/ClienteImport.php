@@ -50,6 +50,6 @@ class ClienteImport implements ToModel, WithProgressBar, WithChunkReading, WithB
 
     public function chunkSize(): int
     {
-        return 2000;
+        return 4000;
     }
 }
