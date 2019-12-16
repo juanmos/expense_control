@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Naturales;
 
 use App\Http\Controllers\Controller;
+use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use App\Models\DocumentoFisico;
 use App\Models\Institucion;
+use App\Models\Cliente;
 use Carbon\Carbon;
 use Crypt;
 use Auth;
@@ -56,7 +58,12 @@ class DocumentoFisicoController extends Controller
             
             // return json_encode(compact('dia', 'mes', 'ano', 'documentos'));
         }
-        
+        $documentos=$institucion->documentos()
+                ->where('documento',$tipo)
+                ->whereBetween('fecha', [$start,$end])
+                ->with(['cliente','categoria'])
+                ->orderBy('fecha', 'desc')->get();
+        return Datatables::of($documentos)->make(true);
     }
 
     /**
@@ -84,6 +91,7 @@ class DocumentoFisicoController extends Controller
         ]);
         $data=$request->except(['foto','fecha']);
         $data['fecha']=Carbon::parse($request->get('fecha'))->toDateString();
+        
         $institucion =Institucion::find(Auth::user()->institucion_id);
         $documento=$institucion->documentos()->create($data);
         $documento['foto']=$request->file('foto')->store('public/documentos/'.$institucion->id.'/'.$documento->documento);
