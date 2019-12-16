@@ -73,7 +73,7 @@ class ClienteController extends Controller
         $clientes = Cliente::where(function ($q) use ($texto) {
                                 $q->orWhere('ruc', 'like', $texto.'%');
                                 $q->orWhere('nombre_comercial', 'like', '%'.$texto.'%');
-                            })->paginate(50);
+                            })->with('cliente')->paginate(50);
         
         // $clientes =  ClienteInstitucion::where('institucion_id', Auth::user()->institucion_id)
         //                 ->whereHas('cliente', function ($query) use ($texto) {
