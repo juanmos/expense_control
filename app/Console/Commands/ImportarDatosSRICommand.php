@@ -39,7 +39,7 @@ class ImportarDatosSRICommand extends Command
     public function handle()
     {
         $this->output->title('Starting import');
-        (new ClienteImport)->withOutput($this->output)->import('sri/AZUAY.txt');
+        // (new ClienteImport)->withOutput($this->output)->import('sri/AZUAY.txt');
         (new ClienteImport)->withOutput($this->output)->import('sri/GUAYAS.txt');
         (new ClienteImport)->withOutput($this->output)->import('sri/PICHINCHA.txt');
         (new ClienteImport)->withOutput($this->output)->import('sri/MANABI.txt');
