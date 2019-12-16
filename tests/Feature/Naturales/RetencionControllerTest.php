@@ -50,10 +50,8 @@ class RetencionControllerTest extends TestCase
     }
 
     /** @test */
-    public function test_retenciones_fisicas_data()
-    {
-        // assertions
-    }
+    
+    
     
     
     

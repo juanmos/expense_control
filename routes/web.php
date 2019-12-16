@@ -115,6 +115,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('naturales/{institucion?}/cliente/data', 'Naturales\ClienteController@clientesData')->name('naturales.clientes.data');
         Route::get('naturales/{institucion}/clientes/upload', 'Naturales\ClienteController@upload')->name('naturales.clientes.upload');
         Route::get('naturales/{institucion}/clientes/id/{id}','Naturales\ClienteController@findById')->name('naturales.clientes.find.id');
+        Route::get('naturales/clientes/search/ruc','Naturales\ClienteController@findCedula')->name('naturales.clientes.find.cedula');
         
         Route::resource('naturales.categoria', 'Naturales\CategoriaController');
         Route::get('naturales/{tipo}/categoria/data/tablas', 'Naturales\CategoriaController@categoriaData')->name('naturales.categoria.data');
@@ -136,6 +137,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('naturales/{institucion}/retenciones/data/table', 'Naturales\RetencionController@retencionesData')->name('naturales.retenciones.data');
 
         Route::get('naturales/documentos/{tipo}','Naturales\DocumentoFisicoController@index')->name('naturales.documentos.index');
+        Route::get('naturales/{institucion}/documento/{tipo}/create','Naturales\DocumentoFisicoController@create')->name('naturales.documentos.create');
+        Route::post('naturales/{institucion}/documento/store','Naturales\DocumentoFisicoController@store')->name('naturales.documentos.store');
 
 
         Route::get('usuario/', 'Naturales\UsuarioController@index')->name('naturales.usuario.index');
