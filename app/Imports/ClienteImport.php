@@ -22,9 +22,9 @@ class ClienteImport implements ToModel, WithProgressBar, WithChunkReading, WithB
     */
     public function model(array $row)
     {
-        if(Cliente::where('ruc',$row['numero_ruc'])->first()!=null){
-            return null;
-        }
+        // if(Cliente::where('ruc',$row['numero_ruc'])->first()!=null){
+        //     return null;
+        // }
         $razon=(strlen($row['razon_social'])<190)?$row['razon_social']:substr($row['razon_social'],0,190);
         return new Cliente([
             'ruc'=>$row['numero_ruc'],
@@ -50,6 +50,6 @@ class ClienteImport implements ToModel, WithProgressBar, WithChunkReading, WithB
 
     public function chunkSize(): int
     {
-        return 4000;
+        return 2000;
     }
 }
