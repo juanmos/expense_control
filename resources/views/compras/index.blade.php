@@ -132,7 +132,7 @@
 $(function() {
     $(document).on('click','#filter',function(){
         table.destroy();
-        $('#tableData').empty(); // empty in case the columns change
+        //$('#tableData').empty(); // empty in case the columns change
  
         table = $('#tableData').DataTable({
             processing: true,

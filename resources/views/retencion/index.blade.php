@@ -6,7 +6,7 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
-                @if($institucion->configuracion->configuraciones!=null && array_key_exists('firma',$institucion->configuracion->configuraciones))
+
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">
@@ -16,10 +16,11 @@
                             <div class="col-md-6 col-xl-4">
                                 <div class="card daily-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Facturas utlimos 7 días</h6>
+                                        <h6 class="mb-4">Retenciones utlimos 7 días</h6>
                                         <div class="row d-flex align-items-center">
                                             <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$ {{$dia}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>RENTA $ {{$dia['renta']}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>IVA $ {{$dia['iva']}}</h3>
                                             </div>
 
                                             <div class="col-3 text-right">
@@ -37,10 +38,11 @@
                             <div class="col-md-6 col-xl-4">
                                 <div class="card Monthly-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Facturas mensuales</h6>
+                                        <h6 class="mb-4">Retenciones mensuales</h6>
                                         <div class="row d-flex align-items-center">
                                             <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>$ {{$mes}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>RENTA: $ {{$mes['renta']}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>IVA: $ {{$mes['iva']}}</h3>
                                             </div>
                                             <div class="col-3 text-right">
                                                 <p class="m-b-0">36%</p>
@@ -57,10 +59,11 @@
                             <div class="col-md-12 col-xl-4">
                                 <div class="card yearly-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Facturas anuales</h6>
+                                        <h6 class="mb-4">Retenciones anuales</h6>
                                         <div class="row d-flex align-items-center">
                                             <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$ {{$ano}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>RENTA: $ {{$ano['renta']}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>IVA: $ {{$ano['iva']}}</h3>
                                             </div>
                                             <div class="col-3 text-right">
                                                 <p class="m-b-0">80%</p>
@@ -78,8 +81,9 @@
                                 <div class="card Recent-Users">
                                     <div class="card-header row">
                                         <div class="col-md-8">
-                                            <h5 class="">Facturas de venta</h5>
-                                        </div>                                        
+                                            <h5 class="">Retenciones</h5>
+                                        </div>
+                                        
                                         <div class="col-md-3">
                                             <div class="input-daterange input-group" id="datepicker_range">
                                                 <input type="text" class="form-control text-left" placeholder="Fecha inicio" value="{{$start}}" name="start" id="start">
@@ -89,24 +93,49 @@
                                         <div class="col-md-1">
                                             <button type="button" id="filter" class="btn btn-icon btn-rounded btn-primary"><i class="feather icon-filter"></i></button>
                                         </div>
-                                        <a href="{{route('naturales.facturas.create',$institucion_id)}}" class="btn btn-primary float-right"><i class="mdi mdi-credit-card text-c-white f-10 m-r-15"></i> Nueva factura</a>
+                                        {{-- <a href="{{route('empresa.contacto.create',$empresa->id)}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Nuevo usuario</a> --}}
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
-                                            <table  id="tableData" class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Fecha</th>
-                                                        <th>Razón social</th>                                                        
-                                                        <th>Estado</th>
-                                                        <th>Numero</th>
-                                                        <th>Total</th>                                                        
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="entrydata">
-                                                </tbody>
-                                            </table>
+                                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" id="pills-electronicas-tab" data-toggle="pill" href="#pills-electronicas" role="tab" aria-controls="pills-electronicas" aria-selected="true">Electrónicas</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="pills-fisicas-tab" data-toggle="pill" href="#pills-fisicas" role="tab" aria-controls="pills-fisicas" aria-selected="false">Físicas</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content" id="pills-tabContent">
+                                                <div class="tab-pane fade show active" id="pills-electronicas" role="tabpanel" aria-labelledby="pills-electronicas-tab">
+                                                    <table  id="tableData" class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Tipo</th>
+                                                                <th>Impuestos</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="tab-pane fade" id="pills-fisicas" role="tabpanel" aria-labelledby="pills-fisicas-tab">
+                                                    <table  id="tableFisicas" class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Tipo</th>
+                                                                <th>Impuestos</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                         </div>
                                     </div>
                                 </div>
@@ -117,31 +146,6 @@
                         <!-- [ Main Content ] end -->
                     </div>
                 </div>
-                @else
-                <div class="main-body">
-                    <div class="page-wrapper">
-                        <!-- [ Main Content ] start -->
-                        <div class="row">
-                            <div class="col-xl-12 col-md-12">
-                                <div class="card Recent-Users">
-                                    <div class="card-header row">
-                                        <div class="col-md-10">
-                                            <h5 class="">No tienes tu firma electronica cargada</h5>
-                                        </div> 
-                                        <div class="col-md-1">
-                                            <a href="{{route('naturales.configuracion.edit')}}" id="filter" class="btn btn-sm btn-primary">Cargar firma</a>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="card-block px-0 py-3">
-                                        <p>Sigue los pasos para obtener tu firma electrónica</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
     </div>
@@ -157,26 +161,29 @@
 $(function() {
     $(document).on('click','#filter',function(){
         table.destroy();
-       // $('#tableData').empty(); // empty in case the columns change
+        {{-- $('#tableData').empty(); // empty in case the columns change --}}
  
         table = $('#tableData').DataTable({
             processing: true,
             serverSide: true,
             "pageLength": 50,
             "order": [[ 1, "desc" ]],
-            ajax: "{!! route('naturales.facturas.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+            ajax: "{!! route('naturales.retenciones.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
             columns: [
                 // { data: 'id', name: 'id' },
-                
-                { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
                 { data: 'fecha', name: 'fecha' },
-                { data: 'estado.estado', name: 'estado.estado' },
-                { data: 'secuencia', name: 'secuencia' },
-                { data: 'total', name: 'total' },
+                { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+                
+                { data: 'tipoComprobante', name: 'tipoComprobante' },
+                { data: 'impuestos', render:function(impuestos){
+                    return impuestos.map(function(item){
+                        return item.nombreImpuesto+': $'+item.valor+'<br>'
+                    })
+                }},
                 
                 { "data": "id", render: function (dataField) { 
-                    var link='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                    link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';
+                    var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                    {{-- link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; --}}
                         return link;
                     } 
                 }
@@ -188,18 +195,40 @@ $(function() {
         serverSide: true,
         "pageLength": 50,
         "order": [[ 0, "desc" ]],
-        ajax: "{!! route('naturales.facturas.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+        ajax: "{!! route('naturales.retenciones.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
             { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
-            { data: 'estado.estado', name: 'estado.estado' },
-            { data: 'secuencia', name: 'secuencia' },
+            
+            { data: 'tipoComprobante', name: 'tipoComprobante' },
             { data: 'total', name: 'total' },
             
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                 link+='<a href="{{ url("naturales/naturales/".$institucion_id."/facturas")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; 
+                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
+                    return link;
+                } 
+            }
+        ]
+    });
+    var tableFisicas = $('#tableFisicas').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.documentos.index','retencion') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            
+            { data: 'tipoComprobante', name: 'tipoComprobante' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
                     return link;
                 } 
             }

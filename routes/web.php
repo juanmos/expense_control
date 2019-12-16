@@ -132,6 +132,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('naturales/{institucion}/facturas/data/table', 'Naturales\FacturacionController@facturasData')->name('naturales.facturas.data');
         Route::get('facturas/cliente/{id}','Naturales\FacturacionController@ventasCliente')->name('naturales.facturas.cliente');
 
+        Route::resource('naturales.retenciones', 'Naturales\RetencionController');
+        Route::get('naturales/{institucion}/retenciones/data/table', 'Naturales\RetencionController@retencionesData')->name('naturales.retenciones.data');
+
+        Route::get('naturales/documentos/{tipo}','Naturales\DocumentoFisicoController@index')->name('naturales.documentos.index');
+
+
         Route::get('usuario/', 'Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}', 'Naturales\UsuarioController@show')->name('naturales.usuario.show');
         Route::get('{id}/usuario/crear/', 'Naturales\UsuarioController@create')->name('naturales.usuario.crear');

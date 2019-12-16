@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Naturales;
 
 use App\Http\Controllers\Controller;
+use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use App\Models\Institucion;
+use App\Models\Retencion;
 use Carbon\Carbon;
 use Crypt;
 use Auth;
@@ -16,9 +18,58 @@ class RetencionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($institucion_id)
     {
-        //
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        $retenciones=$institucion->retenciones()->whereBetween('fecha', [
+                now()->subDays(7)->toDateString(),
+                now()->toDateString()
+            ])->with('cliente.cliente')->get();
+        $dia=['renta'=>0,'iva'=>0];
+        foreach($retenciones as $retencion){
+            foreach($retencion->impuestos as $impuesto){
+                if($impuesto['nombreImpuesto']=='RENTA'){
+                    $dia['renta']=$dia['renta']+$impuesto['valor'];
+                }
+                if($impuesto['nombreImpuesto']=='IVA'){
+                    $dia['iva']=$dia['iva']+$impuesto['valor'];
+                }
+            }
+        }
+        $retenciones=$institucion->retenciones()->whereBetween('fecha', [
+                now()->firstOfMonth()->toDateString(),
+                now()->toDateString()
+            ])->with('cliente.cliente')->get();
+        $mes=['renta'=>0,'iva'=>0];
+        foreach($retenciones as $retencion){
+            foreach($retencion->impuestos as $impuesto){
+                if($impuesto['nombreImpuesto']=='RENTA'){
+                    $mes['renta']=$mes['renta']+$impuesto['valor'];
+                }
+                if($impuesto['nombreImpuesto']=='IVA'){
+                    $mes['iva']=$mes['iva']+$impuesto['valor'];
+                }
+            }
+        }
+        $retenciones=$institucion->retenciones()->whereBetween('fecha', [
+                now()->startOfYear()->toDateString(),
+                now()->toDateString()
+            ])->with('cliente.cliente')->get();
+        $ano=['renta'=>0,'iva'=>0];
+        foreach($retenciones as $retencion){
+            foreach($retencion->impuestos as $impuesto){
+                if($impuesto['nombreImpuesto']=='RENTA'){
+                    $ano['renta']=$ano['renta']+$impuesto['valor'];
+                }
+                if($impuesto['nombreImpuesto']=='IVA'){
+                    $ano['iva']=$ano['iva']+$impuesto['valor'];
+                }
+            }
+        }
+        
+        $start=now()->firstOfMonth()->format('d-m-Y');
+        $end=now()->format('d-m-Y');
+        return view('retencion.index', compact('institucion', 'institucion_id', 'dia', 'mes', 'ano', 'start', 'end'));
     }
 
     public function retencionesData(Request $request){
