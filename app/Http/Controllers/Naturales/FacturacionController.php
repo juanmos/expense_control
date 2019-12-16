@@ -104,7 +104,7 @@ class FacturacionController extends Controller
             $elCliente= Cliente::find($request->get('cliente_id'));
             $cliente = $institucion->clientes()->create([
                 'cliente_id'=>$request->get('cliente_id'),
-                'nombre'=>$elCliente->id,
+                'nombre'=>$elCliente->nombre_comercial,
                 'email'=>$request->email
             ]);
         } elseif ($cliente->email==null) {
