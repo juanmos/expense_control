@@ -4,10 +4,13 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 use App\Models\DocumentoFisico;
 use App\Models\Institucion;
+use App\Models\Cliente;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentoFisicoControllerTest extends TestCase
 {
@@ -36,12 +39,48 @@ class DocumentoFisicoControllerTest extends TestCase
         $this->actingAs(User::first());
         $response = $this->get('naturales/naturales/documentos/factura');
         $response->assertOk();
-        // $json = (array)json_decode(Crypt::decryptString($response->getContent()));
+    }
+
+    public function test_crear_nueva_documento_fisica()
+    {
+        $this->withoutExceptionHandling();
+        $this->actingAs(User::first());
+        factory(Cliente::class)->create([
+            'razon_social'=>'Juan Mosocso',
+            'ruc'=>'1234567890001'
+        ]);
+        $response =$this->get('naturales/naturales/1/documento/retencion/create');
+        $response->assertOk();
+        $response->assertViewIs('retencion.form');
+        $response->assertViewHasAll(['documento','tipo','id','categorias']);
+        Storage::fake('public/documentos/1/compra/');
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+        $response = $this->post('naturales/naturales/1/documento/store',[
+            'documento'=>'retencion',
+            'cliente_id'=>1,
+            'cliente_nombre'=>'Juan Moscoso',            
+            'ret_iva'=>10,
+            'ret_renta'=>25,
+            'foto'=>$file,
+            'fecha'=>now()->format('d-m-Y')
+        ]);
         
-        // $this->assertArrayHasKey('documentos',$json);
-        // $this->assertArrayHasKey('ano',$json);
-        // $this->assertArrayHasKey('mes',$json);
-        // $this->assertArrayHasKey('dia',$json);
+        $this->assertCount(1,DocumentoFisico::all());
+        $response->assertRedirect('naturales/naturales/1/retenciones');
+        
+    }
+
+    public function test_crear_nueva_documento_fisico_validaciones()
+    {
+        $this->actingAs(User::first());
+        factory(Cliente::class)->create([
+            'razon_social'=>'Juan Mosocso',
+            'ruc'=>'1234567890001'
+        ]);
+        
+        $response = $this->post('naturales/naturales/1/documento/store',[]);
+        $response->assertSessionHasErrors(['documento','foto','fecha']);
     }
     
 }

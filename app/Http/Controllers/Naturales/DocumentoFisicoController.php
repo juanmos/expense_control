@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Naturales;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
+use App\Models\CategoriaCompra;
 use App\Models\DocumentoFisico;
 use App\Models\Institucion;
 use App\Models\Cliente;
@@ -71,9 +72,12 @@ class DocumentoFisicoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id,$tipo)
     {
-        //
+        $documento=null;
+        $categorias = CategoriaCompra::get()->pluck('categoria','id');
+        return view('retencion.form',compact('documento','tipo','id','categorias'));
+
     }
 
     /**
@@ -82,7 +86,7 @@ class DocumentoFisicoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$institucion_id)
     {
         $request->validate([
             'documento'=>'required|in:factura,compra,retencion',
@@ -91,12 +95,28 @@ class DocumentoFisicoController extends Controller
         ]);
         $data=$request->except(['foto','fecha']);
         $data['fecha']=Carbon::parse($request->get('fecha'))->toDateString();
-        
+        if($data['cliente_id']==0){
+            $cliente = Cliente::where('ruc',$data['ruc'])->first();
+            if($cliente==null){
+                $cliente=Cliente::create([
+                    'ruc'=>$data['ruc'],
+                    'nombre_comercial'=>$data['cliente_nombre'],
+                    'razon_social'=>$data['cliente_nombre'],
+                ]);
+            }
+            $data['cliente_id']=$cliente->id;
+        }
         $institucion =Institucion::find(Auth::user()->institucion_id);
         $documento=$institucion->documentos()->create($data);
         $documento['foto']=$request->file('foto')->store('public/documentos/'.$institucion->id.'/'.$documento->documento);
         $documento->save();
-        return ($request->is('api/*'))?response()->json(['creado'=>true]):back();
+        return ($request->is('api/*'))?
+            response()->json(['creado'=>true]):
+            ($data['documento']=='factura')?
+                redirect()->route('naturales.facturacion.index',$institucion_id)->with(['mensaje'=>'Creado con exito']):
+                ($data['documento']=='compra')?
+                    redirect()->route('naturales.compras.index',$institucion_id)->with(['mensaje'=>'Creado con exito']):
+                    redirect()->route('naturales.retenciones.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
     }
 
     /**
