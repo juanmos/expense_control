@@ -70,13 +70,18 @@ class ClienteController extends Controller
     public function buscar(Request $request)
     {
         $texto=($request->is('api/*'))?base64_decode($request->get('texto')):$request->get('texto');
-        $clientes =  ClienteInstitucion::where('institucion_id', Auth::user()->institucion_id)
-                        ->whereHas('cliente', function ($query) use ($texto) {
-                            $query->where(function ($q) use ($texto) {
+        $clientes = Cliente::where(function ($q) use ($texto) {
                                 $q->orWhere('ruc', 'like', $texto.'%');
-                                $q->orWhere('razon_social', 'like', '%'.$texto.'%');
-                            });
-                        })->with('cliente')->paginate(50);
+                                $q->orWhere('nombre_comercial', 'like', '%'.$texto.'%');
+                            })->paginate(50);
+        
+        // $clientes =  ClienteInstitucion::where('institucion_id', Auth::user()->institucion_id)
+        //                 ->whereHas('cliente', function ($query) use ($texto) {
+        //                     $query->where(function ($q) use ($texto) {
+        //                         $q->orWhere('ruc', 'like', $texto.'%');
+        //                         $q->orWhere('razon_social', 'like', '%'.$texto.'%');
+        //                     });
+        //                 })->with('cliente')->paginate(50);
         // return $clientes;
         return ($request->is('api/*'))?
                 Crypt::encrypt(json_encode(compact('clientes')), false):
