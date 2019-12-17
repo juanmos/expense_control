@@ -275,11 +275,11 @@
             </div>
             <div class="modal-body">
                  <div class="table-responsive">
-                    <table id="clientesData" class="table table-hover">
+                    <table id="clientesData" class="table table-hover" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Acciones</th>
-                                <th>Razón social</th>
+                                <th>Nombre comercial</th>
                                 <th>RUC/Cedula</th>
                                 
                             </tr>
@@ -541,7 +541,7 @@ $(function() {
         serverSide: true,
         "pageLength": 50,
         "order": [[ 1, "asc" ]],
-        ajax: "{!! route('naturales.clientes.data',$institucion_id) !!}",
+        ajax: "{!! route('naturales.clientes.buscar',$institucion_id) !!}",
         columnDefs: [
             { width: 200, targets: 0 }
         ],
@@ -553,8 +553,8 @@ $(function() {
                     return link;
                 } 
             },
-            { data: 'cliente.razon_social', name: 'cliente.razon_social',width:'60%' },
-            { data: 'cliente.ruc', name: 'cliente.ruc',width:'20%' },
+            { data: 'nombre_comercial', name: 'nombre_comercial',width:'60%' },
+            { data: 'ruc', name: 'ruc',width:'20%' },
             
         ],
     });
@@ -563,7 +563,7 @@ $(document).on('click','.seleccionarCliente',function(){
     var clienteId = $(this).attr('clienteId');
     $('input[name=email').val('');
     $.get('{{url("naturales/naturales/".$institucion_id."/clientes/id/")}}/'+clienteId,function(json){
-        $("#cliente_nombre").html(json.clientes.razon_social);
+        $("#cliente_nombre").html(json.clientes.nombre_comercial);
         $("#cliente_ruc").html('RUC: '+json.clientes.ruc);
         $("#cliente_direccion").html('Dir: '+json.clientes.direccion);
         $("#cliente_telefono").html('Telf: '+json.clientes.telefono);
@@ -579,6 +579,9 @@ $(document).on('click','.seleccionarCliente',function(){
             }
             
             $("#cliente_contacto").html((json.clientes.cliente_institucion[0].apellido!=null)?'Contacto: '+json.clientes.cliente_institucion[0].nombre+' '+json.clientes.cliente_institucion[0].apellido:'Contacto: '+json.clientes.cliente_institucion[0].nombre);
+        }else{
+            $('#cliente_email_div').show();
+            $("#cliente_email").hide();
         }
         $('input[name=cliente_id]').val(json.clientes.id);
         $('#datosCliente').show();

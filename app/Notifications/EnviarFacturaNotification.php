@@ -60,12 +60,6 @@ class EnviarFacturaNotification extends Notification
                     ]));
     }
 
-    // public function routeNotificationForMail($notification)
-    // {
-    //     \Log::info($this->factura->cliente->email);
-    //     return $this->factura->cliente->email;
-    // }
-
     /**
      * Get the array representation of the notification.
      *

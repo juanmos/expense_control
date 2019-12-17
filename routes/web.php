@@ -116,6 +116,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('naturales/{institucion}/clientes/upload', 'Naturales\ClienteController@upload')->name('naturales.clientes.upload');
         Route::get('naturales/{institucion}/clientes/id/{id}','Naturales\ClienteController@findById')->name('naturales.clientes.find.id');
         Route::get('naturales/clientes/search/ruc','Naturales\ClienteController@findCedula')->name('naturales.clientes.find.cedula');
+        Route::get('naturales/clientes/search/texto','Naturales\ClienteController@buscar')->name('naturales.clientes.buscar');
         
         Route::resource('naturales.categoria', 'Naturales\CategoriaController');
         Route::get('naturales/{tipo}/categoria/data/tablas', 'Naturales\CategoriaController@categoriaData')->name('naturales.categoria.data');
