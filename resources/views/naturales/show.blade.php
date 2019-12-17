@@ -836,8 +836,8 @@
             { data: 'total', name: 'total' },
             
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                 link+='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; 
+                var link='<a href="{{ url("naturales/naturales/".$institucion->id."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                 link+='<a href="{{ url("naturales/naturales/".$institucion->id."/facturas")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; 
                     return link;
                 } 
             }
@@ -857,8 +857,7 @@
             { data: 'total', name: 'total' },
             
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                    return link;
+                return '<a href="{{ url("naturales/naturales/".$institucion->id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
                 } 
             }
         ]
@@ -878,7 +877,7 @@
             { data: 'total', name: 'total' },
             
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
+                var link='<a href="{{ url("naturales/naturales/".$institucion->id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                     return link;
                 } 
             }
@@ -898,8 +897,7 @@
             { data: 'total', name: 'total' },
             
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                    return link;
+                return '<a href="{{ url("naturales/naturales/".$institucion->id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
                 } 
             }
         ]
