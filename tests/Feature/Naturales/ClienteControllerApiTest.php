@@ -9,7 +9,8 @@ use App\Models\Cliente;
 use App\Models\Institucion;
 use App\Models\User;
 use Crypt;
-class ClienteControllerTest extends TestCase
+
+class ClienteControllerApiTest extends TestCase
 {
     use RefreshDatabase;
     protected $headers;

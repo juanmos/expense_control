@@ -62,7 +62,7 @@
                                             <div class="row invoive-info">
                                                 <div class="col-md-4 col-xs-12 invoice-client-info">
                                                     <h6>Cliente :</h6>
-                                                    <h6 class="m-0">{{$factura->cliente->cliente->razon_social}}</h6>
+                                                    <h6 class="m-0">{{$factura->cliente->cliente->nombre_comercial}}</h6>
                                                     <p class="m-0 m-t-10">{{$factura->cliente->cliente->ruc}}</p>
                                                     <p class="m-0">{{$factura->cliente->cliente->direccion}}</p>
                                                     <p class="m-0">{{$factura->cliente->cliente->telefono}}</p>

@@ -28,15 +28,37 @@ class ComprasController extends Controller
         $dia=$institucion->compras()->whereBetween('fecha', [
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
-            ])->with('cliente.cliente')->get()->sum('total');
+            ])->get()->sum('total');
+        $diaFisica=$institucion->documentos()->where('documento','compra')
+            ->whereBetween('fecha', [
+                Carbon::now()->subDays(7)->toDateString(),
+                Carbon::now()->toDateString()
+            ])->get()->sum('total');
+        $dia=$dia+$diaFisica;
+
         $mes=$institucion->compras()->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
-            ])->with('cliente.cliente')->get()->sum('total');
-        $ano=$institucion->compras()->whereBetween('fecha', [
+            ])->get()->sum('total');
+        $mesFisica=$institucion->documentos()->where('documento','compra')
+            ->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->get()->sum('total');
+        $mes+=$mesFisica;
+
+        $ano=$institucion->compras()
+            ->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
-            ])->with('cliente.cliente')->get()->sum('total');
+            ])->get()->sum('total');
+        $anoFisica=$institucion->documentos()->where('documento','compra')
+            ->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->get()->sum('total');
+        $ano+=$anoFisica;
+
         $start=Carbon::now()->firstOfMonth()->format('d-m-Y');
         $end=Carbon::now()->format('d-m-Y');
         return  view('compras.index', compact('institucion', 'institucion_id', 'dia', 'mes', 'ano', 'start', 'end'));
@@ -107,13 +129,15 @@ class ComprasController extends Controller
      */
     public function show($institucion_id, $id)
     {
-        $compra = Compra::find($id);
-        $detalle = $compra->detalles['detalle'];
-        unset($detalle['impuestos']);
-         
         $multiple=false;
-        if (!(count($detalle) == count($detalle, COUNT_RECURSIVE))) {
-            $multiple=true;
+        $compra = Compra::find($id);
+        
+        if($compra->sincronizado){
+            $detalle = $compra->detalles['detalle'];
+            unset($detalle['impuestos']); 
+            if (!(count($detalle) == count($detalle, COUNT_RECURSIVE))) {
+                $multiple=true;
+            }
         }
         $categorias = CategoriaCompra::orderBy('categoria')->get();
         

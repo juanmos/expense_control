@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Naturales;
+namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -8,47 +8,58 @@ use Tests\TestCase;
 use App\Models\Retencion;
 use App\Models\Institucion;
 use App\Models\User;
-use Crypt;
 
 class RetencionControllerTest extends TestCase
 {
     use RefreshDatabase;
-    protected $headers;
-
     public function setUp():void
     {
         parent::setUp();
-        factory(User::class)->create([
-            'email'    => 'test@email.com',
-            'password' => bcrypt('123456')
-        ]);
+        factory(User::class)->create();
         factory(Institucion::class)->create();
-        $token = auth()->guard('api')
-            ->login(User::first());
-        $this->headers['Authorization'] = 'Bearer ' . $token;
     }
     /**
      * A basic feature test example.
      *
      * @return void
      */
-    public function test_api_only_auth_users()
+    public function test_only_auth()
     {
-        $response = $this->post('api/naturales/retenciones',[
+        $response = $this->get('naturales/naturales/1/retenciones');
 
-        ]);
-        $response->assertUnauthorized();
+        $response->assertRedirect('/login');
     }
 
     /** @test */
-    public function test_obtener_retenciones()
+    public function test_index_page()
     {
-        $response = $this->post('api/naturales/retenciones',[],$this->headers);;
+        $this->actingAs(User::first());
+        $response = $this->get('naturales/naturales/1/retenciones');
         $response->assertOk();
-        $json = (array)json_decode(Crypt::decryptString($response->getContent()));
-        
-        $this->assertArrayHasKey('retenciones',$json);
+        $response->assertViewIs('retencion.index');
+        $response->assertViewHasAll(['institucion', 'institucion_id', 'dia', 'mes', 'ano', 'start', 'end']);
+    }
+
+    /** @test */
+    public function test_retenciones_electronicas_data()
+    {
+        $this->actingAs(User::first());
+        $response = $this->get('naturales/naturales/1/retenciones/data/table');
+        $response->assertOk();
+
+    }
+
+    /** @test */
+    public function test_mostrar_retencion_electronica()
+    {
+        // $this->withoutExceptionHandling();
+        $this->actingAs(User::first());
+        factory(Retencion::class)->create();
+        $retencion=Retencion::first();
+        $response = $this->get('naturales/naturales/1/retenciones/'.$retencion->id);
+        // $response->assertViewHasAll(['retencione']);
+        $response->assertViewIs('retencion.show');
         
     }
-    
+        
 }

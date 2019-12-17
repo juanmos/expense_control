@@ -16,10 +16,11 @@
                             <div class="col-md-6 col-xl-4">
                                 <div class="card daily-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Compras utlimos 7 días</h6>
+                                        <h6 class="mb-4">Retenciones utlimos 7 días</h6>
                                         <div class="row d-flex align-items-center">
                                             <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$ {{$dia}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>RENTA $ {{$dia['renta']}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>IVA $ {{$dia['iva']}}</h3>
                                             </div>
 
                                             <div class="col-3 text-right">
@@ -37,10 +38,11 @@
                             <div class="col-md-6 col-xl-4">
                                 <div class="card Monthly-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Compras mensuales</h6>
+                                        <h6 class="mb-4">Retenciones mensuales</h6>
                                         <div class="row d-flex align-items-center">
                                             <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>$ {{$mes}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>RENTA: $ {{$mes['renta']}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-down text-c-red f-30 m-r-10"></i>IVA: $ {{$mes['iva']}}</h3>
                                             </div>
                                             <div class="col-3 text-right">
                                                 <p class="m-b-0">36%</p>
@@ -57,10 +59,11 @@
                             <div class="col-md-12 col-xl-4">
                                 <div class="card yearly-sales">
                                     <div class="card-block">
-                                        <h6 class="mb-4">Compras anuales</h6>
+                                        <h6 class="mb-4">Retenciones anuales</h6>
                                         <div class="row d-flex align-items-center">
                                             <div class="col-9">
-                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>$ {{$ano}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>RENTA: $ {{$ano['renta']}}</h3>
+                                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i class="feather icon-arrow-up text-c-green f-30 m-r-10"></i>IVA: $ {{$ano['iva']}}</h3>
                                             </div>
                                             <div class="col-3 text-right">
                                                 <p class="m-b-0">80%</p>
@@ -78,7 +81,7 @@
                                 <div class="card Recent-Users">
                                     <div class="card-header row">
                                         <div class="col-md-8">
-                                            <h5 class="">Compras</h5>
+                                            <h5 class="">Retenciones</h5>
                                         </div>
                                         
                                         <div class="col-md-3">
@@ -90,10 +93,9 @@
                                         <div class="col-md-1">
                                             <button type="button" id="filter" class="btn btn-icon btn-rounded btn-primary"><i class="feather icon-filter"></i></button>
                                         </div>
-                                        {{-- <a href="{{route('empresa.contacto.create',$empresa->id)}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Nuevo usuario</a> --}}
+                                        
                                     </div>
                                     <div class="card-block px-0 py-3">
-                                        
                                         <div class="table-responsive">
                                             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                                 <li class="nav-item">
@@ -105,13 +107,13 @@
                                             </ul>
                                             <div class="tab-content" id="pills-tabContent">
                                                 <div class="tab-pane fade show active" id="pills-electronicas" role="tabpanel" aria-labelledby="pills-electronicas-tab">
-                                                    <table  id="tableData" class="table table-hover">
+                                                    <table  id="tableData" class="table table-hover"  style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>Fecha</th>
                                                                 <th>Razón social</th>                                                        
                                                                 <th>Tipo</th>
-                                                                <th>Total</th>                                                        
+                                                                <th>Impuestos</th>                                                        
                                                                 <th>Acciones</th>
                                                             </tr>
                                                         </thead>
@@ -120,7 +122,7 @@
                                                     </table>
                                                 </div>
                                                 <div class="tab-pane fade" id="pills-fisicas" role="tabpanel" aria-labelledby="pills-fisicas-tab">
-                                                    <a href="{{route('naturales.documentos.create',[$institucion_id,'compra'])}}" class="btn btn-primary float-right"><i class="fas fa-plus text-c-white f-10 m-r-15"></i> Ingresar compra</a>
+                                                    <a href="{{route('naturales.documentos.create',[$institucion_id,'retencion'])}}" class="btn btn-primary float-right"><i class="fas fa-plus text-c-white f-10 m-r-15"></i> Ingresar retención</a>
                                                     <table  id="tableFisicas" class="table table-hover"  style="width:100%">
                                                         <thead>
                                                             <tr>
@@ -168,62 +170,70 @@ $(function() {
             serverSide: true,
             "pageLength": 50,
             "order": [[ 1, "desc" ]],
-            ajax: "{!! route('naturales.compras.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+            ajax: "{!! route('naturales.retenciones.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
             columns: [
                 // { data: 'id', name: 'id' },
                 { data: 'fecha', name: 'fecha' },
                 { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
                 
                 { data: 'tipoComprobante', name: 'tipoComprobante' },
-                { data: 'total', name: 'total' },
+                { data: 'impuestos', render:function(impuestos){
+                    return impuestos.map(function(item){
+                        return item.nombreImpuesto+': $'+item.valor+'<br>'
+                    })
+                }},
                 
                 { "data": "id", render: function (dataField) { 
-                    var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                    {{-- link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; --}}
-                        return link;
+                    
+                        return '<a href="{{ url("naturales/naturales/".$institucion_id."/retenciones")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                     } 
                 }
             ]
         });
+
         tableFisicas = $('#tableFisicas').DataTable({
-            processing: true,
-            serverSide: true,
-            "pageLength": 50,
-            "order": [[ 0, "desc" ]],
-            ajax: "{!! route('naturales.documentos.index','compra') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
-            columns: [
-                // { data: 'id', name: 'id' },
-                { data: 'fecha', name: 'fecha' },
-                { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
-                
-                { data: 'documento', name: 'documento' },
-                { data: 'total', name:'total'},
-                
-                { "data": "id", render: function (dataField) { 
-                        return '<a href="{{ url("naturales/naturales/".$institucion_id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
-                    } 
-                }
-            ]
-        });
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.documentos.index','retencion') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
+            
+            { data: 'documento', name: 'documento' },
+            { data: 'ret_iva', render:function(impuestos,algo,row){
+                return 'Renta: '+row.ret_renta+'<br>IVA: '+row.ret_iva
+            }},
+            
+            { "data": "id", render: function (dataField) { 
+                    return '<a href="{{ url("naturales/naturales/".$institucion_id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
+                } 
+            }
+        ]
+    });
     })
     var table = $('#tableData').DataTable({
         processing: true,
         serverSide: true,
         "pageLength": 50,
         "order": [[ 0, "desc" ]],
-        ajax: "{!! route('naturales.compras.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+        ajax: "{!! route('naturales.retenciones.data',$institucion_id) !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
-            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'cliente.cliente.nombre_comercial', name: 'cliente.cliente.nombre_comercial' },
             
             { data: 'tipoComprobante', name: 'tipoComprobante' },
-            { data: 'total', name: 'total' },
+            { data: 'impuestos', render:function(impuestos){
+                    return impuestos.map(function(item){
+                        return item.nombreImpuesto+': $'+item.valor+'<br>'
+                    })
+                }},
             
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
-                    return link;
+                    return '<a href="{{ url("naturales/naturales/".$institucion_id."/retenciones")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
                 } 
             }
         ]
@@ -233,14 +243,16 @@ $(function() {
         serverSide: true,
         "pageLength": 50,
         "order": [[ 0, "desc" ]],
-        ajax: "{!! route('naturales.documentos.index','compra') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+        ajax: "{!! route('naturales.documentos.index','retencion') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
             { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
             
             { data: 'documento', name: 'documento' },
-            { data: 'total', name:'total'},
+            { data: 'ret_iva', render:function(impuestos,algo,row){
+                return 'Renta: '+row.ret_renta+'<br>IVA: '+row.ret_iva
+            }},
             
             { "data": "id", render: function (dataField) { 
                     return '<a href="{{ url("naturales/naturales/".$institucion_id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 

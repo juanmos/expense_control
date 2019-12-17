@@ -60,6 +60,9 @@
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.compras.index')?'active':''}}">
                     <a href="{{route('naturales.compras.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-cart-outline"></i></span><span class="pcoded-mtext">Compras</span></a>
                 </li>
+                <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.retenciones.index')?'active':''}}">
+                    <a href="{{route('naturales.retenciones.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi mdi-percent"></i></span><span class="pcoded-mtext">Retenciones</span></a>
+                </li>
                 <li data-username="Table bootstrap datatable footable" class="nav-item {{(Route::currentRouteName()=='naturales.clientes.index')?'active':''}}">
                     <a href="{{route('naturales.clientes.index',Auth::user()->institucion_id)}}" class="nav-link "><span class="pcoded-micon"><i class="mdi mdi-office-building"></i></span><span class="pcoded-mtext">Clientes</span></a>
                 </li>

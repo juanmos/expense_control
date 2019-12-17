@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Naturales;
 
 use App\Http\Controllers\Controller;
+use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
+use App\Models\CategoriaCompra;
 use App\Models\DocumentoFisico;
 use App\Models\Institucion;
+use App\Models\Cliente;
 use Carbon\Carbon;
 use Crypt;
 use Auth;
@@ -56,7 +59,12 @@ class DocumentoFisicoController extends Controller
             
             // return json_encode(compact('dia', 'mes', 'ano', 'documentos'));
         }
-        
+        $documentos=$institucion->documentos()
+                ->where('documento',$tipo)
+                ->whereBetween('fecha', [$start,$end])
+                ->with(['cliente','categoria'])
+                ->orderBy('fecha', 'desc')->get();
+        return Datatables::of($documentos)->make(true);
     }
 
     /**
@@ -64,9 +72,12 @@ class DocumentoFisicoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id,$tipo)
     {
-        //
+        $documento=null;
+        $categorias = CategoriaCompra::get()->pluck('categoria','id');
+        return view('documento.form',compact('documento','tipo','id','categorias'));
+
     }
 
     /**
@@ -75,7 +86,7 @@ class DocumentoFisicoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$institucion_id)
     {
         $request->validate([
             'documento'=>'required|in:factura,compra,retencion',
@@ -84,11 +95,37 @@ class DocumentoFisicoController extends Controller
         ]);
         $data=$request->except(['foto','fecha']);
         $data['fecha']=Carbon::parse($request->get('fecha'))->toDateString();
+        if($data['cliente_id']==0){
+            $cliente = Cliente::where('ruc',$data['ruc'])->first();
+            if($cliente==null){
+                $cliente=Cliente::create([
+                    'ruc'=>$data['ruc'],
+                    'nombre_comercial'=>$data['cliente_nombre'],
+                    'razon_social'=>$data['cliente_nombre'],
+                ]);
+            }
+            $data['cliente_id']=$cliente->id;
+        }
+        $data['iva']=$data['iva'] ?? 0;
+        $data['propina']=$data['propina'] ?? 0;
+        $data['servicio']=$data['servicio'] ?? 0;
+        $data['total']=$data['total'] ?? 0;
+        $data['subtotal']=$data['subtotal'] ?? 0;
+        
         $institucion =Institucion::find(Auth::user()->institucion_id);
         $documento=$institucion->documentos()->create($data);
         $documento['foto']=$request->file('foto')->store('public/documentos/'.$institucion->id.'/'.$documento->documento);
         $documento->save();
-        return ($request->is('api/*'))?response()->json(['creado'=>true]):back();
+        if($request->is('api/*')){
+            return response()->json(['creado'=>true]);
+        }         
+            
+        if ($data['documento']=='factura')
+            return redirect()->route('naturales.facturas.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
+        elseif($data['documento']=='compra')
+            return redirect()->route('naturales.compras.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
+        else 
+            return redirect()->route('naturales.retenciones.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
     }
 
     /**
@@ -97,9 +134,10 @@ class DocumentoFisicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Institucion $institucion, DocumentoFisico $documento)
     {
-        //
+        $categorias = CategoriaCompra::get()->pluck('categoria','id');
+        return view('documento.show',compact('documento','categorias'));
     }
 
     /**
@@ -125,7 +163,7 @@ class DocumentoFisicoController extends Controller
         
         $documento->categoria_id=$request->get('categoria_id');
         $documento->save();
-        return ($request->is('api/*'))?response()->json(['actualizado'=>true]):back();
+        return response()->json(['actualizado'=>true]);
     }
 
     /**
@@ -136,8 +174,17 @@ class DocumentoFisicoController extends Controller
      */
     public function destroy(Request $request, DocumentoFisico $documento)
     {
-        $documento->delete();
-        return ($request->is('api/*'))?response()->json(['eliminado'=>true]):back();
+        //$documento->delete();
+        if($request->is('api/*')){
+            return response()->json(['eliminado'=>true]);
+        }    
+        
+        if ($documento->documento=='factura')
+            return redirect()->route('naturales.facturas.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
+        elseif ($documento->documento=='compra')
+            return redirect()->route('naturales.compras.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
+        else    
+            return redirect()->route('naturales.retenciones.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
 
     }
 }

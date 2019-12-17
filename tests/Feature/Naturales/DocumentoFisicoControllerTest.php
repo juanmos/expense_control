@@ -1,161 +1,140 @@
 <?php
 
-namespace Tests\Feature\Naturales;
+namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use App\Models\DocumentoFisico;
 use App\Models\Institucion;
+use App\Models\Cliente;
 use App\Models\User;
-use Crypt;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentoFisicoControllerTest extends TestCase
 {
     use RefreshDatabase;
-    protected $headers;
-
     public function setUp():void
     {
         parent::setUp();
-        factory(User::class)->create([
-            'email'    => 'test@email.com',
-            'password' => bcrypt('123456')
-        ]);
+        factory(User::class)->create();
         factory(Institucion::class)->create();
-        $token = auth()->guard('api')
-            ->login(User::first());
-        $this->headers['Authorization'] = 'Bearer ' . $token;
     }
-    
-    /** @test */
-    public function test_api_only_auth_users()
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function test_only_login_users()
     {
-        $response = $this->post('api/naturales/documentos/compra',[
+        $response = $this->get('naturales/naturales/1/retenciones');
 
-        ]);
-        $response->assertUnauthorized();
+        $response->assertRedirect('/login');
     }
-    /** @test */
-    public function test_validar_documento_lleno()
-    {
-        $this->actingAs(User::first(),'api');
-        $token = auth()->guard('api')
-            ->login(User::first());
-        $response = $this->post('api/naturales/documentos/compra/store',[
-            
-        ],$this->headers);
-        $response->assertSessionHasErrors('documento');
-        $response = $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'Compra'
-        ],$this->headers);
-        $response->assertSessionHasErrors('documento');
-    }
-
-    public function test_validar_foto_lleno()
-    {
-        $this->actingAs(User::first(),'api');
-        $token = auth()->guard('api')
-            ->login(User::first());
-        $response = $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'compra',
-            'foto'=>null
-        ],$this->headers);
-        $response->assertSessionHasErrors('foto');
-    }
-
-    public function test_validar_fecha_lleno()
-    {
-        $this->actingAs(User::first(),'api');
-        $token = auth()->guard('api')
-            ->login(User::first());
-        $response = $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'compra',
-            'foto'=>''
-        ],$this->headers);
-        $response->assertSessionHasErrors('fecha');
-    }
-
-    public function test_crear_documentos()
-    {
-        $this->actingAs(User::first(),'api');
-        Storage::fake('public/documentos/1/compra/');
-
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $response = $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'compra',
-            'foto' => $file,
-            'fecha'=>now()->format('d-m-Y')
-        ],$this->headers);
-        $response->assertStatus(200);
-        $documento =DocumentoFisico::first();
-        $this->assertCount(1,DocumentoFisico::all());
-        $response->assertJsonStructure(['creado']);
-    }
-
 
     /** @test */
-    public function test_obtener_compras_fisicas_mes()
+    public function test_obtener_documentos_fisicos_tipo()
     {
-        
-        $this->actingAs(User::first(),'api');
-        $response=$this->post('api/naturales/documentos/compra',[],$this->headers);
-        
+        $this->actingAs(User::first());
+        $response = $this->get('naturales/naturales/documentos/factura');
         $response->assertOk();
-        $json = (array)json_decode(Crypt::decryptString($response->getContent()));
-        
-        $this->assertArrayHasKey('documentos',$json);
-        $this->assertArrayHasKey('ano',$json);
-        $this->assertArrayHasKey('mes',$json);
-        $this->assertArrayHasKey('dia',$json);
-        // $response->assertJsonStructure(['documentos','ano','mes','dia']);
     }
-    
-    public function test_eliminar_documentos()
+
+    public function test_crear_nueva_documento_fisica()
     {
-        $this->actingAs(User::first(),'api');
-        Storage::fake('public/documentos/1/compra/');
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'compra',
-            'foto' => $file,
-            'fecha'=>now()->format('d-m-Y')
-        ],$this->headers);
-
-        $documento =DocumentoFisico::first();
         
-        $response=$this->delete('api/naturales/documento/eliminar/compra/'.$documento->id,[],$this->headers);
-        $response->assertJsonStructure(['eliminado']);
+        $this->actingAs(User::first());
+        factory(Cliente::class)->create([
+            'razon_social'=>'Juan Mosocso',
+            'ruc'=>'1234567890001'
+        ]);
+        $response =$this->get('naturales/naturales/1/documento/retencion/create');
+        $response->assertOk();
+        $response->assertViewIs('documento.form');
+        $response->assertViewHasAll(['documento','tipo','id','categorias']);
+        $response = $this->post('naturales/naturales/1/documento/store',$this->data());
+        
+        $this->assertCount(1,DocumentoFisico::all());
+        $response->assertRedirect('naturales/naturales/1/retenciones');
+        
+    }
 
-        $this->assertCount(0,DocumentoFisico::all());
+    public function test_crear_nueva_documento_fisico_validaciones()
+    {
+        $this->actingAs(User::first());
+        factory(Cliente::class)->create([
+            'razon_social'=>'Juan Mosocso',
+            'ruc'=>'1234567890001'
+        ]);
+        
+        $response = $this->post('naturales/naturales/1/documento/store',[]);
+        $response->assertSessionHasErrors(['documento','foto','fecha']);
+        
+    }
+
+    public function test_ver_documento_fisico()
+    {
+        $this->actingAs(User::first());
+        factory(Cliente::class)->create([
+            'razon_social'=>'Juan Mosocso',
+            'ruc'=>'1234567890001'
+        ]);
+        $this->post('naturales/naturales/1/documento/store',$this->data());
+        $documento = DocumentoFisico::first();
+        $response = $this->get('naturales/naturales/1/documento/'.$documento->id);
+        $response->assertOk();
+        $response->assertViewIs('documento.show');
+        $response->assertViewHasAll(['documento','categorias']);
     }
 
     /** @test */
+    public function test_eliminar_documento()
+    {
+        
+        $this->actingAs(User::first());
+        factory(Cliente::class)->create([
+            'razon_social'=>'Juan Mosocso',
+            'ruc'=>'1234567890001'
+        ]);
+        $this->post('naturales/naturales/1/documento/store',$this->data());
+        $documento = DocumentoFisico::first();
+        $response = $this->delete('naturales/naturales/documento/'.$documento->id);
+        $this->assertCount(0,DocumentoFisico::all());
+        $response->assertRedirect('naturales/naturales/1/retenciones');
+        
+    }
+
     public function test_cambiar_categoria_compra()
     {
-        $this->actingAs(User::first(),'api');
-        Storage::fake('public/documentos/1/compra/');
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'compra',
-            'foto' => $file,
-            'fecha'=>now()->format('d-m-Y'),
-            'categoria_id'=>1
-        ],$this->headers);
+        $this->withoutExceptionHandling();
+        $this->actingAs(User::first());
+        
+        $this->post('naturales/naturales/1/documento/store',$this->data());
 
         $documento =DocumentoFisico::first();
         $this->assertCount(1, DocumentoFisico::all());
         
-        $response =$this->put('api/naturales/documentos/update/'. $documento->id,[
+        $response =$this->put('naturales/naturales/documento/'. $documento->id.'/clasificar',[
             'categoria_id'=>2
-        ],$this->headers);
+        ]);
         $response->assertJsonStructure(['actualizado']);
         $this->assertEquals("2", $documento->fresh()->categoria_id);
     }
-    
+
+    protected function data(){
+        Storage::fake('public/documentos/1/compra/');
+        $file = UploadedFile::fake()->image('avatar.jpg');
+        return [
+            'documento'=>'retencion',
+            'cliente_id'=>1,
+            'cliente_nombre'=>'Juan Moscoso',            
+            'ret_iva'=>10,
+            'ret_renta'=>25,
+            'foto'=>$file,
+            'fecha'=>now()->format('d-m-Y')
+        ];
+    }
     
     
 }

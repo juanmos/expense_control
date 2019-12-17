@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Institucion;
 use App\Models\CategoriaCompra;
 use App\Models\Cliente;
+use Carbon\Carbon;
 
 class DocumentoFisico extends Model
 {
@@ -30,6 +31,10 @@ class DocumentoFisico extends Model
         'ret_iva'
     ];
 
+    protected $dates=[
+        'fecha'
+    ];
+
     public function institucion()
     {
         return $this->belongsTo(Institucion::class, 'institucion_id');
@@ -41,5 +46,9 @@ class DocumentoFisico extends Model
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
+    }
+
+    public function getFechaAttribute($fecha){
+        return Carbon::parse($fecha)->format('d-m-Y');
     }
 }

@@ -28,6 +28,8 @@ class AyudaControllerTest extends TestCase
         $this->actingAs(factory(User::class)->create());
         $response = $this->get('/ayuda');
         $response->assertStatus(200);
+        $response->assertViewIs('ayuda.index');
+        $response->assertViewHasAll(['ayudas']);
     }
 
     /** @test */
@@ -36,6 +38,8 @@ class AyudaControllerTest extends TestCase
         $this->actingAs(factory(User::class)->create());
         $response=$this->get('ayuda/create');
         $response->assertOk();
+        $response->assertViewIs('ayuda.form');
+        $response->assertViewHasAll(['ayuda']);
     }
     
     /** @test */
@@ -67,8 +71,11 @@ class AyudaControllerTest extends TestCase
         $this->assertCount(1,Ayuda::all());
 
         $ayuda = Ayuda::first();
-        $response = $this->get('/ayuda/'.$ayuda->id);
+        $response = $this->get('/ayuda/'.$ayuda->id.'/edit');
         $response->assertOk();
+        $response->assertViewIs('ayuda.form');
+        $response->assertViewHasAll(['ayuda']);
+
         $response = $this->put('ayuda/'.$ayuda->id,[
             'titulo'=>'otro titulo'
         ]);
