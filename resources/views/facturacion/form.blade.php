@@ -538,6 +538,7 @@ $(document).on('click','.eliminarItem',function(){
 })
 $(document).on('keyup','.buscaCliente',function(){
     if($(this).val().length>6){
+        $('#entrdata').empty();
         $.get("{{route('naturales.clientes.find.cedula')}}?q="+$(this).val(),function(json){
             json.forEach(function(cliente){
                 var link='<a href="#" clienteId="'+cliente.value+'" data-dismiss="modal" class="label theme-bg2 text-white f-12 seleccionarCliente">Seleccionar</a>';
