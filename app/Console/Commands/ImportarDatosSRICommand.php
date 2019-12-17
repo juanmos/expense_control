@@ -57,12 +57,12 @@ class ImportarDatosSRICommand extends Command
         // (new ClienteImport)->withOutput($this->output)->import('sri/MORONA_SANTIAGO.txt');
         // (new ClienteImport)->withOutput($this->output)->import('sri/ORELLANA.txt');
         // (new ClienteImport)->withOutput($this->output)->import('sri/NAPO.txt');
-        (new ClienteImport)->withOutput($this->output)->import('sri/PASTAZA.txt');
-        (new ClienteImport)->withOutput($this->output)->import('sri/SANTA_ELENA.txt');
-        (new ClienteImport)->withOutput($this->output)->import('sri/SANTO_DOMINGO.txt');
-        (new ClienteImport)->withOutput($this->output)->import('sri/SUCUMBIOS.txt');
-        (new ClienteImport)->withOutput($this->output)->import('sri/TUNGURAHUA.txt');
-        (new ClienteImport)->withOutput($this->output)->import('sri/ZAMORA_CHINCHIPE.txt');
+        // (new ClienteImport)->withOutput($this->output)->import('sri/PASTAZA.txt');
+        // (new ClienteImport)->withOutput($this->output)->import('sri/SANTA_ELENA.txt');
+        // (new ClienteImport)->withOutput($this->output)->import('sri/SANTO_DOMINGO.txt');
+        // (new ClienteImport)->withOutput($this->output)->import('sri/SUCUMBIOS.txt');
+        // (new ClienteImport)->withOutput($this->output)->import('sri/TUNGURAHUA.txt');
+        // (new ClienteImport)->withOutput($this->output)->import('sri/ZAMORA_CHINCHIPE.txt');
         $this->output->success('Import successful');
         
     }
