@@ -127,6 +127,8 @@ class FacturarCommand extends Command
                     $detalles.=$impuestos;
                     $detalles.='</detalle>';
                 }
+                $direccion=$factura->cliente->cliente->direccion ?? 'Sin dreccion';
+                $subtotal = $factura->subtotal+$factura->subtotal0;
                 $xml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
                     <factura id="comprobante" version="1.0.0">
                     <infoTributaria>
@@ -149,8 +151,8 @@ class FacturarCommand extends Command
                         <tipoIdentificacionComprador>'.$tipoDoc.'</tipoIdentificacionComprador>
                         <razonSocialComprador>'.$nombre.'</razonSocialComprador>
                         <identificacionComprador>'.$factura->cliente->cliente->ruc.'</identificacionComprador>
-                        <direccionComprador>'.$factura->cliente->cliente->direccion.'</direccionComprador>
-                        <totalSinImpuestos>'.$factura->subtotal.'</totalSinImpuestos>
+                        <direccionComprador>'.$direccion.'</direccionComprador>
+                        <totalSinImpuestos>'.$subtotal.'</totalSinImpuestos>
                         <totalDescuento>'.$factura->descuento.'</totalDescuento>
                         <totalConImpuestos>
                         <totalImpuesto>
