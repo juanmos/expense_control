@@ -110,9 +110,11 @@ class DocumentoFisicoController extends Controller
         $documento=$institucion->documentos()->create($data);
         $documento['foto']=$request->file('foto')->store('public/documentos/'.$institucion->id.'/'.$documento->documento);
         $documento->save();
-        return ($request->is('api/*'))?
-            response()->json(['creado'=>true]):
-            ($data['documento']=='factura')?
+        if($request->is('api/*')){
+            return response()->json(['creado'=>true]);
+        }         
+            
+        return  ($data['documento']=='factura')?
                 redirect()->route('naturales.facturacion.index',$institucion_id)->with(['mensaje'=>'Creado con exito']):
                 ($data['documento']=='compra')?
                     redirect()->route('naturales.compras.index',$institucion_id)->with(['mensaje'=>'Creado con exito']):
@@ -166,9 +168,10 @@ class DocumentoFisicoController extends Controller
     public function destroy(Request $request, DocumentoFisico $documento)
     {
         $documento->delete();
-        return ($request->is('api/*'))?
-            response()->json(['eliminado'=>true]):
-            ($documento->documento=='factura')?
+        if($request->is('api/*')){
+            return response()->json(['eliminado'=>true]);
+        }    
+        return ($documento->documento=='factura')?
                 redirect()->route('naturales.facturacion.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']):
                 ($documento->documento=='compra')?
                     redirect()->route('naturales.compras.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']):

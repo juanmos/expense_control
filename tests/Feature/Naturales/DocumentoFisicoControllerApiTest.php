@@ -81,15 +81,10 @@ class DocumentoFisicoControllerApiTest extends TestCase
 
     public function test_crear_documentos()
     {
+        
         $this->actingAs(User::first(),'api');
-        Storage::fake('public/documentos/1/compra/');
-
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $response = $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'compra',
-            'foto' => $file,
-            'fecha'=>now()->format('d-m-Y')
-        ],$this->headers);
+        
+        $response = $this->post('api/naturales/documentos/compra/store',$this->data(),$this->headers);
         $response->assertStatus(200);
         $documento =DocumentoFisico::first();
         $this->assertCount(1,DocumentoFisico::all());
@@ -119,11 +114,7 @@ class DocumentoFisicoControllerApiTest extends TestCase
         $this->actingAs(User::first(),'api');
         Storage::fake('public/documentos/1/compra/');
         $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'compra',
-            'foto' => $file,
-            'fecha'=>now()->format('d-m-Y')
-        ],$this->headers);
+        $this->post('api/naturales/documentos/compra/store',$this->data(),$this->headers);
 
         $documento =DocumentoFisico::first();
         
@@ -139,12 +130,7 @@ class DocumentoFisicoControllerApiTest extends TestCase
         $this->actingAs(User::first(),'api');
         Storage::fake('public/documentos/1/compra/');
         $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post('api/naturales/documentos/compra/store',[
-            'documento'=>'compra',
-            'foto' => $file,
-            'fecha'=>now()->format('d-m-Y'),
-            'categoria_id'=>1
-        ],$this->headers);
+        $this->post('api/naturales/documentos/compra/store',$this->data(),$this->headers);
 
         $documento =DocumentoFisico::first();
         $this->assertCount(1, DocumentoFisico::all());
@@ -156,6 +142,16 @@ class DocumentoFisicoControllerApiTest extends TestCase
         $this->assertEquals("2", $documento->fresh()->categoria_id);
     }
     
-    
+    protected function data(){
+        Storage::fake('public/documentos/1/compra/');
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+        return [
+            'documento'=>'compra',
+            'foto' => $file,
+            'fecha'=>now()->format('d-m-Y'),
+            'cliente_id'=>1
+        ];
+    }
     
 }
