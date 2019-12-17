@@ -77,10 +77,17 @@ class ClienteController extends Controller
     public function buscar(Request $request)
     {
         $texto=($request->is('api/*'))?base64_decode($request->get('texto')):$request->get('texto');
-        $clientes = Cliente::where(function ($q) use ($texto) {
+        if(($request->is('api/*'))){
+            $clientes = Cliente::where(function ($q) use ($texto) {
                                 $q->orWhere('ruc', 'like', $texto.'%');
                                 $q->orWhere('nombre_comercial', 'like', '%'.$texto.'%');
                             })->with('clienteInstitucion')->paginate(50);
+            return Crypt::encrypt(json_encode(compact('clientes')), false);
+        }else{
+            $clientes = Cliente::with('clienteInstitucion')->get();
+            return Datatables::of($clientes)->make(true);
+        }
+                            
         
         // $clientes =  ClienteInstitucion::where('institucion_id', Auth::user()->institucion_id)
         //                 ->whereHas('cliente', function ($query) use ($texto) {
@@ -90,9 +97,7 @@ class ClienteController extends Controller
         //                     });
         //                 })->with('cliente')->paginate(50);
         // return $clientes;
-        return ($request->is('api/*'))?
-                Crypt::encrypt(json_encode(compact('clientes')), false):
-                response()->json(compact('clientes'));
+        
     }
 
     /**
