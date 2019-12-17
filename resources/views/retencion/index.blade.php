@@ -93,7 +93,7 @@
                                         <div class="col-md-1">
                                             <button type="button" id="filter" class="btn btn-icon btn-rounded btn-primary"><i class="feather icon-filter"></i></button>
                                         </div>
-                                        {{-- <a href="{{route('empresa.contacto.create',$empresa->id)}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Nuevo usuario</a> --}}
+                                        
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
@@ -107,7 +107,7 @@
                                             </ul>
                                             <div class="tab-content" id="pills-tabContent">
                                                 <div class="tab-pane fade show active" id="pills-electronicas" role="tabpanel" aria-labelledby="pills-electronicas-tab">
-                                                    <table  id="tableData" class="table table-hover">
+                                                    <table  id="tableData" class="table table-hover"  style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>Fecha</th>
@@ -122,7 +122,8 @@
                                                     </table>
                                                 </div>
                                                 <div class="tab-pane fade" id="pills-fisicas" role="tabpanel" aria-labelledby="pills-fisicas-tab">
-                                                    <table  id="tableFisicas" class="table table-hover">
+                                                    <a href="{{route('naturales.documentos.create',[$institucion_id,'retencion'])}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Ingresar retención</a>
+                                                    <table  id="tableFisicas" class="table table-hover"  style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>Fecha</th>
@@ -161,7 +162,7 @@
 $(function() {
     $(document).on('click','#filter',function(){
         table.destroy();
-        {{-- $('#tableData').empty(); // empty in case the columns change --}}
+        tableFisicas.destroy();
  
         table = $('#tableData').DataTable({
             processing: true,
@@ -182,13 +183,35 @@ $(function() {
                 }},
                 
                 { "data": "id", render: function (dataField) { 
-                    var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                    {{-- link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; --}}
-                        return link;
+                    
+                        return '<a href="{{ url("naturales/naturales/".$institucion_id."/retenciones")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                     } 
                 }
             ]
         });
+
+        tableFisicas = $('#tableFisicas').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.documentos.index','retencion') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
+            
+            { data: 'documento', name: 'documento' },
+            { data: 'ret_iva', render:function(impuestos,algo,row){
+                return 'Renta: '+row.ret_renta+'<br>IVA: '+row.ret_iva
+            }},
+            
+            { "data": "id", render: function (dataField) { 
+                    return '<a href="{{ url("naturales/naturales/".$institucion_id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
+                } 
+            }
+        ]
+    });
     })
     var table = $('#tableData').DataTable({
         processing: true,
@@ -199,15 +222,17 @@ $(function() {
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
-            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'cliente.cliente.nombre_comercial', name: 'cliente.cliente.nombre_comercial' },
             
             { data: 'tipoComprobante', name: 'tipoComprobante' },
-            { data: 'total', name: 'total' },
+            { data: 'impuestos', render:function(impuestos){
+                    return impuestos.map(function(item){
+                        return item.nombreImpuesto+': $'+item.valor+'<br>'
+                    })
+                }},
             
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
-                    return link;
+                    return '<a href="{{ url("naturales/naturales/".$institucion_id."/retenciones")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
                 } 
             }
         ]
@@ -221,15 +246,15 @@ $(function() {
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
-            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
             
-            { data: 'tipoComprobante', name: 'tipoComprobante' },
-            { data: 'total', name: 'total' },
+            { data: 'documento', name: 'documento' },
+            { data: 'ret_iva', render:function(impuestos,algo,row){
+                return 'Renta: '+row.ret_renta+'<br>IVA: '+row.ret_iva
+            }},
             
             { "data": "id", render: function (dataField) { 
-                var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
-                    return link;
+                    return '<a href="{{ url("naturales/naturales/".$institucion_id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
                 } 
             }
         ]

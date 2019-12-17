@@ -50,9 +50,14 @@ class RetencionControllerTest extends TestCase
     }
 
     /** @test */
-    
-    
-    
-    
-    
+    public function test_mostrar_retencion_electronica()
+    {
+        $this->actingAs(User::first());
+        factory(Retencion::class)->create();
+        $retencion=Retencion::first();
+        $response = $this->get('naturales/naturales/1/retenciones/'.$retencion->id);
+        $response->assertViewIs('retencion.show');
+        $response->assertViewHasAll(['retencione']);
+    }
+        
 }

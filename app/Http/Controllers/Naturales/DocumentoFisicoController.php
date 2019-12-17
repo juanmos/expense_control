@@ -76,7 +76,7 @@ class DocumentoFisicoController extends Controller
     {
         $documento=null;
         $categorias = CategoriaCompra::get()->pluck('categoria','id');
-        return view('retencion.form',compact('documento','tipo','id','categorias'));
+        return view('documento.form',compact('documento','tipo','id','categorias'));
 
     }
 
@@ -125,9 +125,10 @@ class DocumentoFisicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Institucion $institucion, DocumentoFisico $documento)
     {
-        //
+        $categorias = CategoriaCompra::get()->pluck('categoria','id');
+        return view('documento.show',compact('documento','categorias'));
     }
 
     /**
@@ -165,7 +166,13 @@ class DocumentoFisicoController extends Controller
     public function destroy(Request $request, DocumentoFisico $documento)
     {
         $documento->delete();
-        return ($request->is('api/*'))?response()->json(['eliminado'=>true]):back();
+        return ($request->is('api/*'))?
+            response()->json(['eliminado'=>true]):
+            ($documento->documento=='factura')?
+                redirect()->route('naturales.facturacion.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']):
+                ($documento->documento=='compra')?
+                    redirect()->route('naturales.compras.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']):
+                    redirect()->route('naturales.retenciones.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
 
     }
 }
