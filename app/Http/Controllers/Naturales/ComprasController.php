@@ -107,13 +107,15 @@ class ComprasController extends Controller
      */
     public function show($institucion_id, $id)
     {
-        $compra = Compra::find($id);
-        $detalle = $compra->detalles['detalle'];
-        unset($detalle['impuestos']);
-         
         $multiple=false;
-        if (!(count($detalle) == count($detalle, COUNT_RECURSIVE))) {
-            $multiple=true;
+        $compra = Compra::find($id);
+        
+        if($compra->sincronizado){
+            $detalle = $compra->detalles['detalle'];
+            unset($detalle['impuestos']); 
+            if (!(count($detalle) == count($detalle, COUNT_RECURSIVE))) {
+                $multiple=true;
+            }
         }
         $categorias = CategoriaCompra::orderBy('categoria')->get();
         
