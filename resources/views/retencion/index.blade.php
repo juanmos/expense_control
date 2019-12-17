@@ -122,7 +122,7 @@
                                                     </table>
                                                 </div>
                                                 <div class="tab-pane fade" id="pills-fisicas" role="tabpanel" aria-labelledby="pills-fisicas-tab">
-                                                    <a href="{{route('naturales.documentos.create',[$institucion_id,'retencion'])}}" class="btn btn-primary float-right"><i class="fas fa-user-plus text-c-white f-10 m-r-15"></i> Ingresar retención</a>
+                                                    <a href="{{route('naturales.documentos.create',[$institucion_id,'retencion'])}}" class="btn btn-primary float-right"><i class="fas fa-plus text-c-white f-10 m-r-15"></i> Ingresar retención</a>
                                                     <table  id="tableFisicas" class="table table-hover"  style="width:100%">
                                                         <thead>
                                                             <tr>
@@ -137,6 +137,7 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

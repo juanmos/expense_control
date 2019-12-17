@@ -141,7 +141,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('naturales/{institucion}/documento/store','Naturales\DocumentoFisicoController@store')->name('naturales.documentos.store');
         Route::get('naturales/{institucion}/documento/{documento}','Naturales\DocumentoFisicoController@show')->name('naturales.documentos.show');
         Route::delete('naturales/documento/{documento}','Naturales\DocumentoFisicoController@destroy')->name('naturales.documentos.eliminar');
-
+        Route::put('naturales/documento/{documento}/clasificar/','Naturales\DocumentoFisicoController@update')->name('naturales.documentos.update');
 
         Route::get('usuario/', 'Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}', 'Naturales\UsuarioController@show')->name('naturales.usuario.show');

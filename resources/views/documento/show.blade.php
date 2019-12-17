@@ -48,7 +48,7 @@
                                                     @if($documento->documento=='compra')
                                                     
                                                         <label for="exampleInputPassword1">Categoria de la compra</label>
-                                                        {!! Form::select('categoria_id', $categorias, ($documento!=null)?$documento->categoria_id : 1 ,["class"=>"form-control"]) !!}
+                                                        {!! Form::select('categoria_id', $categorias, ($documento!=null)?$documento->categoria_id : 1 ,["class"=>"form-control","id"=>'categoriaChange']) !!}
                                                     
                                                     @endif
                                                     @if($documento->documento=='compra' || $documento->documento=='factura')
@@ -98,3 +98,29 @@
     </div>
 </section>
 @endsection
+@push('scripts')
+<!-- Pnotify Js -->
+<script src="{{asset('assets/plugins/pnotify/js/pnotify.custom.min.js')}}">
+</script>
+<script src="{{asset('assets/plugins/pnotify/js/notify-event.js')}}">
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#categoriaChange').on('change',function(){
+            $.post('{{route("naturales.documentos.update",$documento->id)}}',{categoria_id:$(this).val(),_token:"{{csrf_token()}}",_method:'PUT'},function(json){
+                if(json.actualizado){
+                    new PNotify({
+                        title: 'Exito!',
+                        text: 'Categoria ha sido cambiada.',
+                        type: 'success'
+                    });
+                }
+            },'json');
+        })
+    })
+</script>
+@endpush
+@push('styles')
+<link href="{{asset('assets/plugins/pnotify/css/pnotify.custom.min.css')}}" rel="stylesheet">
+<link href="{{asset('assets/css/pages/pnotify.css')}}" rel="stylesheet">
+@endpush

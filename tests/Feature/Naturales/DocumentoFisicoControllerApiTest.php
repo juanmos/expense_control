@@ -112,8 +112,6 @@ class DocumentoFisicoControllerApiTest extends TestCase
     public function test_eliminar_documentos()
     {
         $this->actingAs(User::first(),'api');
-        Storage::fake('public/documentos/1/compra/');
-        $file = UploadedFile::fake()->image('avatar.jpg');
         $this->post('api/naturales/documentos/compra/store',$this->data(),$this->headers);
 
         $documento =DocumentoFisico::first();
@@ -128,8 +126,6 @@ class DocumentoFisicoControllerApiTest extends TestCase
     public function test_cambiar_categoria_compra()
     {
         $this->actingAs(User::first(),'api');
-        Storage::fake('public/documentos/1/compra/');
-        $file = UploadedFile::fake()->image('avatar.jpg');
         $this->post('api/naturales/documentos/compra/store',$this->data(),$this->headers);
 
         $documento =DocumentoFisico::first();

@@ -156,7 +156,7 @@ class DocumentoFisicoController extends Controller
         
         $documento->categoria_id=$request->get('categoria_id');
         $documento->save();
-        return ($request->is('api/*'))?response()->json(['actualizado'=>true]):back();
+        return response()->json(['actualizado'=>true]);
     }
 
     /**

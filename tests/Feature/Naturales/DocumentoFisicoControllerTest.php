@@ -53,18 +53,7 @@ class DocumentoFisicoControllerTest extends TestCase
         $response->assertOk();
         $response->assertViewIs('documento.form');
         $response->assertViewHasAll(['documento','tipo','id','categorias']);
-        Storage::fake('public/documentos/1/compra/');
-
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $response = $this->post('naturales/naturales/1/documento/store',[
-            'documento'=>'retencion',
-            'cliente_id'=>1,
-            'cliente_nombre'=>'Juan Moscoso',            
-            'ret_iva'=>10,
-            'ret_renta'=>25,
-            'foto'=>$file,
-            'fecha'=>now()->format('d-m-Y')
-        ]);
+        $response = $this->post('naturales/naturales/1/documento/store',$this->data());
         
         $this->assertCount(1,DocumentoFisico::all());
         $response->assertRedirect('naturales/naturales/1/retenciones');
@@ -91,18 +80,7 @@ class DocumentoFisicoControllerTest extends TestCase
             'razon_social'=>'Juan Mosocso',
             'ruc'=>'1234567890001'
         ]);
-        Storage::fake('public/documentos/1/compra/');
-
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post('naturales/naturales/1/documento/store',[
-            'documento'=>'retencion',
-            'cliente_id'=>1,
-            'cliente_nombre'=>'Juan Moscoso',            
-            'ret_iva'=>10,
-            'ret_renta'=>25,
-            'foto'=>$file,
-            'fecha'=>now()->format('d-m-Y')
-        ]);
+        $this->post('naturales/naturales/1/documento/store',$this->data());
         $documento = DocumentoFisico::first();
         $response = $this->get('naturales/naturales/1/documento/'.$documento->id);
         $response->assertOk();
@@ -119,10 +97,35 @@ class DocumentoFisicoControllerTest extends TestCase
             'razon_social'=>'Juan Mosocso',
             'ruc'=>'1234567890001'
         ]);
-        Storage::fake('public/documentos/1/compra/');
+        $this->post('naturales/naturales/1/documento/store',$this->data());
+        $documento = DocumentoFisico::first();
+        $response = $this->delete('naturales/naturales/documento/'.$documento->id);
+        $this->assertCount(0,DocumentoFisico::all());
+        $response->assertRedirect('naturales/naturales/1/retenciones');
+        
+    }
 
+    public function test_cambiar_categoria_compra()
+    {
+        $this->withoutExceptionHandling();
+        $this->actingAs(User::first());
+        
+        $this->post('naturales/naturales/1/documento/store',$this->data());
+
+        $documento =DocumentoFisico::first();
+        $this->assertCount(1, DocumentoFisico::all());
+        
+        $response =$this->put('naturales/naturales/documento/'. $documento->id.'/clasificar',[
+            'categoria_id'=>2
+        ]);
+        $response->assertJsonStructure(['actualizado']);
+        $this->assertEquals("2", $documento->fresh()->categoria_id);
+    }
+
+    protected function data(){
+        Storage::fake('public/documentos/1/compra/');
         $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post('naturales/naturales/1/documento/store',[
+        return [
             'documento'=>'retencion',
             'cliente_id'=>1,
             'cliente_nombre'=>'Juan Moscoso',            
@@ -130,12 +133,7 @@ class DocumentoFisicoControllerTest extends TestCase
             'ret_renta'=>25,
             'foto'=>$file,
             'fecha'=>now()->format('d-m-Y')
-        ]);
-        $documento = DocumentoFisico::first();
-        $response = $this->delete('naturales/naturales/documento/'.$documento->id);
-        $this->assertCount(0,DocumentoFisico::all());
-        $response->assertRedirect('naturales/naturales/1/retenciones');
-        
+        ];
     }
     
     
