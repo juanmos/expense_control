@@ -143,7 +143,8 @@ $(document).ready(function(){
     $('.buscaRUC').autoComplete({
         resolverSettings: {
             url: "{{route('naturales.clientes.find.cedula')}}"
-        }
+        },
+        minLength:6
     }).on('autocomplete.select', function (evt, item) {
         $('#nombre_cliente').val(item.text)
         $('#cliente_id').val(item.val);

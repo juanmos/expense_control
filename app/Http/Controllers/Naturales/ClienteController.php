@@ -52,10 +52,10 @@ class ClienteController extends Controller
                 'ruc',
                 'like', 
                 base64_decode($request->get('ruc')).'%'
-            )->get();
+            )->orderBy('nombre_comercial')->get();
             return Crypt::encrypt(json_encode(compact('clientes')), false) ;
         }else{
-            $clientes =  Cliente::where('ruc','like', $request->query('q').'%')
+            $clientes =  Cliente::where('ruc','like', $request->query('q').'%')->orderBy('nombre_comercial')
                             ->select('nombre_comercial as text','id as value','ruc')                
                             ->get();
         }

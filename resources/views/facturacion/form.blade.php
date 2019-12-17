@@ -275,6 +275,7 @@
             </div>
             <div class="modal-body">
                  <div class="table-responsive">
+                    <input type="text" placeholder="Ingrese el numero de cedula o RUC para buscar" class="form-control buscaCliente">
                     <table id="clientesData" class="table table-hover" style="width:100%">
                         <thead>
                             <tr>
@@ -535,8 +536,20 @@ $(document).on('click','.eliminarItem',function(){
     });
     
 })
+$(document).on('keyup','.buscaCliente',function(){
+    if($(this).val().length>6){
+        $.get("{{route('naturales.clientes.find.cedula')}}?q="+$(this).val(),function(json){
+            json.forEach(function(cliente){
+                var link='<a href="#" clienteId="'+cliente.value+'" data-dismiss="modal" class="label theme-bg2 text-white f-12 seleccionarCliente">Seleccionar</a>';
+                $('#entrydata').append(
+                    '<tr><td>'+link+'</td><td>'+cliente.text+'</td><td>'+cliente.ruc+'</td></tr>'
+                )
+            })
+        },'json')
+    }
+})
 $(function() {
-    $('#clientesData').DataTable({
+    {{-- $('#clientesData').DataTable({
         processing: true,
         serverSide: true,
         "pageLength": 50,
@@ -557,7 +570,7 @@ $(function() {
             { data: 'ruc', name: 'ruc',width:'20%' },
             
         ],
-    });
+    }); --}}
 });
 $(document).on('click','.seleccionarCliente',function(){
     var clienteId = $(this).attr('clienteId');
