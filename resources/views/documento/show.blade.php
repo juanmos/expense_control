@@ -42,7 +42,7 @@
                                                     <label for="exampleInputEmail1">RUC/Cedula *</label>
                                                     <input type="text" value="@if($documento!=null){{$documento->cliente->ruc}} @else{{old('ruc')}}@endif" name="ruc"  required="required" readonly="readonly" class="form-control buscaRUC" aria-describedby="emailHelp" placeholder="Cedula, RUC">
                                                     <label for="exampleInputPassword1">Cliente *</label>
-                                                    <input type="text" value="@if($documento!=null){{$documento->cliente->nombre_comercial}} @else{{old('cliente_nombre')}}@endif" name="cliente_nombre"  required="required" class="form-control" id="nombre_cliente" placeholder="Nombre del cliente">
+                                                    <input type="text" value="@if($documento!=null){{$documento->cliente->nombre_comercial}} @else{{old('cliente_nombre')}}@endif" name="cliente_nombre" readonly="readonly" required="required" class="form-control" id="nombre_cliente" placeholder="Nombre del cliente">
                                                     <label for="exampleInputPassword1">Fecha *</label>
                                                     <input type="text" value="@if($documento!=null){{$documento->fecha}} @else{{old('fecha')}}@endif" name="fecha"  required="required" readonly="readonly" class="form-control datepicker" id="exampleInputPassword1" placeholder="Fecha">
                                                     @if($documento->documento=='compra')

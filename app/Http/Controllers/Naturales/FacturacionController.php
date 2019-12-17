@@ -25,18 +25,41 @@ class FacturacionController extends Controller
     public function index(Request $request, $institucion_id)
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
-        $dia=$institucion->facturas()->whereBetween('fecha', [
+        $dia=$institucion->facturas()
+            ->whereBetween('fecha', [
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
-            ])->with('cliente.cliente')->get()->sum('total');
-        $mes=$institucion->facturas()->whereBetween('fecha', [
+            ])->get()->sum('total');
+        $diaFisica=$institucion->documentos()->where('documento','factura')
+            ->whereBetween('fecha', [
+                Carbon::now()->subDays(7)->toDateString(),
+                Carbon::now()->toDateString()
+            ])->get()->sum('total');
+        $dia+=$diaFisica;
+
+        $mes=$institucion->facturas()
+            ->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
-            ])->with('cliente.cliente')->get()->sum('total');
+            ])->get()->sum('total');
+        $mesFisica=$institucion->documentos()->where('documento','factura')
+            ->whereBetween('fecha', [
+                Carbon::now()->firstOfMonth()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->get()->sum('total');
+        $mes+=$mesFisica;
+
         $ano=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
-            ])->with('cliente.cliente')->get()->sum('total');
+            ])->get()->sum('total');
+        $anoFisica=$institucion->documentos()->where('documento','factura')
+            ->whereBetween('fecha', [
+                Carbon::now()->startOfYear()->toDateString(),
+                Carbon::now()->toDateString()
+            ])->get()->sum('total');
+        $ano+=$anoFisica;
+
         $start=Carbon::now()->firstOfMonth()->format('d-m-Y');
         $end=Carbon::now()->format('d-m-Y');
         return view('facturacion.index', compact('institucion', 'institucion_id', 'dia', 'mes', 'ano', 'start', 'end'));

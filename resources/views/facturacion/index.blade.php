@@ -6,7 +6,7 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
-                @if($institucion->configuracion->configuraciones!=null && array_key_exists('firma',$institucion->configuracion->configuraciones))
+                @include('includes.mensaje')
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">
@@ -89,24 +89,65 @@
                                         <div class="col-md-1">
                                             <button type="button" id="filter" class="btn btn-icon btn-rounded btn-primary"><i class="feather icon-filter"></i></button>
                                         </div>
-                                        <a href="{{route('naturales.facturas.create',$institucion_id)}}" class="btn btn-primary float-right"><i class="mdi mdi-credit-card text-c-white f-10 m-r-15"></i> Nueva factura</a>
+                                        
                                     </div>
                                     <div class="card-block px-0 py-3">
                                         <div class="table-responsive">
-                                            <table  id="tableData" class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Fecha</th>
-                                                        <th>Razón social</th>                                                        
-                                                        <th>Estado</th>
-                                                        <th>Numero</th>
-                                                        <th>Total</th>                                                        
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="entrydata">
-                                                </tbody>
-                                            </table>
+                                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" id="pills-electronicas-tab" data-toggle="pill" href="#pills-electronicas" role="tab" aria-controls="pills-electronicas" aria-selected="true">Electrónicas</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="pills-fisicas-tab" data-toggle="pill" href="#pills-fisicas" role="tab" aria-controls="pills-fisicas" aria-selected="false">Físicas</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content" id="pills-tabContent">
+                                                <div class="tab-pane fade show active" id="pills-electronicas" role="tabpanel" aria-labelledby="pills-electronicas-tab">
+                                                    @if($institucion->configuracion->configuraciones!=null && array_key_exists('firma',$institucion->configuracion->configuraciones))
+                                                    <a href="{{route('naturales.facturas.create',$institucion_id)}}" class="btn btn-primary float-right"><i class="mdi mdi-credit-card text-c-white f-10 m-r-15"></i> Nueva factura</a>
+                                                    <table  id="tableData" class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Estado</th>
+                                                                <th>Numero</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
+                                                    @else
+                                                    <div class="">
+                                                        <div class="col-md-10">
+                                                            <h5 class="">No tienes tu firma electronica cargada</h5>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <a href="{{route('naturales.configuracion.edit')}}" id="filter" class="btn btn-sm btn-primary">Cargar firma</a>
+                                                        </div>
+                                                        <p>Sigue los pasos para obtener tu firma electrónica</p>
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                                <div class="tab-pane fade" id="pills-fisicas" role="tabpanel" aria-labelledby="pills-fisicas-tab">
+                                                    <a href="{{route('naturales.documentos.create',[$institucion_id,'factura'])}}" class="btn btn-primary float-right"><i class="fas fa-plus text-c-white f-10 m-r-15"></i> Ingresar factura</a>
+                                                    <table  id="tableFisicas" class="table table-hover"  style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Tipo</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -117,31 +158,7 @@
                         <!-- [ Main Content ] end -->
                     </div>
                 </div>
-                @else
-                <div class="main-body">
-                    <div class="page-wrapper">
-                        <!-- [ Main Content ] start -->
-                        <div class="row">
-                            <div class="col-xl-12 col-md-12">
-                                <div class="card Recent-Users">
-                                    <div class="card-header row">
-                                        <div class="col-md-10">
-                                            <h5 class="">No tienes tu firma electronica cargada</h5>
-                                        </div> 
-                                        <div class="col-md-1">
-                                            <a href="{{route('naturales.configuracion.edit')}}" id="filter" class="btn btn-sm btn-primary">Cargar firma</a>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="card-block px-0 py-3">
-                                        <p>Sigue los pasos para obtener tu firma electrónica</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
+                
             </div>
         </div>
     </div>
@@ -157,7 +174,7 @@
 $(function() {
     $(document).on('click','#filter',function(){
         table.destroy();
-       // $('#tableData').empty(); // empty in case the columns change
+        tableFisicas.destroy();
  
         table = $('#tableData').DataTable({
             processing: true,
@@ -182,6 +199,26 @@ $(function() {
                 }
             ]
         });
+        tableFisicas = $('#tableFisicas').DataTable({
+            processing: true,
+            serverSide: true,
+            "pageLength": 50,
+            "order": [[ 0, "desc" ]],
+            ajax: "{!! route('naturales.documentos.index','factura') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+            columns: [
+                // { data: 'id', name: 'id' },
+                { data: 'fecha', name: 'fecha' },
+                { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
+                
+                { data: 'documento', name: 'documento' },
+                { data: 'total', name:'total'},
+                
+                { "data": "id", render: function (dataField) { 
+                        return '<a href="{{ url("naturales/naturales/".$institucion_id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
+                    } 
+                }
+            ]
+        });
     })
     var table = $('#tableData').DataTable({
         processing: true,
@@ -201,6 +238,26 @@ $(function() {
                 var link='<a href="{{ url("naturales/naturales/".$institucion_id."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                  link+='<a href="{{ url("naturales/naturales/".$institucion_id."/facturas")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; 
                     return link;
+                } 
+            }
+        ]
+    });
+    var tableFisicas = $('#tableFisicas').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.documentos.index','factura') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
+            
+            { data: 'documento', name: 'documento' },
+            { data: 'total', name:'total'},
+            
+            { "data": "id", render: function (dataField) { 
+                    return '<a href="{{ url("naturales/naturales/".$institucion_id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
                 } 
             }
         ]

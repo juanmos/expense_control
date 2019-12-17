@@ -6,7 +6,7 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <!-- [ breadcrumb ] start -->
-
+                @include('includes.mensaje')
                 <!-- [ breadcrumb ] end -->
                 <div class="main-body">
                     <div class="page-wrapper">
@@ -161,7 +161,7 @@
 $(function() {
     $(document).on('click','#filter',function(){
         table.destroy();
-        //$('#tableData').empty(); // empty in case the columns change
+        tableFisicas.destroy();
  
         table = $('#tableData').DataTable({
             processing: true,
@@ -181,6 +181,26 @@ $(function() {
                     var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                     {{-- link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; --}}
                         return link;
+                    } 
+                }
+            ]
+        });
+        tableFisicas = $('#tableFisicas').DataTable({
+            processing: true,
+            serverSide: true,
+            "pageLength": 50,
+            "order": [[ 0, "desc" ]],
+            ajax: "{!! route('naturales.documentos.index','compra') !!}?start_date="+$('#start').val()+'&end_date='+$('#end').val(),
+            columns: [
+                // { data: 'id', name: 'id' },
+                { data: 'fecha', name: 'fecha' },
+                { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
+                
+                { data: 'documento', name: 'documento' },
+                { data: 'total', name:'total'},
+                
+                { "data": "id", render: function (dataField) { 
+                        return '<a href="{{ url("naturales/naturales/".$institucion_id."/documento")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>'; 
                     } 
                 }
             ]
