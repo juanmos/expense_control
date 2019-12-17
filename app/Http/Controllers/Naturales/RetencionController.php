@@ -36,6 +36,14 @@ class RetencionController extends Controller
                 }
             }
         }
+        $retenciones=$institucion->documentos()->where('documento','retencion')
+            ->whereBetween('fecha', [
+                now()->subDays(7)->toDateString(),
+                now()->toDateString()
+            ])->get();
+        $dia['iva']=$dia['iva']+$retenciones->sum('ret_iva');
+        $dia['renta']=$dia['renta']+$retenciones->sum('ret_renta');
+
         $retenciones=$institucion->retenciones()->whereBetween('fecha', [
                 now()->firstOfMonth()->toDateString(),
                 now()->toDateString()
@@ -51,6 +59,14 @@ class RetencionController extends Controller
                 }
             }
         }
+        $retenciones=$institucion->documentos()->where('documento','retencion')
+            ->whereBetween('fecha', [
+                now()->firstOfMonth()->toDateString(),
+                now()->toDateString()
+            ])->get();
+        $mes['iva']=$mes['iva']+$retenciones->sum('ret_iva');
+        $mes['renta']=$mes['renta']+$retenciones->sum('ret_renta');
+
         $retenciones=$institucion->retenciones()->whereBetween('fecha', [
                 now()->startOfYear()->toDateString(),
                 now()->toDateString()
@@ -66,6 +82,13 @@ class RetencionController extends Controller
                 }
             }
         }
+        $retenciones=$institucion->documentos()->where('documento','retencion')
+            ->whereBetween('fecha', [
+                now()->startOfYear()->toDateString(),
+                now()->toDateString()
+            ])->get();
+        $ano['iva']=$ano['iva']+$retenciones->sum('ret_iva');
+        $ano['renta']=$ano['renta']+$retenciones->sum('ret_renta');
         
         $start=now()->firstOfMonth()->format('d-m-Y');
         $end=now()->format('d-m-Y');
