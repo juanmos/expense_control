@@ -70,34 +70,64 @@ class InstitucionController extends Controller
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
             ])
+            ->get()->sum('total') + $institucion->documentos()->where('documento','compra')
+                ->whereBetween('fecha', [
+                    Carbon::now()->subDays(7)->toDateString(),
+                    Carbon::now()->toDateString()
+                ])
             ->get()->sum('total');
         $compras['mes']=$institucion->compras()->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])
+            ->get()->sum('total') + $institucion->documentos()->where('documento','compra')
+                ->whereBetween('fecha', [
+                    Carbon::now()->firstOfMonth()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])
             ->get()->sum('total');
         $compras['ano']=$institucion->compras()->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
             ])
+            ->get()->sum('total') + $institucion->documentos()->where('documento','compra')
+                ->whereBetween('fecha', [
+                    Carbon::now()->startOfYear()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])
             ->get()->sum('total');
         $compras['total']=$institucion->compras()
-            ->get()->count();
+            ->get()->count() + $institucion->documentos()->where('documento','compra')->get()->count();
         $ventas=[];
         $ventas['dia']=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
             ])
+            ->get()->sum('total') + $institucion->documentos()->where('documento','factura')
+                ->whereBetween('fecha', [
+                    Carbon::now()->subDays(7)->toDateString(),
+                    Carbon::now()->toDateString()
+                ])
             ->get()->sum('total');
         $ventas['mes']=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])
+            ->get()->sum('total') + $institucion->documentos()->where('documento','factura')
+                ->whereBetween('fecha', [
+                    Carbon::now()->firstOfMonth()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])
             ->get()->sum('total');
         $ventas['ano']=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
             ])
+            ->get()->sum('total') + $institucion->documentos()->where('documento','factura')
+                ->whereBetween('fecha', [
+                    Carbon::now()->startOfYear()->toDateString(),
+                    Carbon::now()->toDateString()
+                ])
             ->get()->sum('total');
         $ventas['total']=$institucion->facturas()
             ->get()->count();

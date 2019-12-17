@@ -277,7 +277,7 @@
                                     <div class="tab-pane fade {{seleccionado('V',$pest)}}" id="ventas" role="tabpanel" aria-labelledby="ventas-tab">
                                         <div class="card Recent-Users">
                                             <div class="card-header">
-                                                <h5>Ultimas Ventas </h5>
+                                                <h5>Ultimas Ventas electrónicas</h5>
                                             </div>
                                             <div class="card-block px-0 py-3">
                                                 <div class="table-responsive">
@@ -297,16 +297,57 @@
                                                     </table>
                                                 </div>
                                             </div>
+                                            <div class="card-header">
+                                                <h5>Ultimas Ventas fisicas</h5>
+                                            </div>
+                                            <div class="card-block px-0 py-3">
+                                                <div class="table-responsive">
+                                                    <table  id="ventasFisicas" class="table table-hover" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Tipo</th>
+                                                                
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade {{seleccionado('C',$pest)}}" id="compras" role="tabpanel" aria-labelledby="compras-tab">
                                         <div class="card Recent-Users">
                                             <div class="card-header">
-                                                <h5>Ultimas Compras </h5>
+                                                <h5>Ultimas Compras Electrónicas </h5>
                                             </div>
                                             <div class="card-block px-0 py-3">
                                                 <div class="table-responsive">
                                                     <table  id="comprasTable" class="table table-hover" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fecha</th>
+                                                                <th>Razón social</th>                                                        
+                                                                <th>Tipo</th>
+                                                                <th>Total</th>                                                        
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="entrydata">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="card-header">
+                                                <h5>Ultimas Compras Físicas </h5>
+                                            </div>
+                                            <div class="card-block px-0 py-3">
+                                                <div class="table-responsive">
+                                                    <table  id="comprasFisicas" class="table table-hover" style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>Fecha</th>
@@ -789,7 +830,7 @@
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
-            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'cliente.cliente.nombre_comercial', name: 'cliente.cliente.nombre_comercial' },
             { data: 'estado.estado', name: 'estado.estado' },
             { data: 'secuencia', name: 'secuencia' },
             { data: 'total', name: 'total' },
@@ -797,6 +838,26 @@
             { "data": "id", render: function (dataField) { 
                 var link='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                  link+='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; 
+                    return link;
+                } 
+            }
+        ]
+    });
+    $('#ventasFisicas').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.documentos.index','factura') !!}?start_date={{$start}}&end_date={{$end}}",
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
+            { data: 'documento', name: 'documento' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                     return link;
                 } 
             }
@@ -811,14 +872,33 @@
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
-            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'cliente.cliente.nombre_comercial', name: 'cliente.cliente.nombre_comercial' },
             
             { data: 'tipoComprobante', name: 'tipoComprobante' },
             { data: 'total', name: 'total' },
             
             { "data": "id", render: function (dataField) { 
                 var link='<a href="{{ url("naturales/naturales/".$institucion."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
+                    return link;
+                } 
+            }
+        ]
+    });
+    $('#comprasFisicas').DataTable({
+        processing: true,
+        serverSide: true,
+        "pageLength": 50,
+        "order": [[ 0, "desc" ]],
+        ajax: "{!! route('naturales.documentos.index','compra') !!}?start_date={{$start}}&end_date={{$end}}",
+        columns: [
+            // { data: 'id', name: 'id' },
+            { data: 'fecha', name: 'fecha' },
+            { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
+            { data: 'documento', name: 'documento' },
+            { data: 'total', name: 'total' },
+            
+            { "data": "id", render: function (dataField) { 
+                var link='<a href="{{ url("naturales/naturales/".$institucion."/facturas")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                     return link;
                 } 
             }
