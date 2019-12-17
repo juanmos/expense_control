@@ -44,16 +44,16 @@ class ClienteController extends Controller
 
     public function findCedula(Request $request)
     {
-        // if($request->is('api/*'))
-        // $request->validate([
-        //     'ruc'=>'required'
-        // ]);
         if($request->is('api/*')){
+            $request->validate([
+                'ruc'=>'required'
+            ]);
             $clientes =  Cliente::where(
                 'ruc',
                 'like', 
                 base64_decode($request->get('ruc')).'%'
             )->get();
+            return Crypt::encrypt(json_encode(compact('clientes')), false) ;
         }else{
             $clientes =  Cliente::where('ruc','like', $request->query('q').'%')
                             ->select('nombre_comercial as text','id as value','ruc')                
