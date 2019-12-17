@@ -106,6 +106,12 @@ class DocumentoFisicoController extends Controller
             }
             $data['cliente_id']=$cliente->id;
         }
+        $data['iva']=$data['iva'] ?? 0;
+        $data['propina']=$data['propina'] ?? 0;
+        $data['servicio']=$data['servicio'] ?? 0;
+        $data['total']=$data['total'] ?? 0;
+        $data['subtotal']=$data['subtotal'] ?? 0;
+        
         $institucion =Institucion::find(Auth::user()->institucion_id);
         $documento=$institucion->documentos()->create($data);
         $documento['foto']=$request->file('foto')->store('public/documentos/'.$institucion->id.'/'.$documento->documento);
@@ -114,11 +120,12 @@ class DocumentoFisicoController extends Controller
             return response()->json(['creado'=>true]);
         }         
             
-        return  ($data['documento']=='factura')?
-                redirect()->route('naturales.facturacion.index',$institucion_id)->with(['mensaje'=>'Creado con exito']):
-                ($data['documento']=='compra')?
-                    redirect()->route('naturales.compras.index',$institucion_id)->with(['mensaje'=>'Creado con exito']):
-                    redirect()->route('naturales.retenciones.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
+        if ($data['documento']=='factura')
+            return redirect()->route('naturales.facturas.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
+        elseif($data['documento']=='compra')
+            return redirect()->route('naturales.compras.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
+        else 
+            return redirect()->route('naturales.retenciones.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
     }
 
     /**
@@ -167,15 +174,17 @@ class DocumentoFisicoController extends Controller
      */
     public function destroy(Request $request, DocumentoFisico $documento)
     {
-        $documento->delete();
+        //$documento->delete();
         if($request->is('api/*')){
             return response()->json(['eliminado'=>true]);
         }    
-        return ($documento->documento=='factura')?
-                redirect()->route('naturales.facturacion.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']):
-                ($documento->documento=='compra')?
-                    redirect()->route('naturales.compras.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']):
-                    redirect()->route('naturales.retenciones.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
+        
+        if ($documento->documento=='factura')
+            return redirect()->route('naturales.facturas.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
+        elseif ($documento->documento=='compra')
+            return redirect()->route('naturales.compras.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
+        else    
+            return redirect()->route('naturales.retenciones.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
 
     }
 }
