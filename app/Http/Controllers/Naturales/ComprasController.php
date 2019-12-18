@@ -80,30 +80,15 @@ class ComprasController extends Controller
             $dia=$institucion->compras()->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
                     Carbon::now()->toDateString()
-                ])->get()->sum('total')  + $institucion->documentos()->where('documento','compra')
-                    ->whereBetween('fecha', [
-                        Carbon::now()->subDays(7)->toDateString(),
-                        Carbon::now()->toDateString()
-                    ])
-                ->get()->sum('total');
+                ])->get()->sum('total');
             $mes=$institucion->compras()->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
-                ])->get()->sum('total')  + $institucion->documentos()->where('documento','compra')
-                    ->whereBetween('fecha', [
-                        Carbon::now()->firstOfMonth()->toDateString(),
-                        Carbon::now()->toDateString()
-                    ])
-                ->get()->sum('total');
+                ])->get()->sum('total') ;
             $ano=$institucion->compras()->whereBetween('fecha', [
                     Carbon::now()->startOfYear()->toDateString(),
                     Carbon::now()->toDateString()
-                ])->get()->sum('total') + $institucion->documentos()->where('documento','compra')
-                    ->whereBetween('fecha', [
-                        Carbon::now()->startOfYear()->toDateString(),
-                        Carbon::now()->toDateString()
-                    ])
-                ->get()->sum('total');
+                ])->get()->sum('total');
             $compras=$institucion->compras()->whereBetween('fecha', [$start,$end])
                         ->with(['cliente.cliente','categoria'])->orderBy('fecha', 'desc')->paginate(50);
             return Crypt::encrypt(json_encode(compact('dia', 'mes', 'ano', 'compras')), false);
