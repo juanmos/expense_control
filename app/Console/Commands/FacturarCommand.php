@@ -255,6 +255,7 @@ class FacturarCommand extends Command
                             "rucVendedor"=>$configuraciones['ruc'],
                             "direccion"=>$configuraciones['direccion_facturacion'],
                             "telefono"=>$configuraciones['telefono_facturacion'],
+                            "contabilidad"=>$configuraciones['contabilidad'],
                             "fechaAut"=>Carbon::now()->format("d/m/Y H:m:s"),
                             "fecha"=>Carbon::now()->format("d/m/Y"),
                             "ambiente"=>($factura->ambiente==1)?'Pruebas':'Produccion',

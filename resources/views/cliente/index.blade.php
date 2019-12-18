@@ -44,7 +44,7 @@
                                             {!! Form::close()!!}
                                         </div> --}}
                                         <div class="table-responsive">
-                                        @if($clientes->count()>0)
+                                        {{-- @if($clientes->count()>0) --}}
                                             <table  id="tableData" class="table table-hover">
                                                 <thead>
                                                     <tr>
@@ -59,10 +59,10 @@
                                                 <tbody id="entrydata">
                                                 </tbody>
                                             </table>
-                                        @else
+                                        {{-- @else
                                             <h4>No hay clientes registrados</h4>
                                             <a class="btn btn-primary" href="{{route('naturales.clientes.create',$institucion_id)}}"><span class="pcoded-micon"><i class="feather icon-plus-circle"></i></span><span class="pcoded-mtext">Crear cliente</span></a>
-                                        @endif
+                                        @endif --}}
                                         </div>
                                     </div>
                                 </div>
