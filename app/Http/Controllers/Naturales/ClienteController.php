@@ -33,14 +33,18 @@ class ClienteController extends Controller
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
         if($request->is('api/*')){
-            $clientes = $institucion->clientes()->with(['cliente'])->orderBy(function($query){
+            $clientesInstitucion = $institucion->clientes()->orderBy(function($query){
                 $query->select('nombre_comercial')
                     ->from('clientes')
                     ->whereColumn('clientes.id','cliente_institucions.cliente_id')
                     ->orderBy('nombre_comercial');
             })->paginate(50);
-            // return $clientes;
-           
+            $clientesLista = Cliente::whereIn('id',$clientesInstitucion->pluck('id'))
+                ->with(['clienteInstitucion'=> function ($query) use ($institucion_id) {
+                    $query->where('institucion_id', $institucion_id);
+                }])->orderBy('nombre_comercial')->get();
+            $clientes=$clientesInstitucion->toArray();
+            $clientes['data']=$clientesLista;
             return  Crypt::encrypt(json_encode(compact('clientes')), false);
         }
          $clientes = $institucion->clientes()->with(['cliente'])->get()->sortBy(function ($useritem, $key) {
