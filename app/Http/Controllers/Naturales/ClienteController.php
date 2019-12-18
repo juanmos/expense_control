@@ -23,13 +23,13 @@ class ClienteController extends Controller
     {
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
-        $clientes = Cliente::whereHas('clienteInstitucion', function ($query) use ($institucion_id) {
-            $query->where('institucion_id', $institucion_id);
-        })->with('clienteInstitucion')->orderBy('razon_social')->paginate(50);
+        // $clientes = Cliente::whereHas('clienteInstitucion', function ($query) use ($institucion_id) {
+        //     $query->where('institucion_id', $institucion_id);
+        // })->with('clienteInstitucion')->orderBy('razon_social')->paginate(50);
         // return $clientes;
         return ($request->is('api/*'))?
                     Crypt::encrypt(json_encode(compact('clientes')), false) :
-                    view('cliente.index', compact('clientes', 'institucion_id'));
+                    view('cliente.index', compact( 'institucion_id'));
     }
 
     public function clientesData(Request $request, $institucion_id = null)
