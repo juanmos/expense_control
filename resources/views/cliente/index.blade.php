@@ -48,11 +48,10 @@
                                             <table  id="tableData" class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Razón social</th>
+                                                        <th>Nombre comercial</th>
                                                         <th>RUC/Cedula</th>
                                                         <th>Teléfono</th>
-                                                        <th>Nombre</th>
-                                                        <th>Apellido</th>
+                                                        <th>Dirección</th>
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
@@ -95,8 +94,7 @@ $(function() {
             { data: 'cliente.nombre_comercial', name: 'cliente.nombre_comercial' },
             { data: 'cliente.ruc', name: 'cliente.ruc' },
             { data: 'cliente.telefono', name: 'cliente.telefono' },
-            { data: 'nombre', name: 'nombre' },
-            { data: 'apellido', name: 'apellido' },
+            { data: 'cliente.direccion', name: 'cliente.direccion' },
             { "data": "id", render: function (dataField) { 
                 var link='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
                 link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';

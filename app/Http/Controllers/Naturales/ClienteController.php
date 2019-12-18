@@ -39,7 +39,8 @@ class ClienteController extends Controller
         $clientes = $institucion->clientes()->with(['cliente'])->get()->sortBy(function ($useritem, $key) {
             return $useritem->cliente->razon_social;
         });
-        return Datatables::of($clientes)->make(true);
+
+        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')), false) : Datatables::of($clientes)->make(true);
     }
 
     public function findCedula(Request $request)
