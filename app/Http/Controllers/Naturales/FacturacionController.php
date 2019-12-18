@@ -80,15 +80,30 @@ class FacturacionController extends Controller
             $dia=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
                     Carbon::now()->toDateString()
-                ])->get()->sum('total');
+                ])->get()->sum('total') + $institucion->documentos()->where('documento','factura')
+                    ->whereBetween('fecha', [
+                        Carbon::now()->subDays(7)->toDateString(),
+                        Carbon::now()->toDateString()
+                    ])
+                ->get()->sum('total');
             $mes=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
-                ])->get()->sum('total');
+                ])->get()->sum('total')  + $institucion->documentos()->where('documento','factura')
+                    ->whereBetween('fecha', [
+                        Carbon::now()->firstOfMonth()->toDateString(),
+                        Carbon::now()->toDateString()
+                    ])
+                ->get()->sum('total');
             $ano=$institucion->facturas()->whereBetween('fecha', [
                     Carbon::now()->startOfYear()->toDateString(),
                     Carbon::now()->toDateString()
-                ])->get()->sum('total');
+                ])->get()->sum('total')  + $institucion->documentos()->where('documento','factura')
+                    ->whereBetween('fecha', [
+                        Carbon::now()->startOfYear()->toDateString(),
+                        Carbon::now()->toDateString()
+                    ])
+                ->get()->sum('total');
             $facturas=$institucion->facturas()->whereBetween('fecha', [$start,$end])
                         ->with(['cliente.cliente','estado','detalle'])->orderBy('fecha', 'desc')->paginate(50);
             return Crypt::encrypt(json_encode(compact('dia', 'mes', 'ano', 'facturas')), false);
