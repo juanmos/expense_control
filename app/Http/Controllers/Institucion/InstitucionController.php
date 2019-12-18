@@ -154,6 +154,12 @@ class InstitucionController extends Controller
             } else if(array_key_exists('clave',$configuracion->configuraciones)) {
                 $data['clave']=$configuracion->configuraciones['clave'];
             }
+            if($request->has('logo')){
+                $data['logo']=$request->file('logo')->store('public/logos/'.$id);
+            } else if(array_key_exists('logo',$configuracion->configuraciones)){
+                $data['logo']=$configuracion->configuraciones['logo'];
+            }
+            
         }
         
         if ($request->has('clave_sri') && $request->get('clave_sri')!=null) {
