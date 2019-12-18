@@ -91,13 +91,13 @@
     <footer class="footer_part">
         <div class="container">
             <div class="row">
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-4">
                     <div class="single_footer_part">
                         <a href="index.html" class="footer_logo_iner"> <img src="{{asset('web/img/logo.png')}}" alt="#"> </a>
                         
                     </div>
 				</div>
-				<div class="col-sm-6 col-lg-3">
+				<div class="col-sm-6 col-lg-4">
 					<div class="single_footer_part">
 						<h4>Sobre nosotros</h4>
                         <p>
@@ -106,7 +106,7 @@
 						</p>
 					</div>
 				</div>
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-4">
                     <div class="single_footer_part">
                         <h4>Contactanos</h4>
                         <p>Dirección : Av de las Americas y Naranjos.</p>
@@ -114,7 +114,7 @@
                         <p>Email : info@factu.app</p>
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-3">
+                {{-- <div class="col-sm-6 col-lg-3">
                     <div class="single_footer_part">
                         <h4>Información importante</h4>
                         <ul class="list-unstyled">
@@ -125,7 +125,7 @@
                             <li><a href="">Our Shop</a></li>
                         </ul>
                     </div>
-                </div>
+                </div> --}}
                 {{-- <div class="col-sm-6 col-lg-3">
                     <div class="single_footer_part">
                         <h4>Newsletter</h4>
@@ -153,7 +153,7 @@
                 <div class="col-lg-8">
                     <div class="copyright_text">
                         <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> Todos los derechos reservados
 <!-- Link back to Colorlib cant be removed. Template is licensed under CC BY 3.0. --></P>
                     </div>
                 </div>

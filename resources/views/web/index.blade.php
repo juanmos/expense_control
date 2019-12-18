@@ -7,9 +7,9 @@
                 <div class="col-lg-7">
                     <div class="banner_text">
                         <div class="banner_text_iner">
-                            <h1>Facturación electrónica
+                            <h1>Contabilidad y Facturación electrónica
                                 fácil y sencilla</h1>
-                            <p>Maneja tus facturas, compras, retenciones y clientes desde un solo lugar.</p>
+                            <p>Maneja tus facturas, compras, retenciones y clientes desde un solo lugar, de manera fácil y disponible desde cualquier plataforma.</p>
                             <a href="#beneficios" class="btn_2 banner_btn_1">Conocer más </a>
 							<a href="{{route('login')}}" class="btn_2 banner_btn_2">Iniciar sesión </a>
 							<a href="{{route('register')}}" class="btn_2 banner_btn_2">Registrarme </a>
@@ -70,8 +70,9 @@
                 <div class="col-lg-5">
                     <div class="feature_part_text">
                         <h2>Solución completa para tu día a día</h2>
-                        <p>Somos una solucioón completa para el manejo de tus facturas, tus compras, retenciones y manejo de clientes todo en un solo lugar y conectados al SRI.</p>
-                        <div class="row">
+                        <p>Somos una solución completa para el manejo de tus facturas, tus compras, retenciones y manejo de clientes todo en un solo lugar y conectados al SRI.</p>
+                        <p>Ten toda tu información almacenada en un solo lugar, gestiona tus declaraciones al SRI de forma fácil mediante nuestro metodo de exportación a EXCEL</p>
+                        {{-- <div class="row">
                             <div class="col-sm-6 col-md-4 col-lg-5">
                                 <div class="feature_part_text_iner">
                                     <h4>50k</h4>
@@ -84,8 +85,8 @@
                                     <p>Facturas realizadas</p>
                                 </div>
                             </div>
-                        </div>
-                        <a href="#" class="btn_4">conoce más <img src="{{asset('web/img/icon/right-arrow.svg')}}" alt=""></a>
+                        </div> --}}
+                        {{-- <a href="#" class="btn_4">conoce más <img src="{{asset('web/img/icon/right-arrow.svg')}}" alt=""></a> --}}
                     </div>
                 </div>
             </div>
@@ -114,8 +115,8 @@
 								<li><img src="{{asset('web/img/icon/remove.png')}}" style="width:20px; padding-right:2px;" alt="">No te ha llegado la retención.</li>
 							</ul>
 						</p>
-                        <a href="#" class="btn_1">iniciar sesión</a>
-                        <a href="#" class="btn_2">registrarme</a>
+                        <a href="{{route('login')}}" class="btn_1">iniciar sesión</a>
+                        <a href="{{route('register')}}" class="btn_2">registrarme</a>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6">
@@ -137,7 +138,7 @@
             <div class="row align-items-center justify-content-between">
                 <div class="col-md-6 col-lg-6">
                     <div class="learning_img">
-                        <img src="{{asset('web/img/about_img_2.png')}}" alt="">
+                        <img src="{{asset('web/img/about_img_3.png')}}" alt="">
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-5">
@@ -224,14 +225,15 @@
                         <p>gratuito</p>
                         <h3>Gratis <span></span></h3>
                         <ul>
-                            <li>Obtención de compras desde el SRI</li>
-                            <li>Obtencioón de retenciones desde el SRI</li>
-                            <li>Almacenamiento gratuito ilimitado</li>
-                            <li>Estadisticas de tus consumos</li>
+                            <li>Ingreso de facturas manuales</li>
+                            <li>Ingreso de compras manuales</li>
+                            <li>Ingreso de retenciones manuales</li>
+                            <li>Almacenamiento ilimitados de todos tus comprobantes</li>
+                            <li>Estadisticas de ventas, compras y retenciones</li>
                             <li>Manejo de clientes</li>
                             <li>Soporte 8/5</li>
                         </ul>
-                        <a href="#" class="btn_1">Registrarme</a>
+                        <a href="{{route('register')}}" class="btn_1">Registrarme</a>
                     </div>
                 </div>
                 <div class="col-lg-5 col-sm-6">
@@ -242,15 +244,15 @@
                         <ul>
                             <li>Todo lo del plan gratuito</li>
                             <li>Facturación Electrónica</li>
-                            <li>Exportación de facturas, retenciones y compras a Excel</li>
-                            <li>Acceso para contadores</li>
-							<li>CRM</li>
-							<li>Cotizaciones</li>
+                            <li>Obtención de compras electroinicas desde el SRI</li>
+                            <li>Obtención de retenciones electronicas desde el SRI</li>
+							<li>CRM de clientes</li>
+							<li>Acceso para contadores</li>
 							<li>Punto de venta móvil y web</li>
 							<li>Aplicación para iPAD</li>
                             <li>Soporte 24/7</li>
                         </ul>
-                        <a href="#" class="btn_1">Registrarme</a>
+                        <a href="{{route('register')}}" class="btn_1">Registrarme</a>
                     </div>
                 </div>
                 
@@ -267,9 +269,9 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xl-6">
-                    <div class="cta_text text-center">
+                    <div class="cta_text text-center single_footer_part">
                         <h2>Suscribete a nuestro boletin</h2>
-                        <p>Recibe la ultima informacioón sobre factu, nuevas funcionalidades, eventos y mucho mas</p>
+                        <p>Recibe la ultima información sobre factu, nuevas funcionalidades, eventos y mucho más</p>
                         <div id="mc_embed_signup">
                             <form target="_blank"
                                 action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"
