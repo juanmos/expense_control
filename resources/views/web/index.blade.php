@@ -115,8 +115,8 @@
 								<li><img src="{{asset('web/img/icon/remove.png')}}" style="width:20px; padding-right:2px;" alt="">No te ha llegado la retención.</li>
 							</ul>
 						</p>
-                        <a href="#" class="btn_1">iniciar sesión</a>
-                        <a href="#" class="btn_2">registrarme</a>
+                        <a href="{{route('login')}}" class="btn_1">iniciar sesión</a>
+                        <a href="{{route('register')}}" class="btn_2">registrarme</a>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6">
