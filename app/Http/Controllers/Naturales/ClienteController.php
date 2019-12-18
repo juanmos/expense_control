@@ -23,10 +23,6 @@ class ClienteController extends Controller
     {
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
-        // $clientes = Cliente::whereHas('clienteInstitucion', function ($query) use ($institucion_id) {
-        //     $query->where('institucion_id', $institucion_id);
-        // })->with('clienteInstitucion')->orderBy('razon_social')->paginate(50);
-        // return $clientes;
         return ($request->is('api/*'))?
                     Crypt::encrypt(json_encode(compact('clientes')), false) :
                     view('cliente.index', compact( 'institucion_id'));
@@ -36,11 +32,21 @@ class ClienteController extends Controller
     {
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
-        $clientes = $institucion->clientes()->with(['cliente'])->get()->sortBy(function ($useritem, $key) {
-            return $useritem->cliente->razon_social;
-        });
-
-        return ($request->is('api/*'))?  Crypt::encrypt(json_encode(compact('clientes')), false) : Datatables::of($clientes)->make(true);
+        if($request->is('api/*')){
+            $clientes = $institucion->clientes()->with(['cliente'])->orderBy(function($query){
+                $query->select('nombre_comercial')
+                    ->from('clientes')
+                    ->whereColumn('clientes.id','cliente_institucions.cliente_id')
+                    ->orderBy('nombre_comercial');
+            })->pagiante(50);
+            // return $clientes;
+           
+            return  Crypt::encrypt(json_encode(compact('clientes')), false);
+        }
+         $clientes = $institucion->clientes()->with(['cliente'])->get()->sortBy(function ($useritem, $key) {
+                return $useritem->cliente->razon_social;
+            });
+        return Datatables::of($clientes)->make(true);
     }
 
     public function findCedula(Request $request)
