@@ -80,7 +80,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('dashboard/grafico/top/ventas','Naturales\InstitucionController@topVentas');
         Route::get('dashboard/grafico/top/compras','Naturales\InstitucionController@topCompras');
 
-        Route::get('clientes/', 'Naturales\ClienteController@index');
+        Route::get('clientes/', 'Naturales\ClienteController@clientesData');
         Route::post('cliente/by/cedula', 'Naturales\ClienteController@findCedula');
         Route::post('cliente/buscar', 'Naturales\ClienteController@buscar');
         Route::post('clientes/store', 'Naturales\ClienteController@store');
