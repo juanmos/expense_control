@@ -172,14 +172,13 @@ $(function() {
             columns: [
                 // { data: 'id', name: 'id' },
                 { data: 'fecha', name: 'fecha' },
-                { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+                { data: 'cliente.cliente.nombre_comercial', name: 'cliente.cliente.nombre_comercial' },
                 
                 { data: 'tipoComprobante', name: 'tipoComprobante' },
                 { data: 'total', name: 'total' },
                 
                 { "data": "id", render: function (dataField) { 
                     var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                    {{-- link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>'; --}}
                         return link;
                     } 
                 }
@@ -215,14 +214,13 @@ $(function() {
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
-            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'cliente.cliente.nombre_comercial', name: 'cliente.cliente.nombre_comercial' },
             
             { data: 'tipoComprobante', name: 'tipoComprobante' },
             { data: 'total', name: 'total' },
             
             { "data": "id", render: function (dataField) { 
                 var link='<a href="{{ url("naturales/naturales/".$institucion_id."/compras")}}/'+dataField+'" class="label theme-bg2 text-white f-12">Ver</a>';
-                {{--  link+='<a href="{{ url("naturales/naturales/".$institucion_id."/clientes")}}/'+dataField+'/edit" class="label theme-bg text-white f-12">Editar</a>';  --}}
                     return link;
                 } 
             }

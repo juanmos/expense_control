@@ -185,7 +185,7 @@ $(function() {
             columns: [
                 // { data: 'id', name: 'id' },
                 
-                { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+                { data: 'cliente.cliente.nombre_comercial', name: 'cliente.cliente.nombre_comercial' },
                 { data: 'fecha', name: 'fecha' },
                 { data: 'estado.estado', name: 'estado.estado' },
                 { data: 'secuencia', name: 'secuencia' },
@@ -229,7 +229,7 @@ $(function() {
         columns: [
             // { data: 'id', name: 'id' },
             { data: 'fecha', name: 'fecha' },
-            { data: 'cliente.cliente.razon_social', name: 'cliente.cliente.razon_social' },
+            { data: 'cliente.cliente.nombre_comercial', name: 'cliente.cliente.nombre_comercial' },
             { data: 'estado.estado', name: 'estado.estado' },
             { data: 'secuencia', name: 'secuencia' },
             { data: 'total', name: 'total' },
