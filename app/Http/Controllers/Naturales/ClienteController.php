@@ -38,7 +38,7 @@ class ClienteController extends Controller
                     ->from('clientes')
                     ->whereColumn('clientes.id','cliente_institucions.cliente_id')
                     ->orderBy('nombre_comercial');
-            })->pagiante(50);
+            })->paginate(50);
             // return $clientes;
            
             return  Crypt::encrypt(json_encode(compact('clientes')), false);
