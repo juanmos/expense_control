@@ -57,7 +57,7 @@ class FacturarCommand extends Command
         foreach ($facturas as $factura) {
             $urlEnvio='https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
             $urlAutorizacion='https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
-            $urlImg = "https://doctopro.com/images/logo.png";
+            
             
             if ($factura->ambiente==1) {
                 $urlEnvio='https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl';
@@ -242,9 +242,11 @@ class FacturarCommand extends Command
                             "precioTotalSinImpuesto"=>$detalle->precio
                         )];
                     }
+                    $urlImg = \Config::get('app.url');
+                    $urlImg.= Storage::url($configuraciones['logo']) ?? url('images/logo.png');
                     
                     $json=array(
-                        "template"=>array("shortid" => "NJTN-fPUm"),
+                        "template"=>array("shortid" => "EkRZMhojP"),
                         "data"=>array(
                             "facturaNo"=> $factura->factura_numero,
                             "autorizacion"=>$factura->clave,

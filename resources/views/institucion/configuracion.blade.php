@@ -82,47 +82,75 @@
                                                                 {!! Form::text('telefono_facturacion', ($configuracion->configuraciones!=null && array_key_exists('telefono_facturacion',$configuracion->configuraciones))?$configuracion->configuraciones['telefono_facturacion'] : $institucion->telefono ,["class"=>"form-control"]) !!}
                                                             </div>
                                                             
-                                                            <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Establecimiento</label>
-                                                                {!! Form::text('establecimiento', ($configuracion->configuraciones!=null && array_key_exists('establecimiento',$configuracion->configuraciones))?$configuracion->configuraciones['establecimiento'] : '001' ,["class"=>"form-control"]) !!}
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Punto</label>
-                                                                {!! Form::text('punto', ($configuracion->configuraciones!=null && array_key_exists('punto',$configuracion->configuraciones))?$configuracion->configuraciones['punto'] : '500' ,["class"=>"form-control"]) !!}
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Secuencia</label>
-                                                                {!! Form::text('secuencia', ($configuracion->configuraciones!=null && array_key_exists('secuencia',$configuracion->configuraciones))?$configuracion->configuraciones['secuencia'] : '1' ,["class"=>"form-control"]) !!}
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Firma electrónica: {!!($configuracion->configuraciones!=null && array_key_exists('firma',$configuracion->configuraciones))?($configuracion->configuraciones['firma'])?'<span class="label text-c-green">Firma guardada</span>':'' : ''!!}</label>
-                                                                {!! Form::file('firma',["class"=>"form-control"]) !!}
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Clave {!!($configuracion->configuraciones!=null && array_key_exists('clave',$configuracion->configuraciones))?($configuracion->configuraciones['clave'])?'<span class="label text-c-green">Clave guardada</span>':'' : ''!!}</label>
-                                                                
-                                                                {!! Form::password('clave',["class"=>"form-control"]) !!}
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Fecha expiración</label>
-                                                                {!! Form::text('fecha_expiracion', ($configuracion->configuraciones!=null && array_key_exists('fecha_expiracion',$configuracion->configuraciones))?$configuracion->configuraciones['fecha_expiracion'] : '' ,["class"=>"form-control","placeholder"=>'Obtendremos la fecha de expiracion de tu firma electronica']) !!}
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">En modo:</label><br>
-                                                                <div class="radio d-inline">
-                                                                    <input type="radio" name="ambiente_facturacion" id="radio-produccion" value="2" {{($configuracion->configuraciones!=null && array_key_exists('ambiente_facturacion',$configuracion->configuraciones))?($configuracion->configuraciones['ambiente_facturacion']==2)?'checked':'':''}}>
-                                                                    <label for="radio-produccion" class="cr">Producción</label>
+                                                            
+                                                            <div class="col-md-8 row">
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="exampleInputPassword1">Establecimiento</label>
+                                                                    {!! Form::text('establecimiento', ($configuracion->configuraciones!=null && array_key_exists('establecimiento',$configuracion->configuraciones))?$configuracion->configuraciones['establecimiento'] : '001' ,["class"=>"form-control"]) !!}
                                                                 </div>
-                                                                <div class="radio d-inline">
-                                                                    <input type="radio" name="ambiente_facturacion" id="radio-pruebas" value="1" {{($configuracion->configuraciones!=null && array_key_exists('ambiente_facturacion',$configuracion->configuraciones))?($configuracion->configuraciones['ambiente_facturacion']==1)?'checked':'':''}}>
-                                                                    <label for="radio-pruebas" class="cr">Pruebas</label>
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="exampleInputPassword1">Punto</label>
+                                                                    {!! Form::text('punto', ($configuracion->configuraciones!=null && array_key_exists('punto',$configuracion->configuraciones))?$configuracion->configuraciones['punto'] : '500' ,["class"=>"form-control"]) !!}
+                                                                </div>
+                                                                <div class="form-group col-md-4">
+                                                                    <label for="exampleInputPassword1">Secuencia</label>
+                                                                    {!! Form::text('secuencia', ($configuracion->configuraciones!=null && array_key_exists('secuencia',$configuracion->configuraciones))?$configuracion->configuraciones['secuencia'] : '1' ,["class"=>"form-control"]) !!}
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="exampleInputPassword1">Firma electrónica: {!!($configuracion->configuraciones!=null && array_key_exists('firma',$configuracion->configuraciones))?($configuracion->configuraciones['firma'])?'<span class="label text-c-green">Firma guardada</span>':'' : ''!!}</label>
+                                                                    {!! Form::file('firma',["class"=>"form-control"]) !!}
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="exampleInputPassword1">Clave {!!($configuracion->configuraciones!=null && array_key_exists('clave',$configuracion->configuraciones))?($configuracion->configuraciones['clave'])?'<span class="label text-c-green">Clave guardada</span>':'' : ''!!}</label>
+                                                                    
+                                                                    {!! Form::password('clave',["class"=>"form-control"]) !!}
+                                                                </div>
+                                                                {{-- <div class="form-group col-md-6">
+                                                                    <label for="exampleInputPassword1">Fecha expiración</label>
+                                                                    {!! Form::text('fecha_expiracion', ($configuracion->configuraciones!=null && array_key_exists('fecha_expiracion',$configuracion->configuraciones))?$configuracion->configuraciones['fecha_expiracion'] : '' ,["class"=>"form-control","placeholder"=>'Obtendremos la fecha de expiracion de tu firma electronica']) !!}
+                                                                </div> --}}
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="exampleInputPassword1">En modo:</label><br>
+                                                                    <div class="radio d-inline">
+                                                                        <input type="radio" name="ambiente_facturacion" id="radio-produccion" value="2" {{($configuracion->configuraciones!=null && array_key_exists('ambiente_facturacion',$configuracion->configuraciones))?($configuracion->configuraciones['ambiente_facturacion']==2)?'checked':'':''}}>
+                                                                        <label for="radio-produccion" class="cr">Producción</label>
+                                                                    </div>
+                                                                    <div class="radio d-inline">
+                                                                        <input type="radio" name="ambiente_facturacion" id="radio-pruebas" value="1" {{($configuracion->configuraciones!=null && array_key_exists('ambiente_facturacion',$configuracion->configuraciones))?($configuracion->configuraciones['ambiente_facturacion']==1)?'checked':'':''}}>
+                                                                        <label for="radio-pruebas" class="cr">Pruebas</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="exampleInputPassword1">Clave SRI para obtener compras {!!($configuracion->configuraciones!=null && array_key_exists('clave_sri',$configuracion->configuraciones))?($configuracion->configuraciones['clave_sri'])?'<span class="label text-c-green">Clave del SRI guardada</span>':'' : ''!!}</label>
+                                                                    {!! Form::password('clave_sri',["class"=>"form-control"]) !!}
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-4">
-                                                                <label for="exampleInputPassword1">Clave SRI para obtener compras {!!($configuracion->configuraciones!=null && array_key_exists('clave_sri',$configuracion->configuraciones))?($configuracion->configuraciones['clave_sri'])?'<span class="label text-c-green">Clave del SRI guardada</span>':'' : ''!!}</label>
-                                                                {!! Form::password('clave_sri',["class"=>"form-control"]) !!}
+                                                                <div>
+                                                                    <label for="exampleInputPassword1">Logo para factura</label>
+                                                                    <br>
+                                                                    <span class="btn btn-round btn-primary btn-file">
+                                                                        <span class="fileinput-new">Buscar foto</span>
+                                                                        <span class="fileinput-exists">Cambiar</span>
+                                                                        {!! Form::file('logo',null,['class' => 'form-control']) !!} 
+                                                                    </span>
+                                                                    
+                                                                    <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Borrar</a>
+                                                                </div>
+                                                                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                                                    <div class="fileinput-new thumbnail img-circle">
+                                                                        @if($configuracion->configuraciones!=null && array_key_exists('logo',$configuracion->configuraciones))
+                                                                            <img id="foto_nueva" src="{{Storage::url($configuracion->configuraciones['logo'])}}" border="0">
+                                                                        @else
+                                                                            <img id="foto_nueva" src="{{asset('images/default_user.png')}}" border="0">
+                                                                        @endif
+                                                                    </div>
+                                                                    <div id="image_preview" class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
+                                                                </div>
                                                             </div>
+
                                                         </div>
+
                                                     </div>
                                                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                                        
@@ -180,14 +208,48 @@
 </div>
 @endsection
 
-@if(Session::has('mensaje'))
+
 
 
 @push('scripts')
 <script type="text/javascript">
-    $(document).ready(function(){
-        $.notify("{{Session::get('mensaje')}}",{"type":"success","placement":{"align":"center"}})
+$(document).ready(function(){
+    @if(Session::has('mensaje'))
+    $.notify("{{Session::get('mensaje')}}",{"type":"success","placement":{"align":"center"}})
+    @endif
+    $('input[name=logo]').change(function(e) {
+
+        var tgt = e.target || window.event.srcElement,
+        files = tgt.files;
+
+        var filename = files[0].name;
+        var extension = files[0].type;
+        var fileExtension = filename.split('.')[filename.split('.').length - 1].toLowerCase();   
+
+        var file = $(this)[0].files[0];
+        if (file) {
+            {{-- orientation(file, function(base64img, value) {                
+                console.log(rotation[value]);
+                var rotated = $('#image_preview').attr('src', base64img);
+                if (value) {
+                    rotated.css('transform', rotation[value]);
+                }
+            }); --}}
+        }            
+
+        if (FileReader && files && files.length) {
+            if (fileExtension === 'png' || fileExtension === 'jpeg' || fileExtension === 'jpg') {
+                var fr = new FileReader();
+                fr.onload = function () {
+                    $("#foto_nueva").attr("src",fr.result);
+                }
+                fr.readAsDataURL(files[0]);   
+            }else {
+                alert('Formato de imagen inválido, solo se permite PNG, JPG o JPEG');
+                $('input[name=logo]').val('');
+            }         
+        }        
     });
+});
 </script>
 @endpush
-@endif
