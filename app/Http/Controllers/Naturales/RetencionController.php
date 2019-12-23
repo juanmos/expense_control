@@ -148,6 +148,20 @@ class RetencionController extends Controller
         return view('retencion.show',compact('retencione'));
     }
 
+    public function retencionesCliente(Request $request, $cliente_id)
+    {
+        $institucion = Institucion::find(Auth::user()->institucion_id);
+        if($request->is('api/*')){
+            $retenciones=$institucion->retenciones()->where('cliente_id', base64_decode($cliente_id))
+                            ->with(['cliente.cliente'])->orderBy('fecha', 'desc')->paginate(50);
+            // return $retenciones;
+            return Crypt::encrypt(json_encode(compact('retenciones')), false);
+        }
+        $retenciones=$institucion->retenciones()->where('cliente_id', $cliente_id)
+                            ->with(['cliente.cliente'])->orderBy('fecha', 'desc')->get();
+        return Datatables::of($retenciones)->make(true);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -50,5 +50,16 @@ class RetencionControllerApiTest extends TestCase
         $this->assertArrayHasKey('retenciones',$json);
         
     }
+
+    /** @test */
+    public function test_obtener_retenciones_clientes()
+    {
+        $response = $this->get('api/naturales/retenciones/cliente/'.base64_encode(1),$this->headers);
+        $response->assertOk();
+        $json = (array)json_decode(Crypt::decryptString($response->getContent()));
+        
+        $this->assertArrayHasKey('retenciones',$json);
+    }
+    
     
 }

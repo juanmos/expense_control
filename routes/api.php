@@ -99,6 +99,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         Route::put('factura/anular/{id}/{factura_id}', 'Institucion\FacturacionController@anular');
 
         Route::post('retenciones', 'Naturales\RetencionController@retencionesData');
+        Route::get('retenciones/cliente/{id}','Naturales\RetencionController@retencionesCliente');
 
         Route::get('categorias/{tipo}', 'Naturales\CategoriaController@categoriaData');
         Route::post('categorias/store/{tipo}', 'Naturales\CategoriaController@store');
