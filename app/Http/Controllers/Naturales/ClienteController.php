@@ -39,7 +39,7 @@ class ClienteController extends Controller
                     ->whereColumn('clientes.id','cliente_institucions.cliente_id')
                     ->orderBy('nombre_comercial');
             })->paginate(50);
-            $clientesLista = Cliente::whereIn('id',$clientesInstitucion->pluck('id'))
+            $clientesLista = Cliente::whereIn('id',$clientesInstitucion->pluck('cliente_id'))
                 ->with(['clienteInstitucion'=> function ($query) use ($institucion_id) {
                     $query->where('institucion_id', $institucion_id);
                 }])->orderBy('nombre_comercial')->get();

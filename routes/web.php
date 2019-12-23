@@ -32,6 +32,12 @@ Route::group(['middleware' => ['auth']], function () {
                     ->toMail($user);
     });
 
+    Route::get('exportar/{id}', function ($id) {
+        
+
+        return (new \App\Exports\DocumentosMesExport($id,'2019-11-01','2019-11-30'))->download('documentos.xlsx');
+    });
+
     Route::group(['prefix' => 'admin'], function () {
         Route::get('institucion', 'Admin\InstitucionController@index')->name('admin.institucion.index');
         Route::get('institucion/create', 'Admin\InstitucionController@create')->name('admin.institucion.create');
