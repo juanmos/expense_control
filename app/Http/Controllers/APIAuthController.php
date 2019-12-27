@@ -137,10 +137,6 @@ class APIAuthController extends Controller
             $usuario->foto=$request->file('foto')->store('public/usuarios');
             $usuario->save();
         }
-        /*Mail::send('emails.nuevo', $info, function ($message){
-            $message->subject('Nuevo Empresa a Registrar');
-            $message->to(Config::get('constants.MAIL_CORP'));
-            }); */
         $usuario->assignRole('Usuarios');
         $created=true;
         if (! $token = JWTAuth::attempt(['email'=> $request->email, 'password' => $request->get('password')])) {
