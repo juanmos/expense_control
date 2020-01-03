@@ -369,7 +369,10 @@ class InstitucionController extends Controller
 
     public function exportar(Request $request)
     {
-        return (new DocumentosMesExport(auth()->user()->institucion_id, $request->get('start'), $request->get('end')))
+        $start = Carbon::parse($request->get('start'))->toDateString();
+        $end = Carbon::parse($request->get('end'))->toDateString();
+
+        return (new DocumentosMesExport(auth()->user()->institucion_id, $start, $end))
             ->download('documentos-'.$request->get('start').'-'.$request->get('end').'.xlsx');
     }
 }
