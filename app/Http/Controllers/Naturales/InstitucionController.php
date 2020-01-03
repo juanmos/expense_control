@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Naturales;
 
 use App\Http\Controllers\Controller;
+use App\Exports\DocumentosMesExport;
 use Illuminate\Http\Request;
 use App\Models\Institucion;
 use App\Models\Transaccion;
@@ -70,7 +71,7 @@ class InstitucionController extends Controller
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
             ])
-            ->get()->sum('total') + $institucion->documentos()->where('documento','compra')
+            ->get()->sum('total') + $institucion->documentos()->where('documento', 'compra')
                 ->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
                     Carbon::now()->toDateString()
@@ -80,7 +81,7 @@ class InstitucionController extends Controller
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])
-            ->get()->sum('total') + $institucion->documentos()->where('documento','compra')
+            ->get()->sum('total') + $institucion->documentos()->where('documento', 'compra')
                 ->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
@@ -90,20 +91,20 @@ class InstitucionController extends Controller
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
             ])
-            ->get()->sum('total') + $institucion->documentos()->where('documento','compra')
+            ->get()->sum('total') + $institucion->documentos()->where('documento', 'compra')
                 ->whereBetween('fecha', [
                     Carbon::now()->startOfYear()->toDateString(),
                     Carbon::now()->toDateString()
                 ])
             ->get()->sum('total');
         $compras['total']=$institucion->compras()
-            ->get()->count() + $institucion->documentos()->where('documento','compra')->get()->count();
+            ->get()->count() + $institucion->documentos()->where('documento', 'compra')->get()->count();
         $ventas=[];
         $ventas['dia']=$institucion->facturas()->whereBetween('fecha', [
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
             ])
-            ->get()->sum('total') + $institucion->documentos()->where('documento','factura')
+            ->get()->sum('total') + $institucion->documentos()->where('documento', 'factura')
                 ->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
                     Carbon::now()->toDateString()
@@ -113,7 +114,7 @@ class InstitucionController extends Controller
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])
-            ->get()->sum('total') + $institucion->documentos()->where('documento','factura')
+            ->get()->sum('total') + $institucion->documentos()->where('documento', 'factura')
                 ->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
@@ -123,7 +124,7 @@ class InstitucionController extends Controller
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
             ])
-            ->get()->sum('total') + $institucion->documentos()->where('documento','factura')
+            ->get()->sum('total') + $institucion->documentos()->where('documento', 'factura')
                 ->whereBetween('fecha', [
                     Carbon::now()->startOfYear()->toDateString(),
                     Carbon::now()->toDateString()
@@ -158,7 +159,7 @@ class InstitucionController extends Controller
         $paises = Pais::orderBy('pais')->get()->pluck('pais', 'id');
         $ciudad = Ciudad::orderBy('ciudad')->get()->pluck('ciudad', 'id');
         $estado = EstadoInstitucion::get()->pluck('estado', 'id');
-        return view('naturales.form',compact('institucion','paises','ciudad','estado'));
+        return view('naturales.form', compact('institucion', 'paises', 'ciudad', 'estado'));
     }
 
     /**
@@ -168,13 +169,13 @@ class InstitucionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Institucion  $naturale)
+    public function update(Request $request, Institucion  $naturale)
     {
         $request->validate([
             'nombre'=>'required'
         ]);
         $naturale->update($request->all());
-        return redirect()->route('naturales.show',$naturale->id);
+        return redirect()->route('naturales.show', $naturale->id);
     }
 
     /**
@@ -188,16 +189,17 @@ class InstitucionController extends Controller
         //
     }
 
-    public function dashboard(){
+    public function dashboard()
+    {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $fisicasCompras=$institucion->documentos()
-                ->where('documento','compra')
+                ->where('documento', 'compra')
                 ->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
                 ])->get()->sum('total');
         $fisicasVentas=$institucion->documentos()
-                ->where('documento','factura')
+                ->where('documento', 'factura')
                 ->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
@@ -225,18 +227,19 @@ class InstitucionController extends Controller
         // ));
     }
 
-    public function graficoComprasVentas(){
+    public function graficoComprasVentas()
+    {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $grafico=[];
-        for($i=0;$i<6;$i++){
+        for ($i=0;$i<6;$i++) {
             $fisicasCompras=$institucion->documentos()
-                ->where('documento','compra')
+                ->where('documento', 'compra')
                 ->whereBetween('fecha', [
                     Carbon::now()->subMonths($i)->firstOfMonth()->toDateString(),
                     Carbon::now()->subMonths($i)->endOfMonth()->toDateString()
                 ])->get()->sum('total');
             $fisicasVentas=$institucion->documentos()
-                ->where('documento','factura')
+                ->where('documento', 'factura')
                 ->whereBetween('fecha', [
                     Carbon::now()->subMonths($i)->firstOfMonth()->toDateString(),
                     Carbon::now()->subMonths($i)->endOfMonth()->toDateString()
@@ -255,17 +258,18 @@ class InstitucionController extends Controller
                 ->get()->sum('total');
             $grafico[]=[
                 'fecha'=>now()->subMonths($i)->format('Y-m'),
-                'ventas'=>number_format($electronicaVentas+$fisicasVentas,2,'.',''),
-                'compras'=>number_format($electronicaCompras+$fisicasCompras,2,'.','')
+                'ventas'=>number_format($electronicaVentas+$fisicasVentas, 2, '.', ''),
+                'compras'=>number_format($electronicaCompras+$fisicasCompras, 2, '.', '')
             ];
-        }        
+        }
         return Crypt::encrypt(json_encode(compact('grafico')), false);
-    //     return response()->json( compact(
+        //     return response()->json( compact(
     //         'grafico'
     //     ));
     }
 
-    public function graficoGastos(){
+    public function graficoGastos()
+    {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $compras=$institucion->compras()->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
@@ -275,7 +279,7 @@ class InstitucionController extends Controller
             ->with('categoria')
             ->select(DB::raw('COUNT(*) AS totalCompras,categoria_id,SUM(total) as compras'))->get();
         $comprasFisicas=$institucion->documentos()
-            ->where('documento','compra')
+            ->where('documento', 'compra')
             ->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
@@ -288,9 +292,9 @@ class InstitucionController extends Controller
             return [$item->categoria->categoria => $item];
         });
         $compras=[];
-        foreach($comprasJunto as $key=>$compra){
+        foreach ($comprasJunto as $key=>$compra) {
             $compras[]=[
-                'totales'=>number_format($compra->sum('compras'),2,'.',''),
+                'totales'=>number_format($compra->sum('compras'), 2, '.', ''),
                 'categoria'=>$key
             ];
         }
@@ -301,7 +305,8 @@ class InstitucionController extends Controller
         // ));
     }
 
-    public function graficoGastosAnual(){
+    public function graficoGastosAnual()
+    {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $compras=$institucion->compras()->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
@@ -311,7 +316,7 @@ class InstitucionController extends Controller
             ->with('categoria')
             ->select(DB::raw('COUNT(*) AS totalCompras,categoria_id,SUM(total) as compras'))->get();
         $comprasFisicas=$institucion->documentos()
-            ->where('documento','compra')
+            ->where('documento', 'compra')
             ->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
@@ -324,9 +329,9 @@ class InstitucionController extends Controller
             return [$item->categoria->categoria => $item];
         });
         $compras=[];
-        foreach($comprasJunto as $key=>$compra){
+        foreach ($comprasJunto as $key=>$compra) {
             $compras[]=[
-                'totales'=>number_format($compra->sum('compras'),2,'.',''),
+                'totales'=>number_format($compra->sum('compras'), 2, '.', ''),
                 'categoria'=>$key
             ];
         }
@@ -337,10 +342,11 @@ class InstitucionController extends Controller
         // ));
     }
 
-    public function topVentas(){
+    public function topVentas()
+    {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $ventas=$institucion->facturas()
-            ->orderBy('total','desc')
+            ->orderBy('total', 'desc')
             ->groupBy('cliente_id')
             ->with('cliente.cliente')
             ->select(DB::raw('COUNT(*) AS totalCompras,cliente_id,SUM(total) as total'))
@@ -348,15 +354,22 @@ class InstitucionController extends Controller
         // return $ventas;
         return Crypt::encrypt(json_encode(compact('ventas')), false);
     }
-    public function topCompras(){
+    public function topCompras()
+    {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $compras=$institucion->compras()
-            ->orderBy('total','desc')
+            ->orderBy('total', 'desc')
             ->groupBy('cliente_id')
             ->with('cliente.cliente')
             ->select(DB::raw('COUNT(*) AS totalCompras,cliente_id,SUM(total) as total'))
             ->limit(10)->get();
         
         return Crypt::encrypt(json_encode(compact('compras')), false);
+    }
+
+    public function exportar(Request $request)
+    {
+        return (new DocumentosMesExport(auth()->user()->institucion_id, $request->get('start'), $request->get('end')))
+            ->download('documentos-'.$request->get('start').'-'.$request->get('end').'.xlsx');
     }
 }

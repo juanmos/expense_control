@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/','PublicController@index');
+Route::get('/', 'PublicController@index');
 // Route::get('/', 'HomeController@index')->middleware('auth');
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
@@ -20,10 +20,10 @@ Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 // Route::get('carga','Bares\PaymentController@carga');
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::resource('ayuda','AyudaController');
+    Route::resource('ayuda', 'AyudaController');
 
-    Route::get('register/institucion','HomeController@register')->name('register.institucion');
-    Route::post('register/institucion','HomeController@registerInstitucion')->name('register.institucion');
+    Route::get('register/institucion', 'HomeController@register')->name('register.institucion');
+    Route::post('register/institucion', 'HomeController@registerInstitucion')->name('register.institucion');
 
     Route::get('mail', function () {
         $user = App\Models\User::find(102);
@@ -33,9 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::get('exportar/{id}', function ($id) {
-        
-
-        return (new \App\Exports\DocumentosMesExport($id,'2019-11-01','2019-11-30'))->download('documentos.xlsx');
+        return (new \App\Exports\DocumentosMesExport($id, '2019-11-01', '2019-11-30'))->download('documentos.xlsx');
     });
 
     Route::group(['prefix' => 'admin'], function () {
@@ -44,7 +42,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('institucion/store', 'Admin\InstitucionController@store')->name('admin.institucion.store');
         Route::get('institucion/show/{id}/{pest?}', 'Admin\InstitucionController@show')->name('admin.institucion.show');
         Route::get('institucion/{institucion}/edit', 'Admin\InstitucionController@edit')->name('admin.institucion.edit');
-        Route::put('institucion/{institucion}/update','Admin\InstitucionController@update')->name('admin.institucion.update');
+        Route::put('institucion/{institucion}/update', 'Admin\InstitucionController@update')->name('admin.institucion.update');
     });
 
     
@@ -120,9 +118,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('naturales.clientes', 'Naturales\ClienteController');
         Route::get('naturales/{institucion?}/cliente/data', 'Naturales\ClienteController@clientesData')->name('naturales.clientes.data');
         Route::get('naturales/{institucion}/clientes/upload', 'Naturales\ClienteController@upload')->name('naturales.clientes.upload');
-        Route::get('naturales/{institucion}/clientes/id/{id}','Naturales\ClienteController@findById')->name('naturales.clientes.find.id');
-        Route::get('naturales/clientes/search/ruc','Naturales\ClienteController@findCedula')->name('naturales.clientes.find.cedula');
-        Route::get('naturales/clientes/search/texto','Naturales\ClienteController@buscar')->name('naturales.clientes.buscar');
+        Route::get('naturales/{institucion}/clientes/id/{id}', 'Naturales\ClienteController@findById')->name('naturales.clientes.find.id');
+        Route::get('naturales/clientes/search/ruc', 'Naturales\ClienteController@findCedula')->name('naturales.clientes.find.cedula');
+        Route::get('naturales/clientes/search/texto', 'Naturales\ClienteController@buscar')->name('naturales.clientes.buscar');
         
         Route::resource('naturales.categoria', 'Naturales\CategoriaController');
         Route::get('naturales/{tipo}/categoria/data/tablas', 'Naturales\CategoriaController@categoriaData')->name('naturales.categoria.data');
@@ -134,21 +132,21 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('naturales.compras', 'Naturales\ComprasController');
         Route::get('naturales/{institucion}/compras/data/table', 'Naturales\ComprasController@comprasData')->name('naturales.compras.data');
         Route::get('naturales/{institucion}/compras/pdf/{id}', 'Naturales\ComprasController@pdf')->name('naturales.compras.pdf');
-        Route::get('compras/cliente/{id}','Naturales\ComprasController@comprasCliente')->name('naturales.compras.cliente');
+        Route::get('compras/cliente/{id}', 'Naturales\ComprasController@comprasCliente')->name('naturales.compras.cliente');
         
-        Route::resource('naturales.facturas','Naturales\FacturacionController');
+        Route::resource('naturales.facturas', 'Naturales\FacturacionController');
         Route::get('naturales/{institucion}/facturas/data/table', 'Naturales\FacturacionController@facturasData')->name('naturales.facturas.data');
-        Route::get('facturas/cliente/{id}','Naturales\FacturacionController@ventasCliente')->name('naturales.facturas.cliente');
+        Route::get('facturas/cliente/{id}', 'Naturales\FacturacionController@ventasCliente')->name('naturales.facturas.cliente');
 
         Route::resource('naturales.retenciones', 'Naturales\RetencionController');
         Route::get('naturales/{institucion}/retenciones/data/table', 'Naturales\RetencionController@retencionesData')->name('naturales.retenciones.data');
 
-        Route::get('naturales/documentos/{tipo}','Naturales\DocumentoFisicoController@index')->name('naturales.documentos.index');
-        Route::get('naturales/{institucion}/documento/{tipo}/create','Naturales\DocumentoFisicoController@create')->name('naturales.documentos.create');
-        Route::post('naturales/{institucion}/documento/store','Naturales\DocumentoFisicoController@store')->name('naturales.documentos.store');
-        Route::get('naturales/{institucion}/documento/{documento}','Naturales\DocumentoFisicoController@show')->name('naturales.documentos.show');
-        Route::delete('naturales/documento/{documento}','Naturales\DocumentoFisicoController@destroy')->name('naturales.documentos.eliminar');
-        Route::put('naturales/documento/{documento}/clasificar/','Naturales\DocumentoFisicoController@update')->name('naturales.documentos.update');
+        Route::get('naturales/documentos/{tipo}', 'Naturales\DocumentoFisicoController@index')->name('naturales.documentos.index');
+        Route::get('naturales/{institucion}/documento/{tipo}/create', 'Naturales\DocumentoFisicoController@create')->name('naturales.documentos.create');
+        Route::post('naturales/{institucion}/documento/store', 'Naturales\DocumentoFisicoController@store')->name('naturales.documentos.store');
+        Route::get('naturales/{institucion}/documento/{documento}', 'Naturales\DocumentoFisicoController@show')->name('naturales.documentos.show');
+        Route::delete('naturales/documento/{documento}', 'Naturales\DocumentoFisicoController@destroy')->name('naturales.documentos.eliminar');
+        Route::put('naturales/documento/{documento}/clasificar/', 'Naturales\DocumentoFisicoController@update')->name('naturales.documentos.update');
 
         Route::get('usuario/', 'Naturales\UsuarioController@index')->name('naturales.usuario.index');
         Route::get('usuario/{id}', 'Naturales\UsuarioController@show')->name('naturales.usuario.show');
@@ -158,6 +156,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/usuario/{id}/update/', 'Naturales\UsuarioController@update')->name('naturales.usuario.update');
         Route::delete('usuario/{id}', 'Naturales\UsuarioController@destroy')->name('naturales.usuario.destroy');
 
-        
+        Route::post('exportar', 'Naturales\InstitucionController@exportar')->name('naturales.documentos.exportar');
     });
 });

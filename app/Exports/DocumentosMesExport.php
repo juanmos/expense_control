@@ -16,7 +16,7 @@ class DocumentosMesExport implements WithMultipleSheets
     private $start=null;
     private $end=null;
 
-    public function __construct($id,$start,$end)
+    public function __construct($id, $start, $end)
     {
         $this->id=$id;
         $this->start=$start;
@@ -26,11 +26,10 @@ class DocumentosMesExport implements WithMultipleSheets
     public function sheets(): array
     {
         $sheets = [
-            new FacturasMesExport($this->id, $this->start,$this->end),
-            new ComprasMesExport($this->id, $this->start,$this->end),
-            new RetencionesMesExport($this->id, $this->start,$this->end)
+            new FacturasMesExport($this->id, $this->start, $this->end),
+            new ComprasMesExport($this->id, $this->start, $this->end),
+            new RetencionesMesExport($this->id, $this->start, $this->end)
         ];
         return $sheets;
     }
-    
 }
