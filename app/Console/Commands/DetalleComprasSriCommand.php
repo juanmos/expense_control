@@ -43,7 +43,7 @@ class DetalleComprasSriCommand extends Command
      */
     public function handle()
     {
-        
+
         $urlAutorizacion = 'https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl';
         $options = [
                 'trace' => true,
@@ -69,10 +69,13 @@ class DetalleComprasSriCommand extends Command
                 $xml = simplexml_load_string($comprobante, "SimpleXMLElement", LIBXML_NOCDATA);
                 $json = json_encode($xml);
                 $array = json_decode($json, true);
-                
+
                 $cliente=Cliente::where('ruc', $array['infoTributaria']['ruc'])->first();
-                $cliente->direccion=$array['infoTributaria']['dirMatriz'];
-                $cliente->save();
+                if(strlen($array['infoTributaria']['dirMatriz'])>0){
+                    $cliente->direccion=(strlen($array['infoTributaria']['dirMatriz'])>191)?substr($array['infoTributaria']['dirMatriz'],0,190):$array['infoTributaria']['dirMatriz'];
+                    $cliente->save();
+                }
+
                 $compra->detalles=$array['detalles'];
                 $compra->sincronizado=1;
                 // print_r($array);
@@ -110,13 +113,13 @@ class DetalleComprasSriCommand extends Command
                         // "imagen"=>$urlImg
                     ),
                     "options"=>array('timeout'=>60000)
-                    
+
                 );
-                                        
+
                 $url = "https://facturas.doctopro.com/api/report";
-                
+
                 /*Convierte el array en el formato adecuado para cURL*/
-                
+
                 $handler = curl_init();
                 curl_setopt($handler, CURLOPT_URL, $url);
                 curl_setopt($handler, CURLOPT_POST, true);
