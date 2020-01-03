@@ -137,6 +137,31 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="card">
+                                    {!! Form::open(['method'=>'POST','route'=>'naturales.documentos.exportar']) !!}
+                                    <div class="card-block border-bottom">
+                                        <div class="row d-flex align-items-center " >
+                                            <h5 class="col-12">Exportar información</h5>
+                                            <div class="col-auto">
+                                                <i class="feather icon-download f-30 text-c-blue"></i>
+                                            </div>
+                                            
+                                            <div class="col-8">
+                                                <div class="input-daterange input-group" id="datepicker_range">
+                                                
+                                                    <input type="text" class="form-control" value="{{$start}}" placeholder="Fecha inicio" name="start" id="start">
+                                                    <input type="text" class="form-control" value="{{$end}}" placeholder="Fecha inicio" name="end" id="end">
+                                                </div>
+                                                <span class="d-block text-uppercase">Fechas de exportación</span>
+                                            </div>
+                                            <div class="col">
+                                                <button type="submit" class="btn btn-icon btn-rounded btn-success"><i class="feather icon-download"></i></button>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    {!! Form::close() !!}
+                                </div>
                             </div>
                             <!-- [ statistics year chart ] end -->
                             <?php function seleccionado($val,$pes){
@@ -818,6 +843,9 @@
 </div>
 @endsection
 @push('scripts')
+<!-- Datepicker Js -->
+<script src='{{asset("assets/plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js")}}'>
+</script>
 <script src='{{asset("assets/plugins/data-tables/js/datatables.min.js")}}'></script>
 <script type="text/javascript">
     @if(!Auth::user()->hasRole('SuperAdministrador'))
@@ -904,7 +932,12 @@
     });
     @endif
     $(document).ready(function() {
-        var chartDatac = [{
+        $('#datepicker_range').datepicker({
+            autoclose:true,
+            format:'dd-mm-yyyy'
+        });
+        
+        {{-- var chartDatac = [{
             "Year": "Jan",
             "value": 50
         }, {
@@ -1028,10 +1061,29 @@
                     "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
                 },
             }],
-        });
+        }); --}}
     });
 </script>
 @endpush
 @push('styles')
 <link rel="stylesheet" href='{{asset("assets/plugins/data-tables/css/datatables.min.css")}}'>
+<link href='{{asset("assets/plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css")}}' rel="stylesheet">
+<script>
+        var page = {
+            bootstrap: 3
+        };
+
+        function swap_bs() {
+            page.bootstrap = 3;
+        }
+    </script>
+    <style>
+        .datepicker>.datepicker-days {
+            display: block;
+        }
+
+        ol.linenums {
+            margin: 0 0 0 -8px;
+        }
+    </style>
 @endpush

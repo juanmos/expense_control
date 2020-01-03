@@ -15,7 +15,7 @@ class ComprasMesExport implements FromView, WithTitle
     private $start=null;
     private $end=null;
 
-    public function __construct($id,$start,$end)
+    public function __construct($id, $start, $end)
     {
         $this->id=$id;
         $this->start=$start;
@@ -30,11 +30,11 @@ class ComprasMesExport implements FromView, WithTitle
         $compras=$institucion->compras()->whereBetween('fecha', [$this->start,$this->end])
                         ->with(['cliente.cliente','categoria'])->orderBy('fecha', 'desc')->get();
         $documentos=$institucion->documentos()
-                ->where('documento','compra')
+                ->where('documento', 'compra')
                 ->whereBetween('fecha', [$this->start,$this->end])
                 ->with(['cliente','categoria'])
                 ->orderBy('fecha', 'desc')->get();
-        return view('exports.compras', compact('compras','documentos'));
+        return view('exports.compras', compact('compras', 'documentos'));
     }
 
     public function title(): string

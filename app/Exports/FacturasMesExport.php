@@ -15,7 +15,7 @@ class FacturasMesExport implements FromView, WithTitle
     private $start=null;
     private $end=null;
 
-    public function __construct($id,$start,$end)
+    public function __construct($id, $start, $end)
     {
         $this->id=$id;
         $this->start=$start;
@@ -30,11 +30,11 @@ class FacturasMesExport implements FromView, WithTitle
         $facturas=$institucion->facturas()->whereBetween('fecha', [$this->start,$this->end])
                         ->with(['cliente.cliente','estado','detalle'])->orderBy('fecha', 'desc')->get();
         $documentos=$institucion->documentos()
-                ->where('documento','factura')
+                ->where('documento', 'factura')
                 ->whereBetween('fecha', [$this->start,$this->end])
                 ->with(['cliente','categoria'])
                 ->orderBy('fecha', 'desc')->get();
-        return view('exports.facturas', compact('facturas','documentos'));
+        return view('exports.facturas', compact('facturas', 'documentos'));
     }
 
     public function title(): string

@@ -264,7 +264,7 @@ $(function() {
     });
     $('#datepicker_range').datepicker({autoclose:true,
             format:'dd-mm-yyyy'});
-});
+    });
 </script>
 @endpush
 @push('styles')
