@@ -15,6 +15,12 @@ Route::get('/', 'PublicController@index');
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
+Route::get('notificacion', function () {
+    $user = App\Models\User::find(97);
+
+    return $user->notify(new App\Notifications\NuevaRetencionNotification());
+});
+
 
 
 // Route::get('carga','Bares\PaymentController@carga');
@@ -24,13 +30,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('register/institucion', 'HomeController@register')->name('register.institucion');
     Route::post('register/institucion', 'HomeController@registerInstitucion')->name('register.institucion');
-
-    Route::get('mail', function () {
-        $user = App\Models\User::find(102);
-
-        return (new App\Notifications\UsuarioRegistradoNotification($user->institucion))
-                    ->toMail($user);
-    });
 
     Route::get('exportar/{id}', function ($id) {
         return (new \App\Exports\DocumentosMesExport($id, '2019-11-01', '2019-11-30'))->download('documentos.xlsx');

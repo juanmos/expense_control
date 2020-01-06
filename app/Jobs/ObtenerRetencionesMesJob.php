@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Notifications\NuevaRetencionNotification;
 use App\Http\Helpers;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
@@ -20,14 +21,17 @@ class ObtenerRetencionesMesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $datos;
+    private $notifica;
+    
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($datos)
+    public function __construct($datos, $notifica = true)
     {
         $this->datos =$datos;
+        $this->notifica = $notifica;
     }
 
     /**
@@ -114,6 +118,12 @@ class ObtenerRetencionesMesJob implements ShouldQueue
                                 'claveAcceso'=>$detalle->claveAcceso,
                                 'impuestos'=>$detalle->impuestos
                             ]);
+                            if ($this->notifica) {
+                                foreach ($institucion->alumnos as $user) {
+                                    $user->notify(new NuevaRetencionNotification());
+                                }
+                                $this->notifica=false;
+                            }
                         }
                     }
                 }
