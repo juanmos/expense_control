@@ -43,7 +43,6 @@ class DocumentoFisicoControllerTest extends TestCase
 
     public function test_crear_nueva_documento_fisica()
     {
-        
         $this->actingAs(User::first());
         factory(Cliente::class)->create([
             'razon_social'=>'Juan Mosocso',
@@ -53,11 +52,10 @@ class DocumentoFisicoControllerTest extends TestCase
         $response->assertOk();
         $response->assertViewIs('documento.form');
         $response->assertViewHasAll(['documento','tipo','id','categorias']);
-        $response = $this->post('naturales/naturales/1/documento/store',$this->data());
+        $response = $this->post('naturales/naturales/1/documento/store', $this->data());
         
-        $this->assertCount(1,DocumentoFisico::all());
+        $this->assertCount(1, DocumentoFisico::all());
         $response->assertRedirect('naturales/naturales/1/retenciones');
-        
     }
 
     public function test_crear_nueva_documento_fisico_validaciones()
@@ -68,9 +66,8 @@ class DocumentoFisicoControllerTest extends TestCase
             'ruc'=>'1234567890001'
         ]);
         
-        $response = $this->post('naturales/naturales/1/documento/store',[]);
+        $response = $this->post('naturales/naturales/1/documento/store', []);
         $response->assertSessionHasErrors(['documento','foto','fecha']);
-        
     }
 
     public function test_ver_documento_fisico()
@@ -80,7 +77,7 @@ class DocumentoFisicoControllerTest extends TestCase
             'razon_social'=>'Juan Mosocso',
             'ruc'=>'1234567890001'
         ]);
-        $this->post('naturales/naturales/1/documento/store',$this->data());
+        $this->post('naturales/naturales/1/documento/store', $this->data());
         $documento = DocumentoFisico::first();
         $response = $this->get('naturales/naturales/1/documento/'.$documento->id);
         $response->assertOk();
@@ -91,18 +88,16 @@ class DocumentoFisicoControllerTest extends TestCase
     /** @test */
     public function test_eliminar_documento()
     {
-        
         $this->actingAs(User::first());
         factory(Cliente::class)->create([
             'razon_social'=>'Juan Mosocso',
             'ruc'=>'1234567890001'
         ]);
-        $this->post('naturales/naturales/1/documento/store',$this->data());
+        $this->post('naturales/naturales/1/documento/store', $this->data());
         $documento = DocumentoFisico::first();
         $response = $this->delete('naturales/naturales/documento/'.$documento->id);
-        $this->assertCount(0,DocumentoFisico::all());
+        $this->assertCount(0, DocumentoFisico::all());
         $response->assertRedirect('naturales/naturales/1/retenciones');
-        
     }
 
     public function test_cambiar_categoria_compra()
@@ -110,31 +105,30 @@ class DocumentoFisicoControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $this->actingAs(User::first());
         
-        $this->post('naturales/naturales/1/documento/store',$this->data());
+        $this->post('naturales/naturales/1/documento/store', $this->data());
 
         $documento =DocumentoFisico::first();
         $this->assertCount(1, DocumentoFisico::all());
         
-        $response =$this->put('naturales/naturales/documento/'. $documento->id.'/clasificar',[
+        $response =$this->put('naturales/naturales/documento/'. $documento->id.'/clasificar', [
             'categoria_id'=>2
         ]);
         $response->assertJsonStructure(['actualizado']);
         $this->assertEquals("2", $documento->fresh()->categoria_id);
     }
 
-    protected function data(){
+    protected function data()
+    {
         Storage::fake('public/documentos/1/compra/');
         $file = UploadedFile::fake()->image('avatar.jpg');
         return [
             'documento'=>'retencion',
             'cliente_id'=>1,
-            'cliente_nombre'=>'Juan Moscoso',            
+            'cliente_nombre'=>'Juan Moscoso',
             'ret_iva'=>10,
             'ret_renta'=>25,
             'foto'=>$file,
             'fecha'=>now()->format('d-m-Y')
         ];
     }
-    
-    
 }
