@@ -6,6 +6,7 @@ use App\Jobs\ObtenerComprasAnterioresJob;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
+use App\Http\Helpers;
 use App\Models\CategoriaCompra;
 use App\Models\Institucion;
 use App\Models\Compra;
@@ -29,7 +30,7 @@ class ComprasController extends Controller
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
             ])->get()->sum('total');
-        $diaFisica=$institucion->documentos()->where('documento','compra')
+        $diaFisica=$institucion->documentos()->where('documento', 'compra')
             ->whereBetween('fecha', [
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
@@ -40,7 +41,7 @@ class ComprasController extends Controller
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])->get()->sum('total');
-        $mesFisica=$institucion->documentos()->where('documento','compra')
+        $mesFisica=$institucion->documentos()->where('documento', 'compra')
             ->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
@@ -52,7 +53,7 @@ class ComprasController extends Controller
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
             ])->get()->sum('total');
-        $anoFisica=$institucion->documentos()->where('documento','compra')
+        $anoFisica=$institucion->documentos()->where('documento', 'compra')
             ->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
@@ -132,9 +133,9 @@ class ComprasController extends Controller
         $multiple=false;
         $compra = Compra::find($id);
         
-        if($compra->sincronizado){
+        if ($compra->sincronizado) {
             $detalle = $compra->detalles['detalle'];
-            unset($detalle['impuestos']); 
+            unset($detalle['impuestos']);
             if (!(count($detalle) == count($detalle, COUNT_RECURSIVE))) {
                 $multiple=true;
             }
@@ -147,7 +148,7 @@ class ComprasController extends Controller
     public function comprasCliente(Request $request, $cliente_id)
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
-        if($request->is('api/*')){
+        if ($request->is('api/*')) {
             $compras=$institucion->compras()->where('cliente_id', base64_decode($cliente_id))
                             ->with(['cliente.cliente','categoria'])->orderBy('fecha', 'desc')->paginate(50);
             // return $compras;
@@ -206,9 +207,16 @@ class ComprasController extends Controller
         return response()->file(storage_path('app/'.$factura->pdf));
     }
 
-    public function actualziarSRI(){
+    public function actualziarSRI()
+    {
         // ObtenerComprasAnterioresJob::dispatch(Institucion::find(Auth::user()->institucion_id))->delay(1);;
         Artisan::queue('sri:compras');
         return response()->json(['obteniendo'=>true]);
+    }
+
+    public function obtenerDetalles(Compra $compra)
+    {
+        Helpers::obtenereComprasSRI($compra);
+        return response()->json($compra->fresh());
     }
 }

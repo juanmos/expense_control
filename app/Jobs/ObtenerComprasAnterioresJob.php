@@ -45,13 +45,13 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
         // dd($this->institucion);
         $institucion=$this->institucion;
         $ruc = (
-                array_key_exists('ruc', $institucion->configuracion->configuraciones) &&
+            array_key_exists('ruc', $institucion->configuracion->configuraciones) &&
                 $institucion->configuracion->configuraciones['ruc']
-            )?$institucion->configuracion->configuraciones['ruc']:null;
+        )?$institucion->configuracion->configuraciones['ruc']:null;
         $clave = (
-                array_key_exists('clave_sri', $institucion->configuracion->configuraciones) &&
+            array_key_exists('clave_sri', $institucion->configuracion->configuraciones) &&
                 $institucion->configuracion->configuraciones['clave_sri']
-            )?Crypt::decryptString($institucion->configuracion->configuraciones['clave_sri']):null;
+        )?Crypt::decryptString($institucion->configuracion->configuraciones['clave_sri']):null;
         if ($ruc!=null && $clave!=null) {
             $client = new \GuzzleHttp\Client();
             $res = $client->request('POST', $sri_web.'v2.0/secured', [
@@ -74,7 +74,7 @@ class ObtenerComprasAnterioresJob implements ShouldQueue
                                     'ano'=>$ano,
                                     'mes'=>$mes,
                                     'institucion_id'=>$institucion->id
-                                ])->delay(1);;
+                                ], false)->delay(1);
                             }
                         }
                     }

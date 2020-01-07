@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Notifications\NuevaCompranNotification;
 use App\Http\Helpers;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
@@ -20,14 +21,17 @@ class ObtenerComprasMesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $datos;
+    private $notifica;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($datos)
+    public function __construct($datos, $notifica = true)
     {
         $this->datos =$datos;
+        $this->notifica = $notifica;
     }
 
     /**
@@ -125,6 +129,12 @@ class ObtenerComprasMesJob implements ShouldQueue
                                 'impuestos'=>$detalle->impuestos,
                                 'categoria_id'=>($cliente->categoria_id!=null)?$cliente->categoria_id:1
                             ]);
+                            if ($this->notifica) {
+                                foreach ($institucion->alumnos as $user) {
+                                    $user->notify(new NuevaCompranNotification());
+                                }
+                                $this->notifica=false;
+                            }
                         }
                     }
                 }

@@ -50,7 +50,6 @@ class FacturarCommand extends Command
      */
     public function handle()
     {
- 
         $facturas = Factura::whereIn('estado_id', [1,6,7])
                     ->with(['institucion.configuracion','cliente.cliente','detalle'])
                     ->get();
@@ -93,7 +92,7 @@ class FacturarCommand extends Command
                 $detalles='';
                 foreach ($factura->detalle as $detalle) {
                     $hayIva = intval($detalle->iva);
-                    if($hayIva==1){
+                    if ($hayIva==1) {
                         $valor=strval(number_format($detalle->precio*0.12, 2));
                         $impuestos='<impuestos>
                             <impuesto>
@@ -104,7 +103,7 @@ class FacturarCommand extends Command
                             <valor>'.$valor.'</valor>
                             </impuesto>
                         </impuestos>';
-                    }else{
+                    } else {
                         $valor=0;
                         $impuestos='<impuestos>
                             <impuesto>
@@ -183,18 +182,19 @@ class FacturarCommand extends Command
                 $claveFirma =Crypt::decrypt($configuraciones['clave']);
                 
                 Storage::put($documento, $xml);
-                $fimado=exec('/usr/bin/java -jar sri.jar '.
+                $fimado=exec(
+                    '/usr/bin/java -jar sri.jar '.
                             storage_path('app/').
                             $configuraciones['firma'].' "'.
                             $claveFirma.'" '.
                             storage_path('app/'.$documento).' '.
                             storage_path('app').' '.
                             $docFirmado
-                    );
-                if(strpos($fimado, "Firma guardada") !==false){
+                );
+                if (strpos($fimado, "Firma guardada") !==false) {
                     Storage::delete($documento);
                     $factura->estado_id=6;
-                }else{
+                } else {
                     $factura->estado_id=9;
                 }
                 
@@ -272,7 +272,7 @@ class FacturarCommand extends Command
                         "options"=>array('timeout'=>60000)
                         
                     );
-                    // dd($json);                    
+                    // dd($json);
                     $url = "https://facturas.doctopro.com/api/report";
                     
                     /*Convierte el array en el formato adecuado para cURL*/
@@ -300,8 +300,10 @@ class FacturarCommand extends Command
                     $factura['estado_id']=2;
                     
                     if (!filter_var($factura->cliente->email, FILTER_VALIDATE_EMAIL) === false) {
-                        
                         $factura->cliente->notify(new EnviarFacturaNotification($factura));
+                    }
+                    foreach ($factura->institucion->alumnos as $usuario) {
+                        $usuario->notify(new ProcesarFacturaNotification($factura));
                     }
                     $factura->save();
                 } else {

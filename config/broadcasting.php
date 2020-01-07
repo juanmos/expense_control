@@ -1,5 +1,7 @@
 <?php
 
+use NotificationChannels\Apn\ApnChannel;
+
 return [
 
     /*
@@ -57,9 +59,9 @@ return [
             'key' => env('FCM_KEY')
         ],
         'apn' => [
-            'environment' => 1, // Or ApnChannel::SANDBOX
-            'certificate' => __DIR__ . '/iosCertificates/certificado.pem',
-            'pass_phrase' => 'soltecnologica', // Optional passPhrase
+            'environment' => ApnChannel::SANDBOX,
+            'certificate' => __DIR__ . '/iosCertificates/dev/cert.pem',
+            'pass_phrase' => null, // Optional passPhrase
         ],
     ],
 

@@ -16,15 +16,15 @@ use Illuminate\Http\Request;
 Route::post('login', ['as'=>'login','uses'=>'APIAuthController@login']);
 // Route::post('usuario', 'APIAuthController@nuevoUsuario')->name('usuario.nuevo');
 
-Route::post('password/email','Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::post('register','Auth\RegisterController@register');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('register', 'Auth\RegisterController@register');
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('/usuario', 'APIAuthController@me');//Obtener los datos del usuario en sesion
     Route::delete('usuario/{plataforma}', 'APIAuthController@logout');//Cerrar sesion del usuario actual
     Route::post('usuario/registroPush', 'APIAuthController@registroPush');//Cerrar sesion del usuario actual
 
-    Route::post('register/institucion','HomeController@registerInstitucion');
+    Route::post('register/institucion', 'HomeController@registerInstitucion');
     
 
     
@@ -73,12 +73,12 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     });
 
     Route::group(['prefix' => 'naturales'], function () {
-        Route::get('dashboard','Naturales\InstitucionController@dashboard');
-        Route::get('dashboard/grafico/ventas-compras','Naturales\InstitucionController@graficoComprasVentas');
-        Route::get('dashboard/grafico/gastos','Naturales\InstitucionController@graficoGastos');
-        Route::get('dashboard/grafico/gastos/anual','Naturales\InstitucionController@graficoGastosAnual');
-        Route::get('dashboard/grafico/top/ventas','Naturales\InstitucionController@topVentas');
-        Route::get('dashboard/grafico/top/compras','Naturales\InstitucionController@topCompras');
+        Route::get('dashboard', 'Naturales\InstitucionController@dashboard');
+        Route::get('dashboard/grafico/ventas-compras', 'Naturales\InstitucionController@graficoComprasVentas');
+        Route::get('dashboard/grafico/gastos', 'Naturales\InstitucionController@graficoGastos');
+        Route::get('dashboard/grafico/gastos/anual', 'Naturales\InstitucionController@graficoGastosAnual');
+        Route::get('dashboard/grafico/top/ventas', 'Naturales\InstitucionController@topVentas');
+        Route::get('dashboard/grafico/top/compras', 'Naturales\InstitucionController@topCompras');
 
         Route::get('clientes/', 'Naturales\ClienteController@clientesData');
         Route::post('cliente/by/cedula', 'Naturales\ClienteController@findCedula');
@@ -88,18 +88,19 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
         Route::post('compras', 'Naturales\ComprasController@comprasData');
         Route::get('compras/pdf/{pdf}/{id}', 'Naturales\ComprasController@pdf');
-        Route::put('compras/update/{id}','Naturales\ComprasController@update');
-        Route::get('compras/cliente/{id}','Naturales\ComprasController@comprasCliente');
-        Route::get('compras/actualizar/sri','Naturales\ComprasController@actualziarSRI');
+        Route::put('compras/update/{id}', 'Naturales\ComprasController@update');
+        Route::get('compras/cliente/{id}', 'Naturales\ComprasController@comprasCliente');
+        Route::get('compras/actualizar/sri', 'Naturales\ComprasController@actualziarSRI');
+        Route::put('compras/detalles/sri/{compra}', 'Naturales\ComprasController@obtenerDetalles');
 
         Route::post('facturas', 'Naturales\FacturacionController@facturasData');
-        Route::post('facturar/store/{id}','Naturales\FacturacionController@store');
-        Route::get('facturas/cliente/{id}','Naturales\FacturacionController@ventasCliente');
+        Route::post('facturar/store/{id}', 'Naturales\FacturacionController@store');
+        Route::get('facturas/cliente/{id}', 'Naturales\FacturacionController@ventasCliente');
         Route::get('factura/pdf/{pdf}/{factura_id}', 'Institucion\FacturacionController@pdf');
         Route::put('factura/anular/{id}/{factura_id}', 'Institucion\FacturacionController@anular');
 
         Route::post('retenciones', 'Naturales\RetencionController@retencionesData');
-        Route::get('retenciones/cliente/{id}','Naturales\RetencionController@retencionesCliente');
+        Route::get('retenciones/cliente/{id}', 'Naturales\RetencionController@retencionesCliente');
 
         Route::get('categorias/{tipo}', 'Naturales\CategoriaController@categoriaData');
         Route::post('categorias/store/{tipo}', 'Naturales\CategoriaController@store');
@@ -108,11 +109,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
         Route::put('configuracion/sri/{id}', 'Institucion\InstitucionController@configuracionUpdate');
 
-        Route::put('perfil/editar/{id}','Naturales\UsuarioController@update');
+        Route::put('perfil/editar/{id}', 'Naturales\UsuarioController@update');
 
-        Route::post('documentos/{tipo}','Naturales\DocumentoFisicoController@index');
-        Route::post('documentos/{tipo}/store','Naturales\DocumentoFisicoController@store');
-        Route::put('documentos/update/{documento}','Naturales\DocumentoFisicoController@update');
-        Route::delete('documento/eliminar/{documento}','Naturales\DocumentoFisicoController@destroy');
+        Route::post('documentos/{tipo}', 'Naturales\DocumentoFisicoController@index');
+        Route::post('documentos/{tipo}/store', 'Naturales\DocumentoFisicoController@store');
+        Route::put('documentos/update/{documento}', 'Naturales\DocumentoFisicoController@update');
+        Route::delete('documento/eliminar/{documento}', 'Naturales\DocumentoFisicoController@destroy');
     });
 });

@@ -93,11 +93,11 @@ class Institucion extends Model
 
     public function tipoPlan()
     {
-        return $this->belongsTo(TipoPlan::class,'tipo_plan_id');
+        return $this->belongsTo(TipoPlan::class, 'tipo_plan_id');
     }
 
     public function documentos()
     {
-        return $this->hasMany(DocumentoFisico::class,'institucion_id');
+        return $this->hasMany(DocumentoFisico::class, 'institucion_id');
     }
 }

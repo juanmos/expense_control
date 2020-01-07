@@ -93,7 +93,7 @@ class User extends Authenticatable implements JWTSubject
         return "Cel: {$this->celular} Telf: {$this->telefono}";
     }
 
-      /**
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
@@ -122,5 +122,15 @@ class User extends Authenticatable implements JWTSubject
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->token_and;
+    }
+
+    public function routeNotificationForApn()
+    {
+        return $this->token_ios;
     }
 }
