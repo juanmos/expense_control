@@ -11,7 +11,9 @@ use App\Models\Factura;
 use App\Models\FormaPago;
 use App\Models\Cliente;
 use App\Models\ClienteInstitucion;
+use App\Jobs\CrearFacturaPDFJob;
 use Carbon\Carbon;
+use SimpleXMLElement;
 use Crypt;
 use Auth;
 
@@ -30,7 +32,7 @@ class FacturacionController extends Controller
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
             ])->get()->sum('total');
-        $diaFisica=$institucion->documentos()->where('documento','factura')
+        $diaFisica=$institucion->documentos()->where('documento', 'factura')
             ->whereBetween('fecha', [
                 Carbon::now()->subDays(7)->toDateString(),
                 Carbon::now()->toDateString()
@@ -42,7 +44,7 @@ class FacturacionController extends Controller
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
             ])->get()->sum('total');
-        $mesFisica=$institucion->documentos()->where('documento','factura')
+        $mesFisica=$institucion->documentos()->where('documento', 'factura')
             ->whereBetween('fecha', [
                 Carbon::now()->firstOfMonth()->toDateString(),
                 Carbon::now()->toDateString()
@@ -53,7 +55,7 @@ class FacturacionController extends Controller
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
             ])->get()->sum('total');
-        $anoFisica=$institucion->documentos()->where('documento','factura')
+        $anoFisica=$institucion->documentos()->where('documento', 'factura')
             ->whereBetween('fecha', [
                 Carbon::now()->startOfYear()->toDateString(),
                 Carbon::now()->toDateString()
@@ -195,7 +197,7 @@ class FacturacionController extends Controller
     public function ventasCliente(Request $request, $cliente_id)
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
-        if($request->is('api/*')){
+        if ($request->is('api/*')) {
             $facturas=$institucion->facturas()->where('cliente_id', base64_decode($cliente_id))
                             ->with(['cliente.cliente','estado','detalle'])->orderBy('fecha', 'desc')->paginate(50);
             return Crypt::encrypt(json_encode(compact('facturas')), false);
@@ -238,5 +240,106 @@ class FacturacionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function import()
+    {
+        return view('facturacion.importar');
+    }
+
+    public function uploadXML(Request $request)
+    {
+        $request->validate([
+            'xml'=>'required'
+        ]);
+        if ($request->has('xml')) {
+            $xml_doc = $request->file('xml')->store('public/xml/'.auth()->user()->institucion_id);
+            $xml = simplexml_load_file(storage_path("app/".$xml_doc));
+            $json = json_encode($xml);
+            $array = json_decode($json, true);
+            $cliente=Cliente::where('ruc', $array['infoFactura']['identificacionComprador'])->first();
+            if ($cliente == null) {
+                $cliente=Cliente::create([
+                    'ruc'=> $array['infoFactura']['identificacionComprador'],
+                    'razon_social'=> $array['infoFactura']['razonSocialComprador'],
+                    'nombre_comercial'=> $array['infoFactura']['razonSocialComprador'],
+                    'direccion'=>$array['infoFactura']['dirEstablecimiento'],
+                ]);
+                $clienteInstitucion = $cliente->clienteInstitucion()->create([
+                    'institucion_id' => auth()->user()->institucion_id,
+                    'nombre'=>$cliente->nombre_comercial
+                ]);
+            } else {
+                $clienteInstitucion = ClienteInstitucion::where('cliente_id', $cliente->id)->first();
+                if ($clienteInstitucion == null) {
+                    $clienteInstitucion = $cliente->clienteInstitucion()->create([
+                        'institucion_id' => auth()->user()->institucion_id,
+                        'nombre'=>$cliente->nombre_comercial
+                    ]);
+                }
+            }
+            
+            $iva=array_reduce($array['infoFactura']['totalConImpuestos'], function ($carry, $item) {
+                if (count($item) == count($item, COUNT_RECURSIVE)) {
+                    $carry += $item['valor'];
+                } else {
+                    foreach ($item as $it) {
+                        $carry+= $it['valor'];
+                    }
+                }
+                return $carry;
+            });
+
+            $sub=0;
+            $sub0=0;
+
+            $factura=Factura::create([
+                'cliente_id'=>$clienteInstitucion->id,
+                'estado_id'=>2,
+                'pago_id'=>1,
+                'factura_no'=>"{$array['infoTributaria']['estab']}-{$array['infoTributaria']['ptoEmi']}-{$array['infoTributaria']['secuencial']}",
+                'fecha'=>Carbon::createFromFormat('d/m/Y', $array['infoFactura']['fechaEmision'])->toDateString(),
+                'establecimiento'=>$array['infoTributaria']['estab'],
+                'puntoEmision'=>$array['infoTributaria']['ptoEmi'],
+                'secuencia'=>$array['infoTributaria']['secuencial'],
+                'subtotal'=>$sub,
+                'subtotal0'=>$sub0,
+                'propina'=>$array['infoFactura']['propina'],
+                'descuento'=>$array['infoFactura']['totalDescuento'],
+                'servicio'=>0,
+                'iva'=>$iva,
+                'total'=>$array['infoFactura']['importeTotal'],
+                'clave'=>$array['infoTributaria']['claveAcceso'],
+                'autorizacion'=>$array['infoTributaria']['claveAcceso'],
+                'ambiente'=>2,
+                'xml'=>$xml_doc,
+                'institucion_id'=>auth()->user()->institucion_id
+            ]);
+            foreach ($array['detalles'] as $detalle) {
+                $iva = 0;
+                foreach ($detalle['impuestos'] as $impuesto) {
+                    if ($impuesto['codigoPorcentaje'] == 2) {
+                        $iva=1;
+                        $sub += $impuesto['baseImponible'];
+                    } elseif ($impuesto['codigoPorcentaje'] == 0) {
+                        $sub0 += $impuesto['baseImponible'];
+                    }
+                }
+                $factura->detalle()->create([
+                    'codigo'=>$detalle['codigoPrincipal'],
+                    'descripcion'=>$detalle['descripcion'],
+                    'cantidad'=>$detalle['cantidad'],
+                    'precio_unitario'=>$detalle['precioUnitario'],
+                    'descuento'=>$detalle['descuento'],
+                    'iva'=>$iva,
+                    'precio'=>$detalle['precioTotalSinImpuesto'],
+                ]);
+            }
+            $factura->subtotal=$sub;
+            $factura->subtotal0=$sub0;
+            $factura->save();
+            CrearFacturaPDFJob::dispatch($factura);
+            return redirect()->route('naturales.facturas.index', Auth::user()->institucion_id);
+        }
     }
 }

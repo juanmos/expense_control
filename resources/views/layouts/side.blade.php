@@ -84,6 +84,7 @@
                         
                         <li class="{{(Route::currentRouteName()=='naturales.usuario.index')?'active':''}}"><a href="{{route('naturales.usuario.index')}}" class="">Usuarios</a></li>
                         <li class="{{(Route::currentRouteName()=='naturales.configuracion.edit')?'active':''}}"><a href="{{route('naturales.configuracion.edit')}}" class="">Configuraciones</a></li>
+                        <li class="{{(Route::currentRouteName()=='naturales.facturas.importar')?'active':''}}"><a href="{{route('naturales.facturas.importar')}}" class="">Importar factura</a></li>
                     </ul>
                 </li>
                 @endif
