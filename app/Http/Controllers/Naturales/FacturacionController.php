@@ -261,9 +261,9 @@ class FacturacionController extends Controller
             if ($cliente == null) {
                 $cliente=Cliente::create([
                     'ruc'=> $array['infoFactura']['identificacionComprador'],
-                    'razon_social'=> $array['infoFactura']['razonSocialComprador'],
-                    'nombre_comercial'=> $array['infoFactura']['razonSocialComprador'],
-                    'direccion'=>$array['infoFactura']['dirEstablecimiento'],
+                    'razon_social'=> utf8_decode($array['infoFactura']['razonSocialComprador']),
+                    'nombre_comercial'=> utf8_decode($array['infoFactura']['razonSocialComprador']),
+                    'direccion'=>utf8_decode($array['infoFactura']['dirEstablecimiento']),
                 ]);
                 $clienteInstitucion = $cliente->clienteInstitucion()->create([
                     'institucion_id' => auth()->user()->institucion_id,
@@ -328,9 +328,11 @@ class FacturacionController extends Controller
                             $sub0 += $impuesto['baseImponible'];
                         }
                     }
+                    
+
                     $factura->detalle()->create([
                         'codigo'=>$detalle['codigoPrincipal'],
-                        'descripcion'=>$detalle['descripcion'],
+                        'descripcion'=>utf8_decode($detalle['descripcion']),
                         'cantidad'=>$detalle['cantidad'],
                         'precio_unitario'=>$detalle['precioUnitario'],
                         'descuento'=>$detalle['descuento'],
