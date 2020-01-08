@@ -261,9 +261,9 @@ class FacturacionController extends Controller
             if ($cliente == null) {
                 $cliente=Cliente::create([
                     'ruc'=> $array['infoFactura']['identificacionComprador'],
-                    'razon_social'=> $array['infoFactura']['razonSocialComprador'],
-                    'nombre_comercial'=> $array['infoFactura']['razonSocialComprador'],
-                    'direccion'=>$array['infoFactura']['dirEstablecimiento'],
+                    'razon_social'=> utf8_decode($array['infoFactura']['razonSocialComprador']),
+                    'nombre_comercial'=> utf8_decode($array['infoFactura']['razonSocialComprador']),
+                    'direccion'=>utf8_decode($array['infoFactura']['dirEstablecimiento']),
                 ]);
                 $clienteInstitucion = $cliente->clienteInstitucion()->create([
                     'institucion_id' => auth()->user()->institucion_id,
@@ -315,26 +315,56 @@ class FacturacionController extends Controller
                 'xml'=>$xml_doc,
                 'institucion_id'=>auth()->user()->institucion_id
             ]);
-            foreach ($array['detalles'] as $detalle) {
-                $iva = 0;
-                foreach ($detalle['impuestos'] as $impuesto) {
-                    if ($impuesto['codigoPorcentaje'] == 2) {
-                        $iva=1;
-                        $sub += $impuesto['baseImponible'];
-                    } elseif ($impuesto['codigoPorcentaje'] == 0) {
-                        $sub0 += $impuesto['baseImponible'];
+           
+            $isArrayOfArrays = array_filter($array['detalles']['detalle'], 'is_array') === $array['detalles']['detalle'];
+            if ($isArrayOfArrays) {
+                foreach ($array['detalles']['detalle'] as $detalle) {
+                    $iva = 0;
+                    foreach ($detalle['impuestos'] as $impuesto) {
+                        if ($impuesto['codigoPorcentaje'] == 2) {
+                            $iva=1;
+                            $sub += $impuesto['baseImponible'];
+                        } elseif ($impuesto['codigoPorcentaje'] == 0) {
+                            $sub0 += $impuesto['baseImponible'];
+                        }
                     }
+                    
+
+                    $factura->detalle()->create([
+                        'codigo'=>$detalle['codigoPrincipal'],
+                        'descripcion'=>utf8_decode($detalle['descripcion']),
+                        'cantidad'=>$detalle['cantidad'],
+                        'precio_unitario'=>$detalle['precioUnitario'],
+                        'descuento'=>$detalle['descuento'],
+                        'iva'=>$iva,
+                        'precio'=>$detalle['precioTotalSinImpuesto'],
+                    ]);
                 }
-                $factura->detalle()->create([
-                    'codigo'=>$detalle['codigoPrincipal'],
-                    'descripcion'=>$detalle['descripcion'],
-                    'cantidad'=>$detalle['cantidad'],
-                    'precio_unitario'=>$detalle['precioUnitario'],
-                    'descuento'=>$detalle['descuento'],
-                    'iva'=>$iva,
-                    'precio'=>$detalle['precioTotalSinImpuesto'],
-                ]);
+            } else {
+                foreach ($array['detalles'] as $detalle) {
+                    $iva = 0;
+                    foreach ($detalle['impuestos'] as $impuesto) {
+                        if ($impuesto['codigoPorcentaje'] == 2) {
+                            $iva=1;
+                            $sub += $impuesto['baseImponible'];
+                        } elseif ($impuesto['codigoPorcentaje'] == 0) {
+                            $sub0 += $impuesto['baseImponible'];
+                        }
+                    }
+                    $factura->detalle()->create([
+                        'codigo'=>$detalle['codigoPrincipal'],
+                        'descripcion'=>$detalle['descripcion'],
+                        'cantidad'=>$detalle['cantidad'],
+                        'precio_unitario'=>$detalle['precioUnitario'],
+                        'descuento'=>$detalle['descuento'],
+                        'iva'=>$iva,
+                        'precio'=>$detalle['precioTotalSinImpuesto'],
+                    ]);
+                }
             }
+
+            
+            
             $factura->subtotal=$sub;
             $factura->subtotal0=$sub0;
             $factura->save();
