@@ -11,6 +11,7 @@ use App\Models\Factura;
 use App\Models\FormaPago;
 use App\Models\Cliente;
 use App\Models\ClienteInstitucion;
+use App\Jobs\CrearFacturaPDFJob;
 use Carbon\Carbon;
 use SimpleXMLElement;
 use Crypt;
@@ -315,16 +316,6 @@ class FacturacionController extends Controller
                 'institucion_id'=>auth()->user()->institucion_id
             ]);
             foreach ($array['detalles'] as $detalle) {
-                // $sub0 += array_reduce($detalle['impuestos'], function ($carry, $item) {
-                //     if ($item['codigoPorcentaje']==0) {
-                //         $carry+=$item['baseImponible'];
-                //     }
-                // });
-                // $sub += array_reduce($detalle['impuestos'], function ($carry, $item) {
-                //     if ($item['codigoPorcentaje']==2) {
-                //         $carry+=$item['baseImponible'];
-                //     }
-                // });
                 $iva = 0;
                 foreach ($detalle['impuestos'] as $impuesto) {
                     if ($impuesto['codigoPorcentaje'] == 2) {
@@ -347,7 +338,7 @@ class FacturacionController extends Controller
             $factura->subtotal=$sub;
             $factura->subtotal0=$sub0;
             $factura->save();
-
+            CrearFacturaPDFJob::dispatch($factura);
             return redirect()->route('naturales.facturas.index', Auth::user()->institucion_id);
         }
     }

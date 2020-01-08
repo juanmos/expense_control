@@ -264,6 +264,7 @@ class FacturarCommand extends Command
                             "ruc"=> $factura->cliente->cliente->ruc,
                             "items" => $detallesArray,
                             "subtotal"=>$factura->subtotal,
+                            "subtotal0"=>$factura->subtotal0,
                             "iva"=>$factura->iva,
                             "propina"=>$factura->propina,
                             "total"=>$factura->total,
