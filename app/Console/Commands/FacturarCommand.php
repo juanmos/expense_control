@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Console\Command;
 use App\Notifications\EnviarFacturaNotification;
+use App\Notifications\ProcesarFacturaNotification;
 use App\Models\Factura;
 use App\Http\Helpers;
 use Carbon\Carbon;
@@ -299,7 +300,8 @@ class FacturarCommand extends Command
                     $factura['autorizacion']=$respAut->RespuestaAutorizacionComprobante
                                     ->autorizaciones->autorizacion->numeroAutorizacion;
                     $factura['estado_id']=2;
-                    
+                    $factura->save();
+
                     if (!filter_var($factura->cliente->email, FILTER_VALIDATE_EMAIL) === false) {
                         $factura->cliente->notify(new EnviarFacturaNotification($factura));
                     }
