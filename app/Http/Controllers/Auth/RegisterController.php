@@ -74,7 +74,7 @@ class RegisterController extends Controller
             'telefono' => $data['telefono'],
             'password' => Hash::make($data['password']),
         ]);
-        if(Request()->has('foto') && Request()->get('foto')!=null){
+        if (Request()->has('foto') && Request()->get('foto')!=null) {
             $user->foto=Request()->file('foto')->store('public/usuarios');
             $user->save();
         }
@@ -101,9 +101,8 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        
         $this->validator($request->all())->validate();
-        dd($request->all());
+        // dd($request->all());
         event(new Registered($user = $this->create($request->all())));
 
         $this->guard()->login($user);
