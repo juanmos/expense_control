@@ -173,7 +173,7 @@ class DocumentoFisicoController extends Controller
      */
     public function destroy(Request $request, DocumentoFisico $documento)
     {
-        //$documento->delete();
+        $documento->delete();
         if ($request->is('api/*')) {
             return response()->json(['eliminado'=>true]);
         }
