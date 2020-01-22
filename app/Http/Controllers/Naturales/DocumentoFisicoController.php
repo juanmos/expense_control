@@ -20,7 +20,7 @@ class DocumentoFisicoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request,$tipo)
+    public function index(Request $request, $tipo)
     {
         $institucion=Institucion::find(Auth::user()->institucion_id);
         $start=now()->firstOfMonth()->toDateString();
@@ -33,25 +33,25 @@ class DocumentoFisicoController extends Controller
         }
         if ($request->is('api/*')) {
             $dia=$institucion->documentos()
-                ->where('documento',$tipo)
+                ->where('documento', $tipo)
                 ->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
                     Carbon::now()->toDateString()
                 ])->get()->sum('total');
             $mes=$institucion->documentos()
-                ->where('documento',$tipo)
+                ->where('documento', $tipo)
                 ->whereBetween('fecha', [
                     Carbon::now()->firstOfMonth()->toDateString(),
                     Carbon::now()->toDateString()
                 ])->get()->sum('total');
             $ano=$institucion->documentos()
-                ->where('documento',$tipo)
+                ->where('documento', $tipo)
                 ->whereBetween('fecha', [
                     Carbon::now()->startOfYear()->toDateString(),
                     Carbon::now()->toDateString()
                 ])->get()->sum('total');
             $documentos=$institucion->documentos()
-                ->where('documento',$tipo)
+                ->where('documento', $tipo)
                 ->whereBetween('fecha', [$start,$end])
                 ->with(['cliente','categoria'])
                 ->orderBy('fecha', 'desc')->paginate(50);
@@ -60,7 +60,7 @@ class DocumentoFisicoController extends Controller
             // return json_encode(compact('dia', 'mes', 'ano', 'documentos'));
         }
         $documentos=$institucion->documentos()
-                ->where('documento',$tipo)
+                ->where('documento', $tipo)
                 ->whereBetween('fecha', [$start,$end])
                 ->with(['cliente','categoria'])
                 ->orderBy('fecha', 'desc')->get();
@@ -72,12 +72,11 @@ class DocumentoFisicoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id,$tipo)
+    public function create($id, $tipo)
     {
         $documento=null;
-        $categorias = CategoriaCompra::get()->pluck('categoria','id');
-        return view('documento.form',compact('documento','tipo','id','categorias'));
-
+        $categorias = CategoriaCompra::get()->pluck('categoria', 'id');
+        return view('documento.form', compact('documento', 'tipo', 'id', 'categorias'));
     }
 
     /**
@@ -86,7 +85,7 @@ class DocumentoFisicoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$institucion_id)
+    public function store(Request $request, $institucion_id)
     {
         $request->validate([
             'documento'=>'required|in:factura,compra,retencion',
@@ -95,9 +94,9 @@ class DocumentoFisicoController extends Controller
         ]);
         $data=$request->except(['foto','fecha']);
         $data['fecha']=Carbon::parse($request->get('fecha'))->toDateString();
-        if($data['cliente_id']==0){
-            $cliente = Cliente::where('ruc',$data['ruc'])->first();
-            if($cliente==null){
+        if (!$request->has('cliente_id') || $data['cliente_id']==0) {
+            $cliente = Cliente::where('ruc', $data['ruc'])->first();
+            if ($cliente==null) {
                 $cliente=Cliente::create([
                     'ruc'=>$data['ruc'],
                     'nombre_comercial'=>$data['cliente_nombre'],
@@ -116,16 +115,17 @@ class DocumentoFisicoController extends Controller
         $documento=$institucion->documentos()->create($data);
         $documento['foto']=$request->file('foto')->store('public/documentos/'.$institucion->id.'/'.$documento->documento);
         $documento->save();
-        if($request->is('api/*')){
+        if ($request->is('api/*')) {
             return response()->json(['creado'=>true]);
-        }         
+        }
             
-        if ($data['documento']=='factura')
-            return redirect()->route('naturales.facturas.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
-        elseif($data['documento']=='compra')
-            return redirect()->route('naturales.compras.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
-        else 
-            return redirect()->route('naturales.retenciones.index',$institucion_id)->with(['mensaje'=>'Creado con exito']);
+        if ($data['documento']=='factura') {
+            return redirect()->route('naturales.facturas.index', $institucion_id)->with(['mensaje'=>'Creado con exito']);
+        } elseif ($data['documento']=='compra') {
+            return redirect()->route('naturales.compras.index', $institucion_id)->with(['mensaje'=>'Creado con exito']);
+        } else {
+            return redirect()->route('naturales.retenciones.index', $institucion_id)->with(['mensaje'=>'Creado con exito']);
+        }
     }
 
     /**
@@ -136,8 +136,8 @@ class DocumentoFisicoController extends Controller
      */
     public function show(Institucion $institucion, DocumentoFisico $documento)
     {
-        $categorias = CategoriaCompra::get()->pluck('categoria','id');
-        return view('documento.show',compact('documento','categorias'));
+        $categorias = CategoriaCompra::get()->pluck('categoria', 'id');
+        return view('documento.show', compact('documento', 'categorias'));
     }
 
     /**
@@ -160,7 +160,6 @@ class DocumentoFisicoController extends Controller
      */
     public function update(Request $request, DocumentoFisico $documento)
     {
-        
         $documento->categoria_id=$request->get('categoria_id');
         $documento->save();
         return response()->json(['actualizado'=>true]);
@@ -175,16 +174,16 @@ class DocumentoFisicoController extends Controller
     public function destroy(Request $request, DocumentoFisico $documento)
     {
         //$documento->delete();
-        if($request->is('api/*')){
+        if ($request->is('api/*')) {
             return response()->json(['eliminado'=>true]);
-        }    
+        }
         
-        if ($documento->documento=='factura')
-            return redirect()->route('naturales.facturas.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
-        elseif ($documento->documento=='compra')
-            return redirect()->route('naturales.compras.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
-        else    
-            return redirect()->route('naturales.retenciones.index',$documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
-
+        if ($documento->documento=='factura') {
+            return redirect()->route('naturales.facturas.index', $documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
+        } elseif ($documento->documento=='compra') {
+            return redirect()->route('naturales.compras.index', $documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
+        } else {
+            return redirect()->route('naturales.retenciones.index', $documento->institucion_id)->with(['mensaje'=>'Eliminado con exito']);
+        }
     }
 }
