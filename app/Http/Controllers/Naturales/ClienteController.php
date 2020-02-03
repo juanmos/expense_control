@@ -25,21 +25,21 @@ class ClienteController extends Controller
         $institucion = Institucion::find($institucion_id);
         return ($request->is('api/*'))?
                     Crypt::encrypt(json_encode(compact('clientes')), false) :
-                    view('cliente.index', compact( 'institucion_id'));
+                    view('cliente.index', compact('institucion_id'));
     }
 
     public function clientesData(Request $request, $institucion_id = null)
     {
         $institucion_id=Auth::user()->institucion_id;
         $institucion = Institucion::find($institucion_id);
-        if($request->is('api/*')){
-            $clientesInstitucion = $institucion->clientes()->orderBy(function($query){
+        if ($request->is('api/*')) {
+            $clientesInstitucion = $institucion->clientes()->orderBy(function ($query) {
                 $query->select('nombre_comercial')
                     ->from('clientes')
-                    ->whereColumn('clientes.id','cliente_institucions.cliente_id')
+                    ->whereColumn('clientes.id', 'cliente_institucions.cliente_id')
                     ->orderBy('nombre_comercial');
             })->paginate(50);
-            $clientesLista = Cliente::whereIn('id',$clientesInstitucion->pluck('cliente_id'))
+            $clientesLista = Cliente::whereIn('id', $clientesInstitucion->pluck('cliente_id'))
                 ->with(['clienteInstitucion'=> function ($query) use ($institucion_id) {
                     $query->where('institucion_id', $institucion_id);
                 }])->orderBy('nombre_comercial')->get();
@@ -47,27 +47,27 @@ class ClienteController extends Controller
             $clientes['data']=$clientesLista;
             return  Crypt::encrypt(json_encode(compact('clientes')), false);
         }
-         $clientes = $institucion->clientes()->with(['cliente'])->get()->sortBy(function ($useritem, $key) {
-                return $useritem->cliente->razon_social;
-            });
+        $clientes = $institucion->clientes()->with(['cliente'])->get()->sortBy(function ($useritem, $key) {
+            return $useritem->cliente->razon_social;
+        });
         return Datatables::of($clientes)->make(true);
     }
 
     public function findCedula(Request $request)
     {
-        if($request->is('api/*')){
+        if ($request->is('api/*')) {
             $request->validate([
                 'ruc'=>'required'
             ]);
             $clientes =  Cliente::where(
                 'ruc',
-                'like', 
+                'like',
                 base64_decode($request->get('ruc')).'%'
             )->orderBy('nombre_comercial')->get();
             return Crypt::encrypt(json_encode(compact('clientes')), false) ;
-        }else{
-            $clientes =  Cliente::where('ruc','like', $request->query('q').'%')->orderBy('nombre_comercial')
-                            ->select('nombre_comercial as text','id as value','ruc')                
+        } else {
+            $clientes =  Cliente::where('ruc', 'like', $request->query('q').'%')->orderBy('nombre_comercial')
+                            ->select('nombre_comercial as text', 'id as value', 'ruc')
                             ->get();
         }
         
@@ -88,13 +88,13 @@ class ClienteController extends Controller
     public function buscar(Request $request)
     {
         $texto=($request->is('api/*'))?base64_decode($request->get('texto')):$request->get('texto');
-        if(($request->is('api/*'))){
+        if (($request->is('api/*'))) {
             $clientes = Cliente::where(function ($q) use ($texto) {
-                                $q->orWhere('ruc', 'like', $texto.'%');
-                                $q->orWhere('nombre_comercial', 'like', '%'.$texto.'%');
-                            })->with('clienteInstitucion')->paginate(50);
+                $q->orWhere('ruc', 'like', $texto.'%');
+                $q->orWhere('nombre_comercial', 'like', '%'.$texto.'%');
+            })->with('clienteInstitucion')->paginate(50);
             return Crypt::encrypt(json_encode(compact('clientes')), false);
-        }else{
+        } else {
             $clientes = Cliente::with('clienteInstitucion')->get();
             return Datatables::of($clientes)->make(true);
         }
@@ -108,7 +108,6 @@ class ClienteController extends Controller
         //                     });
         //                 })->with('cliente')->paginate(50);
         // return $clientes;
-        
     }
 
     /**
@@ -138,7 +137,7 @@ class ClienteController extends Controller
             'nombre'=>'required',
             'apellido'=>'required',
         ]);
-        $cliente=Cliente::where('ruc', $request->get('ruc'));
+        $cliente=Cliente::where('ruc', $request->get('ruc'))->first();
         if ($cliente==null) {
             $dataCliente = $request->only(['razon_social','ruc','telefono','direccion']);
             $$dataCliente['usuario_crea_id']=Auth::user()->id;
@@ -168,7 +167,7 @@ class ClienteController extends Controller
     {
         $institucion = Institucion::find(Auth::user()->institucion_id);
         $cliente = ClienteInstitucion::find($id);
-        if(!$request->is('api/*')){
+        if (!$request->is('api/*')) {
             $compras=[];
             $compras['dia']=$institucion->compras()->whereBetween('fecha', [
                     Carbon::now()->subDays(7)->toDateString(),
@@ -208,7 +207,7 @@ class ClienteController extends Controller
         }
         return ($request->is('api/*'))?
                             response()->json(compact('cliente')):
-                            view('cliente.show', compact('cliente', 'institucion_id','compras','ventas'));
+                            view('cliente.show', compact('cliente', 'institucion_id', 'compras', 'ventas'));
     }
 
     /**
@@ -243,19 +242,19 @@ class ClienteController extends Controller
         $cliente = ClienteInstitucion::where('id', $cliente->id)->with('cliente')->first();
 
         $clienteGeneral = Cliente::find($cliente->cliente_id);
-        if($clienteGeneral!=null && $clienteGeneral->direccion==null){
+        if ($clienteGeneral!=null && $clienteGeneral->direccion==null) {
             $clienteGeneral->direccion=$request->get('direccion');
             $clienteGeneral->save();
         }
-        if($clienteGeneral!=null && $clienteGeneral->nombre_comercial==null){
+        if ($clienteGeneral!=null && $clienteGeneral->nombre_comercial==null) {
             $clienteGeneral->nombre_comercial=$request->get('nombre_comercial');
             $clienteGeneral->save();
         }
-        if($clienteGeneral!=null && $clienteGeneral->razon_social==null){
+        if ($clienteGeneral!=null && $clienteGeneral->razon_social==null) {
             $clienteGeneral->razon_social=$request->get('razon_social');
             $clienteGeneral->save();
         }
-        if($clienteGeneral!=null && $clienteGeneral->telefono==null){
+        if ($clienteGeneral!=null && $clienteGeneral->telefono==null) {
             $clienteGeneral->telefono=$request->get('telefono');
             $clienteGeneral->save();
         }
