@@ -51,7 +51,7 @@ class FacturarCommand extends Command
      */
     public function handle()
     {
-        $facturas = Factura::whereIn('estado_id', [1,6,7])
+        $facturas = Factura::whereIn('estado_id', [1,5,6,7])
                     ->with(['institucion.configuracion','cliente.cliente','detalle'])
                     ->get();
         foreach ($facturas as $factura) {
@@ -223,7 +223,7 @@ class FacturarCommand extends Command
                     }
                 }
             }
-            if ($factura->estado_id==7) {
+            if ($factura->estado_id==7 || $factura->estado_id==5) {
                 $autorizacion = new SoapClient($urlAutorizacion, $options);
                 $respAut = $autorizacion->autorizacionComprobante(['claveAccesoComprobante'=>$factura->clave]);
                 if (is_soap_fault($respAut)) {
