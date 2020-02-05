@@ -59,8 +59,8 @@ return [
             'key' => env('FCM_KEY')
         ],
         'apn' => [
-            'environment' => ApnChannel::SANDBOX,
-            'certificate' => __DIR__ . '/iosCertificates/dev/cert.pem',
+            'environment' => ApnChannel::PRODUCTION,
+            'certificate' => __DIR__ . '/iosCertificates/prod/cert.pem',
             'pass_phrase' => null, // Optional passPhrase
         ],
     ],
