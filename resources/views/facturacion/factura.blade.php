@@ -190,7 +190,7 @@
                                         <div class="col-sm-12 invoice-btn-group text-center">
                                             <a href="{{route('institucion.facturacion.pdf',[$factura->institucion_id,$factura->id])}}" target="_blank" class="btn btn-primary btn-print-invoice m-b-10">Ver PDF</a>
                                             <a href="{{route('institucion.facturacion.xml',[$factura->institucion_id,$factura->id])}}" target="_blank" class="btn btn-secondary m-b-10 ">Ver XML</a>
-                                            <a href="{{route('institucion.facturacion.email',[$factura->institucion_id,$factura->id])}}" target="_blank" class="btn btn-secondary m-b-10 ">Enviar por mail</a>
+                                            <a href="#" data-target="#enviarEmailModal" data-toggle="modal" class="btn btn-secondary m-b-10 ">Enviar por mail</a>
                                             <a href="#" id="botonAnular" class="btn btn-danger m-b-10 ">Anular</a>
                                         </div>
                                     </div>
@@ -210,6 +210,32 @@
         </div>
     </div>
 </section>
+<!-- Envio mail-->
+<div class="modal fade" id="enviarEmailModal" tabindex="-1" role="dialog" aria-labelledby="enviarEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        {!! Form::open(['route'=>['naturales.facturas.reenviar',$factura->id],'method'=>"POST"]) !!}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Reenviar factura a email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Listado de emails separados por comas si es mas de 1:</label>
+                        {!! Form::text('email', '', ["class"=>"form-control datepicker"]) !!}
+                    </div>
+                    <input type="hidden" value="{{$factura->id}}" name="factura_id" id="factura_id"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+        </div>
+        {!! Form::close() !!}
+    </div>
+</div>
 @endsection
 @push('scripts')
 <script src='{{asset("assets/plugins/sweetalert/js/sweetalert.min.js")}}'></script>

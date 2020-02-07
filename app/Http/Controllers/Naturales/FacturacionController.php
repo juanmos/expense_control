@@ -12,6 +12,7 @@ use App\Models\FormaPago;
 use App\Models\Cliente;
 use App\Models\ClienteInstitucion;
 use App\Jobs\CrearFacturaPDFJob;
+use App\Mail\ReenviarFacturaMail;
 use Carbon\Carbon;
 use SimpleXMLElement;
 use Crypt;
@@ -240,6 +241,11 @@ class FacturacionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function reenviarMail(Factura $factura)
+    {
+        ReenviarFacturaMail
     }
 
     public function import()

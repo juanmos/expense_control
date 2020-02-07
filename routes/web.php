@@ -138,7 +138,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('facturas/cliente/{id}', 'Naturales\FacturacionController@ventasCliente')->name('naturales.facturas.cliente');
         Route::get('facturas/importar', 'Naturales\FacturacionController@import')->name('naturales.facturas.importar');
         Route::post('facturas/importar', 'Naturales\FacturacionController@uploadXML')->name('naturales.facturas.importar');
-
+        Route::post('facturas/reenviar/{factura}', 'Naturales\FacturacionController@reenviarMail')->name('naturales.facturas.reenviar');
 
         Route::resource('naturales.retenciones', 'Naturales\RetencionController');
         Route::get('naturales/{institucion}/retenciones/data/table', 'Naturales\RetencionController@retencionesData')->name('naturales.retenciones.data');
