@@ -73,9 +73,9 @@ class NuevaRetencionNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Nueva retención ')
+                    ->subject('Nueva retención recibida')
                     ->line('Hemos recibido una nueva retención electrónica.')
-                    ->action('Ver compras', route('naturales.compras.index', [$notifiable->institucion_id]))
+                    ->action('Ver retención', route('naturales.retenciones.index', [$notifiable->institucion_id]))
                     ->line('Muchas gracias por usar factu!');
     }
 

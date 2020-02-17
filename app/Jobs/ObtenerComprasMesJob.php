@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Notifications\NuevaCompranNotification;
+use App\Notifications\NuevaCompraNotification;
 use App\Http\Helpers;
 use App\Models\ClienteInstitucion;
 use App\Models\Institucion;
@@ -131,7 +131,7 @@ class ObtenerComprasMesJob implements ShouldQueue
                             ]);
                             if ($this->notifica) {
                                 foreach ($institucion->alumnos as $user) {
-                                    $user->notify(new NuevaCompranNotification());
+                                    $user->notify(new NuevaCompraNotification());
                                 }
                                 $this->notifica=false;
                             }
