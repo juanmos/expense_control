@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
 use App\Jobs\ObtenerRetencionesMesJob;
 use App\Jobs\ObtenerComprasMesJob;
 use App\Models\ClienteInstitucion;
@@ -61,27 +63,35 @@ class ObtenerComprasSri extends Command
             )?Crypt::decryptString($institucion->configuracion->configuraciones['clave_sri']):null;
             if ($ruc!=null && $clave!=null) {
                 $client = new \GuzzleHttp\Client();
-                $res = $client->request('POST', $sri_web.'v2.0/secured', [
-                    'headers' => [
-                        'User-Agent' => 'PostmanRuntime/7.19.0',
-                        'Accept'     => '*/*',
-                        'Authorization'      => 'Basic '. base64_encode($ruc.':'.$clave)
-                    ]]);
-                if ($res->getStatusCode()==200) {
-                    $json=(string) $res->getBody();
-                    $token= json_decode($json)->contenido;
-                    ObtenerComprasMesJob::dispatch([
-                        'token'=>$token,
-                        'ano'=>$hoy->format('Y'),
-                        'mes'=>$hoy->format('m'),
-                        'institucion_id'=>$institucion->id
-                    ])->delay(1);
-                    ObtenerRetencionesMesJob::dispatch([
-                        'token'=>$token,
-                        'ano'=>$hoy->format('Y'),
-                        'mes'=>$hoy->format('m'),
-                        'institucion_id'=>$institucion->id
-                    ])->delay(1);
+                try {
+                    $res = $client->request('POST', $sri_web.'v2.0/secured', [
+                        'headers' => [
+                            'User-Agent' => 'PostmanRuntime/7.19.0',
+                            'Accept'     => '*/*',
+                            'Authorization'      => 'Basic '. base64_encode($ruc.':'.$clave)
+                        ]]);
+                    
+                    if ($res->getStatusCode()==200) {
+                        $json=(string) $res->getBody();
+                        $token= json_decode($json)->contenido;
+                        ObtenerComprasMesJob::dispatch([
+                            'token'=>$token,
+                            'ano'=>$hoy->format('Y'),
+                            'mes'=>$hoy->format('m'),
+                            'institucion_id'=>$institucion->id
+                        ])->delay(1);
+                        ObtenerRetencionesMesJob::dispatch([
+                            'token'=>$token,
+                            'ano'=>$hoy->format('Y'),
+                            'mes'=>$hoy->format('m'),
+                            'institucion_id'=>$institucion->id
+                        ])->delay(1);
+                    }
+                } catch (RequestException $e) {
+                    echo Psr7\str($e->getRequest());
+                    if ($e->hasResponse()) {
+                        echo Psr7\str($e->getResponse());
+                    }
                 }
             }
             $bar->advance();
