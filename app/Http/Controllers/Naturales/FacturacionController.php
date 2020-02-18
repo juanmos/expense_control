@@ -245,7 +245,7 @@ class FacturacionController extends Controller
 
     public function reenviarMail(Factura $factura)
     {
-        ReenviarFacturaMail
+        // ReenviarFacturaMail
     }
 
     public function import()
