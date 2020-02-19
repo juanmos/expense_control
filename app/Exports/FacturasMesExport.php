@@ -8,8 +8,9 @@ use Maatwebsite\Excel\Concerns\FromView;
 use App\Models\DocumentoFisico;
 use App\Models\Institucion;
 use App\Models\Factura;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class FacturasMesExport implements FromView, WithTitle
+class FacturasMesExport implements FromView, WithTitle, ShouldAutoSize
 {
     private $id=null;
     private $start=null;
