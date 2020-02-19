@@ -8,8 +8,9 @@ use Maatwebsite\Excel\Concerns\FromView;
 use App\Models\DocumentoFisico;
 use App\Models\Institucion;
 use App\Models\Compra;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class ComprasMesExport implements FromView, WithTitle
+class ComprasMesExport implements FromView, WithTitle, ShouldAutoSize
 {
     private $id=null;
     private $start=null;
