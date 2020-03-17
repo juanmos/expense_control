@@ -15,15 +15,15 @@ use NotificationChannels\Apn\ApnMessage;
 class NuevaCompraNotification extends Notification
 {
     use Queueable;
-
+    private $compra;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($compra)
     {
-        //
+        $this->compra=$compra;
     }
 
     /**
@@ -73,8 +73,12 @@ class NuevaCompraNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Nueva factura de compra ')
+                    ->subject('Nueva factura de compra de '. $this->compra->cliente->cliente->nombre_comercial)
                     ->line('Hemos recibido una nueva factura de compra electrónica.')
+                    ->line('Datos de la compra')
+                    ->line('Nombre comercial: '. $this->compra->cliente->cliente->nombre_comercial)
+                    ->line('Valor: $'.$this->compra->total)
+                    ->line('Factura #: '.$this->compra->factura_numero)
                     ->action('Ver compras', route('naturales.compras.index', [$notifiable->institucion_id]))
                     ->line('Muchas gracias por usar factu!');
     }

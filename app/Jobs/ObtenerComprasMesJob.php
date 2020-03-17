@@ -131,7 +131,7 @@ class ObtenerComprasMesJob implements ShouldQueue
                             ]);
                             if ($this->notifica) {
                                 foreach ($institucion->alumnos as $user) {
-                                    $user->notify(new NuevaCompraNotification());
+                                    $user->notify(new NuevaCompraNotification($compra));
                                 }
                                 $this->notifica=false;
                             }

@@ -11,7 +11,9 @@ class Cliente extends Model
 {
     use SoftDeletes;
     
-    protected $fillable=['razon_social','nombre_comercial','ruc','telefono','direccion','usuario_crea_id','categoria_id'];
+    protected $fillable=[
+        'razon_social','nombre_comercial','ruc','telefono','direccion','usuario_crea_id','categoria_id'
+    ];
 
     public function clienteInstitucion()
     {

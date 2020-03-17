@@ -15,15 +15,15 @@ use NotificationChannels\Apn\ApnMessage;
 class NuevaRetencionNotification extends Notification
 {
     use Queueable;
-
+    private $retencion;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($retencion)
     {
-        //
+        $this->retencion=$retencion;
     }
 
     /**
@@ -73,8 +73,11 @@ class NuevaRetencionNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Nueva retención recibida')
+                    ->subject('Nueva retención recibida de '. $this->retencion->cliente->cliente->nombre_comercial)
                     ->line('Hemos recibido una nueva retención electrónica.')
+                    ->line('Datos de la compra')
+                    ->line('Nombre comercial: '. $this->retencion->cliente->cliente->nombre_comercial)
+                    ->line('Comprobante #: '.$this->retencion->comprobante_numero)
                     ->action('Ver retención', route('naturales.retenciones.index', [$notifiable->institucion_id]))
                     ->line('Muchas gracias por usar factu!');
     }
