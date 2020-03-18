@@ -163,8 +163,8 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="section_tittle text-center">
-                        <h2>Quienes pueden usar factu?</h2>
-                        <p>Factu es para cualqueir persona que quiera usar facturación electronica y llevar todas sus compras y retenciones en un solo lugar</p>
+                        <h2>Quienes pueden usar Lupp CRM?</h2>
+                        <p>Lupp CRM es para cualqueir persona que quiera usar facturación electronica y llevar todas sus compras y retenciones en un solo lugar</p>
                     </div>
                 </div>
             </div>
@@ -271,7 +271,7 @@
                 <div class="col-lg-8 col-xl-6">
                     <div class="cta_text text-center single_footer_part">
                         <h2>Suscribete a nuestro boletin</h2>
-                        <p>Recibe la ultima información sobre factu, nuevas funcionalidades, eventos y mucho más</p>
+                        <p>Recibe la ultima información sobre Lupp CRM, nuevas funcionalidades, eventos y mucho más</p>
                         <div id="mc_embed_signup">
                             <form target="_blank"
                                 action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"

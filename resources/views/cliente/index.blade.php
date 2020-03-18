@@ -31,20 +31,7 @@
                                         
                                     </div>
                                     <div class="card-block px-0 py-3">
-                                        {{-- <div class="">
-                                            {!! Form::open() !!}
-                                                <div class="row overflow-y-auto">                            
-                                                    <div class="col-md-3">
-                                                        <label>Buscar cliente:</label>
-                                                    </div>
-                                                    <div class="col-md-7">                                
-                                                        <input type="text" name="buscar" required id="buscar" class="form-control borderColorElement" value="" placeholder="Escriba el nombre de la empresa o el RUC">
-                                                    </div>
-                                                </div>
-                                            {!! Form::close()!!}
-                                        </div> --}}
                                         <div class="table-responsive">
-                                        {{-- @if($clientes->count()>0) --}}
                                             <table  id="tableData" class="table table-hover">
                                                 <thead>
                                                     <tr>
@@ -58,10 +45,6 @@
                                                 <tbody id="entrydata">
                                                 </tbody>
                                             </table>
-                                        {{-- @else
-                                            <h4>No hay clientes registrados</h4>
-                                            <a class="btn btn-primary" href="{{route('naturales.clientes.create',$institucion_id)}}"><span class="pcoded-micon"><i class="feather icon-plus-circle"></i></span><span class="pcoded-mtext">Crear cliente</span></a>
-                                        @endif --}}
                                         </div>
                                     </div>
                                 </div>
