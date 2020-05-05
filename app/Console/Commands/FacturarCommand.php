@@ -275,7 +275,7 @@ class FacturarCommand extends Command
                         
                     );
                     // dd($json);
-                    $url = "https://facturas.doctopro.com/api/report";
+                    $url = "https://facturas.luppapp.com/api/report";
                     
                     /*Convierte el array en el formato adecuado para cURL*/
                     

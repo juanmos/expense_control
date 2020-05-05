@@ -79,7 +79,7 @@ class CrearFacturaPDFJob implements ShouldQueue
             "options"=>array('timeout'=>60000)
             
         );
-        $url = "https://facturas.doctopro.com/api/report";
+        $url = "https://facturas.luppapp.com/api/report";
                     
         /*Convierte el array en el formato adecuado para cURL*/
                     
