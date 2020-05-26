@@ -7,6 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Carbon\Carbon;
+use Config;
+
 class EnviarFacturaNotification extends Notification
 {
     use Queueable;
@@ -42,7 +44,8 @@ class EnviarFacturaNotification extends Notification
     {
         return (new MailMessage)
                     ->subject('Comprobante electronico recibido')
-                    ->from($this->factura->institucion->configuracion->configuraciones['email_facturacion'],$this->factura->institucion->nombre)
+                    // ->from($this->factura->institucion->configuracion->configuraciones['email_facturacion'],$this->factura->institucion->nombre)
+                    ->from(Config::get('mail.from.address'), $this->factura->institucion->nombre)
                     ->greeting('Estimad@s '.$this->factura->cliente->nombre_comercial)
                     ->line('Ha recibido una factura electrónica de '.$this->factura->institucion->nombre.' con los siguientes detalles:')
                     ->line('Fecha: '.Carbon::parse($this->factura->fecha)->format('d-m-Y'))

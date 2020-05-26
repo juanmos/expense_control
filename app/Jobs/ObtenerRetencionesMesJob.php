@@ -120,7 +120,7 @@ class ObtenerRetencionesMesJob implements ShouldQueue
                             ]);
                             if ($this->notifica) {
                                 foreach ($institucion->alumnos as $user) {
-                                    $user->notify(new NuevaRetencionNotification());
+                                    $user->notify(new NuevaRetencionNotification($retencion));
                                 }
                                 $this->notifica=false;
                             }
